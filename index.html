@@ -1,24 +1,21 @@
 ---
 layout: default
 ---
-
-<div class="home">
-
-  <h1 class="page-heading">Posts</h1>
-
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
-
+<div class="landing-card">
+      <div class="gradient"></div>
+      <div class="intro">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6">
+                <img src="http://owenwillia.ms/assets/images/itme.jpg" class="avatar">
+                <h1 class="display-5">Hey, I'm Owen!</h1>
+                <p>I'm a technologist based in Amsterdam, The Netherlands, trying to make technology friendlier with words.</p><p>With hands-on experience building and growing digital marketing at startups, along with a technical background, I get what's needed to make your product sell itself.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <i class="fab fa-twitter"></i>
+      <i class="fab fa-github"></i>
+      
 </div>
