@@ -97,7 +97,7 @@ gulp.task('serve', ['jekyll-build'], () => {
 
   // Warch html changes.
   gulp.watch([
-    'css/**/*.css',
+
     'scripts/**/*.js',
     '_includes/**/*.html',
     '_layouts/**/*.html',
@@ -106,10 +106,14 @@ gulp.task('serve', ['jekyll-build'], () => {
   ], ['jekyll-build', browserSync.reload]);
 
   // Watch scss changes.
-  gulp.watch('scss/**/*.scss', ['scss']);
+  gulp.watch('scss/**/*.scss', ['scss', 'jekyll-build']);
 
   // Watch JavaScript changes.
   gulp.watch('_scripts/**/*.js', ['scripts']);
+});
+
+gulp.task('watch', ['serve'], function () {
+  gulp.watch(paths.src, ['inject']);
 });
 
 gulp.task('generate-service-worker', (callback) => {
