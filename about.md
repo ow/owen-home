@@ -1,7 +1,10 @@
 ---
 layout: page
 title: About
+header: 👋 Hi, I'm Owen
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+I'm a technologist with experience wearing different hats, as a writer, developer, infrastructure engineer and marketer. Over the years I've crafted a unique ability to build my own products and communicate technically difficult topics across skill levels.
+
+In my spare time, I'm obsessed with learning new things, experimenting, and building products. 

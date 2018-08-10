@@ -24,7 +24,27 @@
 .contact-list,
 .social-media-list {
     list-style: none;
-    margin-left: 0;
+		margin-left: 0;
+	li {
+		padding-bottom: 0.6em;
+		color: $grey-color;
+		a {
+			color: $grey-color;
+
+			&:hover {
+				color: $grey-color;
+				border-bottom: 2px solid $grey-color;
+			}
+		}
+	}
+
+	.icon {
+		width: 25px;
+		padding-right: 12px;
+		display: inline-block;
+		text-align: center;
+		color: $grey-color;
+	}
 }
 
 .footer-col-wrapper {
