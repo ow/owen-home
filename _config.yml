@@ -37,6 +37,17 @@ services:
     icon: far fa-bullhorn
     color: purple
 
+career:
+  - title: Digital Director
+    company: VanMoof
+    description: Doing the needful
+    icon: "/images/career/vanmoof.png"
+    color: vanmoof
+    dates: 
+
+collections:
+- work
+
 # Build settings
 markdown: kramdown
 permalink: pretty

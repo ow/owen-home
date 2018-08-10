@@ -1,0 +1,9 @@
+{% for job in site.career %}
+	<div class="job my-5">
+			<div class="job-box {{ job.color }} d-flex align-items-center"><img src="{{ job.logo }}"></div>
+			<div class="pl-1">
+				<h6 class="mb-1 font-weight-bold">{{ job.title }}</h6>
+				<p class="mb-0">{{ job.description }}</p>
+			</div>
+	</div>
+{% endfor %}

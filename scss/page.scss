@@ -1,0 +1,11 @@
+.job-box {
+	@extend .service-box;
+
+	img {
+		width: 80%;
+	}
+
+	.vanmoof {
+		background: #00FFFF;
+	}
+}
