@@ -40,10 +40,25 @@ services:
 career:
   - title: Digital Director
     company: VanMoof
-    description: Doing the needful
+    description: Built the engineering organization from the ground, moving app + web development in-house. Responsible for managing the engineering team, building out a digital strategy, and launching the brand into new countries online.
     icon: "/images/career/vanmoof.png"
     color: vanmoof
     dates: 
+  - title: Editor
+    company: The Next Web
+    description: Telling stories about the people behind technology, writing news and breaking down complex topics for wide audiences. Managed implementation of performance-focused overhaul of the site, slashing loading times 60 percent.
+    icon: "/images/career/tnw.png"
+    color: tnw
+  - title: Head of marketing / growth 
+    company: Hoist
+    description: Developing marketing strategy and executing it autonomously, reaching out to developers and coding our marketing site. Use wide range of analytics tools (Mixpanel, Crazyegg, Google Analytics) to iterate in real-time on strategy.
+    icon: "/images/career/hoist.png"
+    color: hoist
+  - title: Infrastructure/Devops Engineer
+    company: Xero
+    description: Engineer on critical infrastructure team responsible for scaling the platform to millions of users. Supported product team to debug issues on the platform, optimized performance and built out a deployment pipeline for high availability.
+    icon: "/images/career/xero.png"
+    color: xero
 
 collections:
 - work

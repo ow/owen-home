@@ -5,7 +5,26 @@
 		width: 80%;
 	}
 
-	.vanmoof {
-		background: #00FFFF;
+	&.vanmoof {
+		background: #FFFF00;
 	}
+
+	&.tnw {
+		background: #f42;
+	}
+
+	&.hoist {
+		img {
+			width: 100%;
+			border-radius: 5px;
+		}
+	}
+
+	&.xero {
+		background: #1fc0e7;
+	}
+}
+
+.avatar img {
+	border-radius: 99em;
 }
