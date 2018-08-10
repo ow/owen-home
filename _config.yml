@@ -17,7 +17,7 @@ title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
   Developer, writer, maker, human.
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://festive-yonath-89aaee.netlify.com" # the base hostname & protocol for your site
 twitter_username: ow
 github_username:  ow
