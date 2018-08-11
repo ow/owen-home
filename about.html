@@ -4,23 +4,30 @@ title: About
 header: 👋 Hi, I'm Owen
 permalink: /about/
 ---
-<div class="container my-5">
-	<div class="row">
-		<div class="col-lg-7">
-			<div class="copy">
-					<h1>{{ page.header }}</h1>
-					<p>I'm a technologist with experience wearing different hats, as a writer, developer, infrastructure engineer and marketer. Over the years I've crafted a unique ability to build my own products and communicate technically difficult topics across skill levels.</p>
-					<p>In my spare time, I'm obsessed with learning new things, experimenting, and building products.</p>
+<div class="jumbotron mb-0">
+		<div class="intro py-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6">
+							<h1>{{ page.header }}</h1>
+							<p class="lead">I'm a technologist with experience wearing different hats, as a writer, developer, infrastructure engineer and marketer. 
+							<p>Over the years I've honed the ability to build my own products and communicate technically difficult topics across skill levels. In my spare time, I'm obsessed with learning new things, experimenting, and building products.</p>
+						</div>
+				<div class="col-lg-3 offset-lg-3 text-right">
+						<div class="avatar">
+							<img src="/images/itme.jpg">
+						</div>
+				</div>
+				<div class="col-lg-4">
+						<hr class="fancy-line mb-4">
+				</div>
 			</div>
 		</div>
-		<div class="col-lg-3 offset-lg-2">
-				<div class="avatar">
-					<img src="/images/itme.jpg">
-				</div>
-		</div>
 	</div>
+</div>
+<div class="container my-5"> 
 	<div class="row">
-		<div class="col-lg-7">
+		<div class="col-lg-8">
 			{% include career.html %}
 		</div>
 	</div>

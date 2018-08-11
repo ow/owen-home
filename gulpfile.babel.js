@@ -101,7 +101,9 @@ gulp.task('serve', ['jekyll-build'], () => {
     'scripts/**/*.js',
     '_includes/**/*.html',
     '_layouts/**/*.html',
-    '_posts/**/*.md',
+		'_posts/**/*.md',
+		'*.html',
+		'*.md',
     'index.html'
   ], ['jekyll-build', browserSync.reload]);
 

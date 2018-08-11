@@ -1,25 +1,39 @@
 ---
 layout: default
+title: Blog
+permalink: /blog/
 ---
 
-<div class="blog">
-
-    <h1 class="page-heading">Posts</h1>
+<div class="blog container my-5">
+		<div class="row">
+			<div class="col-lg-6">
+				<h1 class="page-heading">Latest Posts</h1>
+			</div>
+		</div>
+    
+		<div class="row"> 
+			<div class="col-lg-7">
+				<div class="post-list">
+						{% for post in site.posts %}
+							<div class="post">
+								<span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+				
+								<h2>
+									<a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+								</h2>
+							</div>
+						{% endfor %}
+						</div>
+			</div>
+		</div>
+    
   
-    <ul class="post-list">
-      {% for post in site.posts %}
-        <li>
-          <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-  
-          <h2>
-            <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-          </h2>
-        </li>
-      {% endfor %}
-    </ul>
-  
-  
-    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+		<div class="row mt-5">
+			<div class="col-lg-6">
+				<h6 class="font-weight-bold">Want more?</h6>
+				<p class="rss-subscribe">Subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+			</div>
+		</div>
   
   </div>
   

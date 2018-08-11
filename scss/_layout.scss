@@ -33,7 +33,11 @@
 
 			&:hover {
 				color: $grey-color;
-				border-bottom: 2px solid $grey-color;
+			}
+
+			&:hover:after {
+				width: 100%;
+				background: $grey-color;
 			}
 		}
 	}
@@ -169,4 +173,8 @@
             font-size: 18px;
         }
     }
+}
+
+.navbar {
+	border-top: 2px solid $brand-color;
 }
