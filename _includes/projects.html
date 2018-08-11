@@ -1,0 +1,17 @@
+<div class="row">
+		<div class="col-lg-8 mb-4">
+			<h3>Side projects</h3>
+		</div>
+	</div> 
+	<div class="row">
+		{% for project in site.projects %}
+		<div class="col-lg-3">
+			<div class="job-box {{ project.color }} d-flex align-items-center justify-content-center mb-3"><span>{{ project.emoji }}</span></div>
+			<p class="font-weight-bold">{{ project.title }}</p>
+			<p>{{ project.description }}</p>
+			{% if project.url %}
+				<a href="{{ project.url }}">{{ project.action }} > </a>
+			{% endif %}
+		</div>
+		{% endfor %}
+	</div>

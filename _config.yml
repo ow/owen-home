@@ -38,30 +38,66 @@ services:
     color: purple
 
 career:
+  - title: Founder / Freelancer
+    company: Charged
+    description: I help brands with copy, strategy and more, as a for-hire resource. Working with a small group of companies closely to help them get the most of their resources, and grow products with great copy.
+    icon: "/images/career/charged.jpg"
+    color: charged
+    dates: 2017 - Present
   - title: Digital Director
     company: VanMoof
     description: Built the engineering organization from the ground, moving app + web development in-house. Responsible for managing the engineering team, building out a digital strategy, and launching the brand into new countries online.
     icon: "/images/career/vanmoof.png"
     color: vanmoof
-    dates: 
+    dates: 2016 - 2017
   - title: Editor
     company: The Next Web
     description: Telling stories about the people behind technology, writing news and breaking down complex topics for wide audiences. Managed implementation of performance-focused overhaul of the site, slashing loading times 60 percent.
     icon: "/images/career/tnw.png"
     color: tnw
+    dates: 2013 - 2016
   - title: Head of marketing / growth 
     company: Hoist
     description: Developing marketing strategy and executing it autonomously, reaching out to developers and coding our marketing site. Use wide range of analytics tools (Mixpanel, Crazyegg, Google Analytics) to iterate in real-time on strategy.
     icon: "/images/career/hoist.png"
     color: hoist
+    dates: 2013 - 2014
   - title: Infrastructure/Devops Engineer
     company: Xero
     description: Engineer on critical infrastructure team responsible for scaling the platform to millions of users. Supported product team to debug issues on the platform, optimized performance and built out a deployment pipeline for high availability.
     icon: "/images/career/xero.png"
     color: xero
+    dates: 2011 - 2013
+
+projects: 
+  - title: Hubble
+    description: Custom-engineered platform for building your community, and getting paid for your work.
+    color: hubble
+    action: Join waitlist
+    emoji: 📡
+    url: https://producthunt.co/upcoming/hubble
+  - title: re:Charged
+    description: Paid morning technology briefing and community, without clickbait or advertising.
+    color: charged
+    action: Subscribe now
+    emoji: ⚡
+    url: https://producthunt.co/upcoming/hubble
+  - title: Call Me Maybe
+    description: Phone calls are disruptive and archaic. Screen your calls, get a SMS with the reason to talk.
+    color: call-me-maybe
+    action: Join waitlist
+    emoji: 📱
+    url: https://callmemaybe.app
+  - title: Charged Podcast
+    description: A tech podcast with a difference. Three hosts, casual conversations about the state of the industry.
+    color: podcast
+    action: Listen now
+    emoji: 🎤
+    url: https://char.gd/podcast
 
 collections:
-- work
+  work:
+    output: true
 
 # Build settings
 markdown: kramdown

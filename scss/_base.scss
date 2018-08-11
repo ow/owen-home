@@ -204,3 +204,11 @@ pre {
         }
     }
 }
+
+/**
+^ Utility stuff
+*/
+
+.smaller {
+	font-size:$base-font-size / 1.3 !important;
+}

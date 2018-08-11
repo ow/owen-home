@@ -5,60 +5,80 @@
       <div class="col-lg-3">
         <ul class="contact-list">
 					<li class="font-weight-bold">{{ site.title }} 👩‍💻 </li>
-					<li class="text">{{ site.description }}</li>
+					<li class="text smaller">{{ site.description }}</li>
         </ul>
-      </div>
-
-      <div class="col-lg-3 offset-lg-1">
-        	<ul class="social-media-list">
+				<ul class="social-media-list smaller">
+						{% if site.location %}
+						<li>
+							<a href="#">
+								<div class="icon">
+									<i class="fas fa-map-marker"></i>
+								</div>
+	
+								<span class="username">{{ site.location }}</span>
+							</a>
+						</li>
+						{% endif %}
+						<li>
+								<a href="mailto:{{ site.email }}">
+									<div class="icon">
+										<i class="fas fa-envelope"></i>
+									</div>
+									<span class="username">{{ site.email }}</span>
+								</a>
+							</li>
+	
+							{% if site.github_username %}
 							<li>
-									<a href="mailto:{{ site.email }}">
-										<div class="icon">
-											<i class="fas fa-envelope"></i>
-										</div>
-										<span class="username">{{ site.email }}</span>
-									</a>
-								</li>
+								<a href="https://github.com/{{ site.github_username }}">
+									<div class="icon  icon--github">
+										<i class="fab fa-github"></i>
+									</div>
 		
-								{% if site.location %}
-								<li>
-										<div class="icon">
-											<i class="fas fa-map-marker"></i>
-										</div>
-			
-										<span class="username">{{ site.location }}</span>
-								</li>
-								{% endif %}
+									<span class="username">@{{ site.github_username }}</span>
+								</a>
+							</li>
+							{% endif %}
 		
-								{% if site.github_username %}
-								<li>
-									<a href="https://github.com/{{ site.github_username }}">
-										<div class="icon  icon--github">
-											<i class="fab fa-github"></i>
-										</div>
-			
-										<span class="username">@{{ site.github_username }}</span>
-									</a>
-								</li>
-								{% endif %}
-			
-								{% if site.twitter_username %}
-								<li>
-									<a href="https://twitter.com/{{ site.twitter_username }}">
-										<div class="icon icon--twitter">
-											<i class="fab fa-twitter"></i>
-										</div>
-			
-										<span class="username">@{{ site.twitter_username }}</span>
-									</a>
-								</li>
-								{% endif %}
-							</ul>
+							{% if site.twitter_username %}
+							<li>
+								<a href="https://twitter.com/{{ site.twitter_username }}">
+									<div class="icon icon--twitter">
+										<i class="fab fa-twitter"></i>
+									</div>
+		
+									<span class="username">@{{ site.twitter_username }}</span>
+								</a>
+							</li>
+							{% endif %}
+						</ul>
       </div>
 
       <div class="col-lg-2 offset-lg-1">
-        
-      </div>
+				<ul class="navbar-nav mr-auto">
+					<li class="font-weight-bold">Keep clicking</li>
+					{% for page in site.pages %}
+						{% if page.title %}
+						<li class="nav-item mr-5">
+							<a class="nav-link smaller" href="{{ page.url | relative_url }}">{{ page.title }}</a>
+						</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+			
+			<div class="col-lg-2 offset-lg-1">
+				<ul class="navbar-nav mr-auto">
+					<li class="font-weight-bold">Latest writing</li>
+					{% for post in site.posts %}
+						{% if post.title %}
+						<li class="nav-item mr-5">
+							<a class="nav-link smaller" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+						</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
     </div>
 
   </div>

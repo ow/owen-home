@@ -23,6 +23,26 @@
 	&.xero {
 		background: #1fc0e7;
 	}
+
+	&.charged {
+		background-image: linear-gradient(to top, #E43E3A 0%, #ea6a67 99%, #ea6a67 100%);
+		img {
+			width: 100%;
+			border-radius: 5px;
+		}
+	}
+
+	&.hubble {
+		background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+	}
+
+	&.call-me-maybe {
+		background-image: linear-gradient(to top, #3498db 0%, #75b9e7 99%, #75b9e7 100%);
+	}
+
+	&.podcast {
+		background-image: linear-gradient(to top, #453AE4 0%, #2C6DFF 99%, #2C6DFF 100%);
+	}
 }
 
 .avatar img {
