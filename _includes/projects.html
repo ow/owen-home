@@ -6,8 +6,7 @@
 	<div class="row">
 		{% for project in site.projects %}
 		<div class="col-lg-3">
-			<div class="job-box {{ project.color }} d-flex align-items-center justify-content-center mb-3"><span>{{ project.emoji }}</span></div>
-			<p class="font-weight-bold">{{ project.title }}</p>
+			<div class="job-box {{ project.color }} project d-flex align-items-center justify-content-center mb-3"><span class="font-weight-bold">{{ project.title }}<span class="pl-2">{{ project.emoji }}</span></span></div>
 			<p>{{ project.description }}</p>
 			{% if project.url %}
 				<a href="{{ project.url }}">{{ project.action }} > </a>

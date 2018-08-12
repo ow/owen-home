@@ -88,10 +88,10 @@ projects:
     action: Join waitlist
     emoji: 📱
     url: https://callmemaybe.app
-  - title: Charged Podcast
+  - title: Podcast
     description: A tech podcast with a difference. Three hosts, casual conversations about the state of the industry.
     color: podcast
-    action: Listen now
+    action: Listen now 
     emoji: 🎤
     url: https://char.gd/podcast
 

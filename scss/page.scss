@@ -1,6 +1,6 @@
 .job-box {
 	@extend .service-box;
-
+ 
 	img {
 		width: 80%;
 	}
@@ -47,4 +47,10 @@
 
 .avatar img {
 	border-radius: 99em;
+}
+
+.project {
+	width: 100%;
+	font-size: 1.5em;
+	height: 120px;
 }

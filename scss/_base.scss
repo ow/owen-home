@@ -114,21 +114,49 @@ a {
 		}
 }
 
-/**
- * Blockquotes
- */
-blockquote {
-    color: $grey-color;
-    border-left: 4px solid $grey-color-light;
-    padding-left: $spacing-unit / 2;
-    font-size: 18px;
-    letter-spacing: -1px;
-    font-style: italic;
+.btn {
+	&:hover {
+		color: $brand-color;
+		text-decoration: none;
+		//border-bottom: 2px solid $brand-color;
+		transition: ease .2s;
+	}
 
-    > :last-child {
-        margin-bottom: 0;
-    }
+	&:after {
+		content: "";
+		display: block;
+		height: 0px !important;
+		margin-top: 0px !important;
+		width:0;
+		background: transparent;
+		transition: width .5s ease, background-color .5s ease;
+	}
+
+	&:hover:after {
+		width: 0 !important;
+		background: transparent !important;
+	}
 }
+
+.btn-primary {
+	&:hover {
+		background: lighten($brand-color, 5%) !important;
+		color: white;
+	}
+}
+
+.btn-outline-light {
+	color: white;
+
+	&:visited {
+		color: white;
+	}
+
+	&:hover {
+		color: $brand-color;
+	}
+}
+
 
 /**
  * Code formatting
