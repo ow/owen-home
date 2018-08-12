@@ -54,12 +54,12 @@
 						</ul>
       </div>
 
-      <div class="col-lg-2 offset-lg-1">
+      <div class="col-lg-2 offset-lg-1 d-none d-sm-block">
 				<ul class="navbar-nav mr-auto">
 					<li class="font-weight-bold">Keep clicking</li>
 					{% for page in site.pages %}
 						{% if page.title %}
-						<li class="nav-item mr-5">
+						<li class="mr-5">
 							<a class="nav-link smaller" href="{{ page.url | relative_url }}">{{ page.title }}</a>
 						</li>
 						{% endif %}
@@ -67,12 +67,12 @@
 				</ul>
 			</div>
 			
-			<div class="col-lg-2 offset-lg-1">
+			<div class="col-lg-2 offset-lg-1 d-none d-sm-block">
 				<ul class="navbar-nav mr-auto">
 					<li class="font-weight-bold">Latest writing</li>
 					{% for post in site.posts %}
 						{% if post.title %}
-						<li class="nav-item mr-5">
+						<li class="mr-5">
 							<a class="nav-link smaller" href="{{ post.url | relative_url }}">{{ post.title }}</a>
 						</li>
 						{% endif %}

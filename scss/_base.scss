@@ -8,6 +8,10 @@ dl, dd, ol, ul, figure {
     padding: 0;
 }
 
+.jumbotron {
+	border-radius: 0;
+}
+
 /**
  * Basic styling
  */
@@ -102,7 +106,7 @@ a {
 			content: "";
 			display: block;
 			height: 3px;
-			margin-top: 2px;
+			margin-top: -1px;
 			width:0;
 			background: transparent;
 			transition: width .5s ease, background-color .5s ease;

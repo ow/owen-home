@@ -49,15 +49,15 @@
     margin-right: 18px;
 
     &.blue {
-        background: #3498db;
+        background: $brand-color;
     }
 
     &.purple {
-        background: #9b59b6;
+        background: $brand-secondary;
     }
 
     &.green {
-        background: #1abc9c;
+        background: $brand-tertiary;
     }
 
     i {
