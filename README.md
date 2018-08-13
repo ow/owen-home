@@ -37,3 +37,5 @@ $ npm run deploy
 ## License
 
 Feel free to use my theme, but please do not use my images, logo or other copy on your own site. This is built on top of Jekyll, Bootstrap 4, and my own custom CSS. To change things around, just start in main.scss, and tweak the brand colors there.
+
+The data for everything is stored in either config.yml, or in a custom collection such as `_work` directory. The only exception is the brand logos, which are currently hard-coded.
