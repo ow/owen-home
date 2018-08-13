@@ -1,7 +1,5 @@
 # owen
 
-[![license][license-image]][license-url] [![Dependency Status][dependencyci-image]][dependencyci-url]
-
 > My website, running here: https://owenwillia.ms.
 
 ![https://i.imgur.com/ijqtbvb.jpg](https://i.imgur.com/ijqtbvb.jpg)
