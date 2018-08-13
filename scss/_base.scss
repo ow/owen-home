@@ -8,6 +8,11 @@ dl, dd, ol, ul, figure {
     padding: 0;
 }
 
+::selection {
+    background: $brand-color;
+    color: white;
+  }
+
 .jumbotron {
 	border-radius: 0;
 }
