@@ -36,8 +36,6 @@ You can easily deploy your site build with the command
 $ npm run deploy
 ```
 
+## License
 
-[license-image]: https://img.shields.io/badge/license-ISC-blue.svg
-[license-url]: https://github.com/ow/owen/blob/master/LICENSE
-[dependencyci-image]: https://dependencyci.com/github/ow/owen/badge
-[dependencyci-url]: https://dependencyci.com/github/ow/owen
+Feel free to use my theme, but please do not use my images, logo or other copy on your own site. This is built on top of Jekyll, Bootstrap 4, and my own custom CSS.
