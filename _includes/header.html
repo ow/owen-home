@@ -7,21 +7,30 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
+				<ul class="navbar-nav mr-auto ml-0 ml-md-4">
 				{% for page in site.pages %}
 					{% if page.title %}
-					<li class="nav-item mr-5">
+					<li class="nav-item mr-5 d-flex align-items-center">
 						<a class="nav-link" href="{{ page.url | relative_url }}">{{ page.title }}</a>
 					</li>
 					{% endif %}
 				{% endfor %}
+				<li class="nav-item mr-5">
+					<a href="mailto:owen@char.gd" class="nav-link">Email me</a>
+				</li>
 				</ul>
-				<ul class="social navbar-nav">
+				<ul class="social navbar-nav d-none d-sm-flex">
 					<li class="nav-item">
-						<a class="nav-link"><i class="fab fa-twitter"></i></a>
+						<a class="nav-link" href="https://twitter.com/{{ site.twitter_username }}" ><i class="fab fa-twitter"></i></a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link"><i class="fab fa-github"></i></a>
+						<a class="nav-link" href="https://github.com/{{ site.github_username }}"><i class="fab fa-github"></i></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ site.instagram }}"><i class="fab fa-instagram"></i></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ site.telegram }}"><i class="fab fa-telegram"></i></a>
 					</li>
 				</ul>
 			</div>

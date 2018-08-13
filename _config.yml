@@ -21,6 +21,8 @@ baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://festive-yonath-89aaee.netlify.com" # the base hostname & protocol for your site
 twitter_username: ow
 github_username:  ow
+telegram: https://t.me/owenwil
+instagram: https://instagram.com/findingnewo
 location: Amsterdam, Netherlands
 
 services:
