@@ -16,7 +16,7 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen is a developer, writer, maker and technologist based in Amsterdam, Netherlands. He's always looking for great new projects!
+  Owen is a freelance developer, UX writer, maker and technologist based in Amsterdam, Netherlands. He's always looking for great new projects!
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 twitter:
