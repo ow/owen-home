@@ -2,7 +2,9 @@
 
 [![license][license-image]][license-url] [![Dependency Status][dependencyci-image]][dependencyci-url]
 
-> My website.
+> My website, running here: https://owenwillia.ms.
+
+![https://i.imgur.com/ijqtbvb.jpg](https://i.imgur.com/ijqtbvb.jpg)
 
 ## Prerequisites
 
@@ -15,13 +17,13 @@ To install this project, you'll need the following things installed on your mach
 
 1. Clone this repo, or download it into a directory of your choice.
 2. Inside the directory, run `npm install`.
-3. Inside the directory, run `bundle install`.
+3. Code away! 
 
 ## Usage
 
 **Development mode**
 
-This will give you file watching, browser synchronisation, auto-rebuild, CSS injecting etc.
+This will give you file watching, browser synchronisation, auto-rebuild, CSS injecting etc. It's pretty badly coded at the moment, but it works! 
 
 ```shell
 $ npm run start
