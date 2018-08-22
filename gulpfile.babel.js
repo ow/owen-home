@@ -18,7 +18,7 @@ gulp.task('minify-html', () => {
   return gulp.src('_site/**/*.html')
     .pipe($.htmlmin({
       removeComments: true,
-      collapseWhitespace: true,
+      collapseWhitespace: false,
       collapseBooleanAttributes: true,
       removeAttributeQuotes: true,
       removeRedundantAttributes: true,
