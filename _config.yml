@@ -107,7 +107,7 @@ projects:
 
 collections:
   work:
-    output: true
+    output: false
 
 plugins:
   - jekyll-seo-tag
