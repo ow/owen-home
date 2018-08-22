@@ -11,6 +11,7 @@ ruby RUBY_VERSION
 # Happy Jekylling!
 gem "jekyll", "3.8.3"
 gem 'jekyll-seo-tag'
+gem 'jekyll-sitemap'
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do

@@ -111,6 +111,7 @@ collections:
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 # Build settings
 markdown: kramdown
