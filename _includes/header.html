@@ -9,9 +9,9 @@
 				<ul class="navbar-nav mr-auto ml-0 ml-md-4 d-flex align-items-middle">
 				{% for page in site.pages %}
 					{% if page.title %}
-					<li class="nav-item mr-5 d-flex align-items-center">
-						<a class="nav-link" href="{{ page.url | relative_url }}">{{ page.title }}</a>
-					</li>
+						<li class="nav-item mr-5 d-flex align-items-center">
+							<a class="nav-link" href="{{ page.url | relative_url }}">{{ page.title }}</a>
+						</li>
 					{% endif %}
 				{% endfor %}
 				<li class="nav-item mr-5">
