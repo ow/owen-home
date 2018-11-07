@@ -12,7 +12,7 @@ As a result, UX writing often sits somewhere within the design organization of y
 
 There's a lot of ways UX writing is great for business, so I thought I'd share what it's like to work with a UX writer from my own perspective, and how UX writing can help your business.
 
-### Seeing through your user's eyes
+## Seeing through your user's eyes
 
 You're probably accustomed to working with copywriters, but there's a big difference when it comes to the world of UX writers: it's less about flashy copy, catchy sentences and cute wording. 
 
@@ -26,7 +26,7 @@ This is called 'moving the cheese' which alludes to a mouse trying to get to whe
 
 If you're building an onboarding flow, or helping your users for the first time, copy is one of the most important tools you have to help people with difficult to understand concepts. Looking at it from their perspective (and in many cases, identifying what type of users are the audience), then guiding them forward so that it's always clear what's next is key.
 
-### Understanding the technical details
+## Understanding the technical details
 
 UX Writing can do a lot of heavy lifting for you, if your writers understand what's going on and are able to help translate that for the user. As a writer with a technical background, I'm allergic to jargon like 'authentication error' or 'gateway unavailable,' because it means nothing to your users!
 
@@ -41,23 +41,29 @@ I hate these errors, because they're written by developers, and I can't even und
 In projects I've worked on previously, I try to understand all of the error states we might end up with and work them into specific, cruft-free messages that lead the user to understand what to do next. We could take the above error and transform it into different error states, depending on what went wrong:
 
 In the case of the user typing a wrong email or password: 
-`Sorry, your account details were incorrect. You can reset your password here if you're stuck.`
+
+`Sorry, your account details were incorrect. Reset password here if you're stuck.`
 
 In the case of the _server_ having unknown technical problems:
-`Our services are experiencing issues right now, so we can't log you in. Try again soon.`
+
+`Our services are unavailable right now, so we can't log you in. Try again soon.`
 
 In the case a user's account isn't actually allowed to do that:
-`Sorry, your account doesn't have permission to access this area. Click here to message the team owner for help.`
+`Your account needs permission to access this area. Click here to message the team owner for help.`
 
 All of these messages tell the user precisely what went wrong, why, and don't leave them hanging wondering what's next. 
 
-### Concise text always wins
+## Concise text always wins
 
 When developers are left to fill in text in an application, they tend to do so by being overly verbose, or adding way too much text that adds little value to the message. 
 
 In the fantastic book _On Writing Well_ by William Knowlton Zinsser, he says that "the secret of good writing is to strip every sentence to its cleanest components." You should seek to do the same across your product, because it offers a refreshing change of pace: getting directly to the point.
 
 One of my favorite error messages of all time comes from iTunes, the software that will never truly die. If you plug in an iPhone with music synchronized to it, this error appears:
+
+![iTunes error](/images/itunes.png)
+
+The very long string for this is:
 
 `The iPhone (Name) is synced with another iTunes Library on (Computer). Do you want to erase this iPhone and sync with this iTunes Library? An iPhone can be synced with only one iTunes library at a time. Erasing and syncing replaces the contents of this iPhone with the contents of this iTunes library.`
 
