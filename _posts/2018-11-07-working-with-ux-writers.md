@@ -50,7 +50,8 @@ In the case of the _server_ having unknown technical problems:
 
 `Our services are unavailable right now, so we can't log you in. Try again soon.`
 
-In the case a user's account isn't actually allowed to do that:
+And, one last unique message, in case a user's account isn't actually allowed to do that:
+
 `Your account needs permission to access this area. Click here to message the team owner for help.`
 
 All of these messages tell the user precisely what went wrong, why, and don't leave them hanging wondering what's next. 
