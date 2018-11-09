@@ -4,6 +4,7 @@ title:  "Here's why UX Writing is so important"
 date:   2018-11-07 11:56:39 +0300
 categories: ux writing advice
 image: /images/itunes.png
+description: "Most companies think about the words they'll use in their products last, but by then it's too late."
 ---
 There's lots of talk about UX Writing and hiring writers to help design copy for your product, but what does that actually mean? And how is it different from working with a copywriter?
 
