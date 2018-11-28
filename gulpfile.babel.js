@@ -142,9 +142,9 @@ gulp.task('generate-service-worker', (callback) => {
         .pipe(gulp.dest('.'));
   });
 
-gulp.task('jekyll-build', ['scripts', 'scss'], $.shell.task(['jekyll build']));
+gulp.task('jekyll-build', ['scripts', 'scss'], $.shell.task(['bundle exec jekyll build']));
 
-gulp.task('jekyll-build-for-deploy', $.shell.task(['jekyll build']));
+gulp.task('jekyll-build-for-deploy', $.shell.task(['bundle exec jekyll build']));
 
 // Default task.
 gulp.task('build', () =>
