@@ -16,7 +16,7 @@
 title: Owen Williams | Freelance UX writer and technical product marketer
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen is a freelance developer, UX writer, maker and technologist based in Amsterdam, Netherlands. He's always looking for great new projects!
+  Owen is a freelance UX writer, developer, maker and technologist based in Amsterdam, Netherlands. He's always looking for great new projects!
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 twitter:
@@ -35,22 +35,22 @@ location: Amsterdam, Netherlands
 
 services:
   - title: UX Writing
-    description: Let your interface speak. Brilliant copy stands out in a world where voice is an afterthought in the design process, letting your product shine. 
+    description: Give your product a voice. UX Writing can help your users get more done, and make your product easier to use. 
     icon: far fa-pencil
     color: blue
   - title: Content
-    description: Get your product in front of the right people. I'll help you build content that readers love, and converts them into customers.
+    description: Get your product in front of the right people. I'll help you build content that readers love and converts into customers.
     icon: far fa-rocket
     color: green
   - title: Technical Product Marketing
-    description: Developers can smell marketing a mile away. Get your tools in the hands of the right people, with authentic marketing that doesn't stink.
+    description: Developers can smell marketing a mile away. Get your tools in the hands of the right people, with authentic marketing that doesn't put them off.
     icon: far fa-bullhorn
     color: purple
 
 career:
   - title: Founder / Freelancer
     company: Charged
-    description: I help brands with copy, strategy and more, as a for-hire resource. Working with a small group of companies closely to help them get the most of their resources, and grow products with great copy.
+    description: I help brands with copy, strategy and more, as a for-hire resource. Working with a group of companies in every stage to help them get the most from their resources, and grow products with great copy.
     icon: "/images/career/charged.jpg"
     color: charged
     dates: 2017 - Present
