@@ -2,7 +2,7 @@
 layout: post
 title:  "Where does UX Writing fit with design?"
 date:   2019-03-06 11:56:39 +0300
-categories: ux writing advice
+categories: ux-writing
 image: /images/uxwriting.png
 description: "Words are one of the materials in a designer's toolkit. Why aren't we thinking of them sooner?"
 ---
