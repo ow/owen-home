@@ -11,6 +11,8 @@ It feels like there's a new flashy job title every year to keep up within the te
 
 There's an important distinction between traditional copy-writing roles and where a UX writer sits on a team, as well as what they actually *do* in their role. I saw a [thread](https://twitter.com/scottkubie/status/1101239345573519365) kicking around about this being commonly misunderstood, which can lead to painful misunderstandings in the space without clarity.
 
+<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Your first job, always, is to write user-centered content. If it&#39;s not helping someone understand something, use something, learn something–if its sole function is to &quot;express the brand&quot;, you have likely erred. Doesn&#39;t mean you can&#39;t have fun, or add delight, but it&#39;s secondary.</p>&mdash; Scott Kubie (@scottkubie) <a href="https://twitter.com/scottkubie/status/1101242356790149121?ref_src=twsrc%5Etfw">February 28, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 As an *external* UX writer, I get a peek into this at all stages of companies, which helps understand where the need truly lies. Here's a breakdown of where UX writers sit in an organization, and how they're different:
 
 ### It's all about the user
