@@ -7,16 +7,13 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto ml-0 ml-md-4 d-flex align-items-middle">
-				{% for page in site.pages %}
-					{% if page.title %}
+				{% for item in site.nav %}
+					{% if item.title %}
 						<li class="nav-item mr-5 d-flex align-items-center">
-							<a class="nav-link" href="{{ page.url | relative_url }}">{{ page.title }}</a>
+							<a class="nav-link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
 						</li>
 					{% endif %}
 				{% endfor %}
-				<li class="nav-item mr-5">
-					<a href="mailto:hello@char.gd" class="nav-link">Email me</a>
-				</li>
 				</ul>
 				<ul class="social navbar-nav d-none d-sm-flex">
 					<li class="nav-item">

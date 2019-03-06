@@ -105,6 +105,22 @@ projects:
     emoji: 🎤
     url: https://char.gd/podcast
 
+nav:
+- title: About 
+  url: about
+
+- title: Blog
+  url: blog
+
+- title: Services
+  url: services
+
+- title: My work
+  url: work
+
+- title: Contact
+  url: contact
+
 collections:
   work:
     output: false
