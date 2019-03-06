@@ -33,7 +33,7 @@ If you're looking for a voice or quirky marketing copy shoehorned into your prod
 
 It's totally fine to be friendly and try to have a personality. Just don't over do it, and end up using humor as a crutch for good copy.
 
-### We're not here to convert new users
+### We're not here to convert 
 
 If we are, you missed the _UX_ part of the role, and are confusing the job for a copywriter. A UX Writer may possess some of the skills required to do marketing copywriting, but that isn't why we're here, and that's a whole job on its own.
 
@@ -43,7 +43,8 @@ The disciplines are separate for a reason: once your users have signed up, they 
 
 Copywriters are practicing the 'Always Be Converting' discipline, but we're here to 'Always Be Clear' (or, perhaps, Always Be Concise). We want to keep users and have them understand how to use your product, not push them away.
 
- ### This is about more than just words
+### This is about more than just words
+
 UX Writing often goes beyond just the words and microcopy in your app that you see. It can easily encompass complex tasks like direct feedback on the layout of the signup flow, placement of buttons or even a redesign of a page.
 
 That's why it's useful to include UX Writers at the *start* of a design sprint, and why we're sitting at the table with the designers rather than the marketing team. UX Writing is about using copy as a design material that adds to the user's experience, adding the words as a consideration to the design process. Adding UX Writing in at the very start helps make it easier, just like you wouldn't write the ending for a book before the first chapter. 
