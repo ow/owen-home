@@ -21,7 +21,7 @@ To install this project, you'll need the following things installed on your mach
 
 **Development mode**
 
-This will give you file watching, browser synchronisation, auto-rebuild, CSS injecting etc. It's pretty badly coded at the moment, but it works! 
+This will give you file watching, browser synchronisation, auto-rebuild, CSS injecting etc. It's pretty badly configured at the moment, but it works! 
 
 ```shell
 $ npm run start
@@ -36,6 +36,8 @@ $ npm run deploy
 
 ## License
 
-Feel free to use my theme, but please do not use my images, logo or other copy on your own site. This is built on top of Jekyll, Bootstrap 4, and my own custom CSS. To change things around, just start in main.scss, and tweak the brand colors there.
+Feel free to use my theme, but please do not use my images, logo or other copy on your own site. **In order to license this code, the only thing I require you to do is link back to this repository in the footer like this: `[Site style created by Owen Williams.](https://github.com/ow/owen-home)`** 
+
+For context: this is built on top of Jekyll, Bootstrap 4, and my own custom CSS. To change things around, just start in main.scss, and tweak the brand colors there.
 
 The data for everything is stored in either config.yml, or in a custom collection such as `_work` directory. The only exception is the brand logos, which are currently hard-coded.
