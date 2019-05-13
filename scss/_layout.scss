@@ -2,6 +2,11 @@
  * Site header
  */
 
+ .btn-outline-primary {
+    &:hover {
+        color: white !important;
+    }
+}
 
 .site-head {
     position: relative;
@@ -144,4 +149,8 @@
 
 .end-box {
 	margin-bottom: -3rem !important;
+}
+
+img {
+    max-width: 100%;
 }
