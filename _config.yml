@@ -21,18 +21,22 @@ url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 twitter:
   username: ow
+author:
+  twitter: ow
+  picture: /images/itme.jpg
 social:
+    name: Owen Williams
     links:
       - https://twitter.com/ow
       - https://github.com/ow
       - https://instagram.com/findingnewo
+      - https://www.youtube.com/channel/UCZeXk3K3Ow8Peu_KnDjxjhQ
 logo: /images/card.png
 twitter_username: ow
 github_username:  ow
 telegram: https://t.me/owenwil
 instagram: https://instagram.com/findingnewo
 location: Amsterdam, Netherlands
-
 services:
   - title: UX Writing
     description: Give your product a voice. UX Writing can help your users get more done, and make your product easier to use. 
