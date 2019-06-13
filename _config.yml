@@ -96,12 +96,12 @@ projects:
     action: Subscribe now
     emoji: ⚡
     url: https://char.gd/recharged
-  - title: Call Me Maybe
-    description: Phone calls are disruptive and archaic. Screen your calls, get a SMS with the reason to talk.
+  - title: Write Together
+    description: Learn to write through the power of habit-building. It's a social platform that encourages writing anything.
     color: call-me-maybe
-    action: Join waitlist
-    emoji: 📱
-    url: https://callmemaybe.app
+    action: Try it now
+    emoji: 📝
+    url: https://writetogether.space
   - title: Podcast
     description: A tech podcast with a difference. Three hosts, casual conversations about the state of the industry.
     color: podcast
