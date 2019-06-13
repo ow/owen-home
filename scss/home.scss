@@ -43,21 +43,29 @@
     min-width: 75px;
     width: 75px;
     height: 75px;
-    font-size: 1.2em;
+    font-size: 1.4em;
     text-align: center;
     color: white;
     margin-right: 18px;
 
     &.blue {
-        background: $brand-color;
+        background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
     }
 
     &.purple {
-        background: $brand-secondary;
+        background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
     }
 
     &.green {
-        background: $brand-tertiary;
+        background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    }
+
+    &.pink {
+        background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    &.yellow {
+        background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
     }
 
     i {

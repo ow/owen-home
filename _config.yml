@@ -46,10 +46,14 @@ services:
     description: Get your product in front of the right people. I'll help you build content that readers love and converts into customers.
     icon: far fa-rocket
     color: green
+  - title: Product
+    description: Building a design system, internal marketing or a new product? I've helped companies big and small with words and code to get it done.
+    icon: far fa-laptop-code
+    color: pink
   - title: Technical Product Marketing
     description: Developers can smell marketing a mile away. Get your tools in the hands of the right people, with authentic marketing that doesn't put them off.
     icon: far fa-bullhorn
-    color: purple
+    color: yellow
 
 career:
   - title: Founder / Freelancer

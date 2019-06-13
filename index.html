@@ -32,21 +32,19 @@ seo:
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-7">
 			{% for service in site.services %}
-				<div class="thing d-flex align-items-center mb-5">
-					<div class="service-box {{ service.color }} d-flex align-items-center"><i class="{{ service.icon }}"></i></div>
-					<div class="pl-1">
-						<h6 class="mb-1 font-weight-bold">{{ service.title }}</h6>
-						<p class="mb-0">{{ service.description }}</p>
-					</div>
+			<div class="col-lg-6 col-12 mt-2">
+				<div class="thing mb-5">
+					<div class="service-box {{ service.color }} d-flex align-items-center mb-3"><i class="{{ service.icon }}"></i></div>
+					<h6 class="mb-1 font-weight-bold">{{ service.title }}</h6>
+					<p class="mb-0">{{ service.description }}</p>
 				</div>
+			</div>
 			{% endfor %}
-    </div>
 	</div>
 	<div class="row">
-		<div class="col-lg-6 mt-4">
-			<h5>Need help with your words?</h5>
+		<div class="col-lg-7  mt-4">
+			<h5>Need help with your words, code, or somewhere in-between?</h5>
 			<a class="btn btn-outline-primary" href="/services" role="button" >Learn about how I can help ></a>    
 		</div>
 	</div>
