@@ -67,8 +67,6 @@ gulp.task('css', () => {
     'bb >= 10'
   ];
 
-  gulp.src('css/fontawesome-all.min.css').pipe(gulp.dest('_site/css'));
-
   return gulp.src('css/main.css')
     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
     .pipe($.cssnano())
