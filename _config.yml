@@ -19,6 +19,7 @@ description: > # this means to ignore newlines until "baseurl:"
   Freelance UX writer, developer, and maker in Amsterdam, Netherlands. He's always looking for great new projects!
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
+client_availability: false
 twitter:
   username: ow
 author:

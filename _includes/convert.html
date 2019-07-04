@@ -11,7 +11,11 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-6">
-					<p class="text-light">If you're looking for words, marketing, or something in between, say hello! I'm always looking for a great fit.</p>
+					{% if site.client_availability == true %}
+						<p class="text-light">If you're looking for words, marketing, or something in between, say hello! I'm always looking for a great fit.</p>
+					{% else %}
+						<p class="text-light">Sadly, I'm not looking for new clients right now. But, I'm always interested in new ideas or hearing what you're working on, regardless. Say hello!</p>
+					{% endif %}
 					<div class="mt-3">
 							<a class="btn btn-outline-light" href="mailto:hello@char.gd" role="button" >Say hello</a>
 							<a class="btn btn-outline-light ml-3" href="/services" role="button" >Learn more</a>    
