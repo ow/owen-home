@@ -6,6 +6,7 @@ layout: default
 	{% if page.video %}
 	<video autoplay loop id="video-background" muted plays-inline>
 		<source src="{{page.video}}" type="video/webm">
+		<source src="{{page.videoFallback}}" type="video/mp4" />
 	</video>
 	
 	{% endif %}

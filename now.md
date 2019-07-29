@@ -6,6 +6,7 @@ permalink: /now/
 description: Here's what Owen is up to right now.
 image: "/images/card.png"
 video: "/images/drone.webm"
+videoFallback: "/images/drone.mp4"
 ---
 *Last updated: July 29, 2019*
 
