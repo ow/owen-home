@@ -118,6 +118,9 @@ nav:
 - title: About 
   url: about
 
+- title: Now 
+  url: now
+
 - title: Blog
   url: blog
 

@@ -1,5 +1,5 @@
 <header class="site-head">
-	<nav class="navbar navbar-expand-lg navbar-light">
+	<nav class="navbar navbar-expand-lg {% if page.video %}navbar-dark{% else %}navbar-light{% endif %}">
 		<div class="container">
 			<a class="navbar-brand" href="/">@ow</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,7 +15,7 @@
 					{% endif %}
 				{% endfor %}
 				</ul>
-				<ul class="social navbar-nav d-none d-sm-flex">
+				<ul class="social navbar-nav d-none d-lg-flex">
 					<li class="nav-item">
 						<a class="nav-link" href="https://twitter.com/{{ site.twitter_username }}" ><i class="fab fa-twitter"></i></a>
 					</li>

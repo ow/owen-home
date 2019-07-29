@@ -1,16 +1,35 @@
 ---
 layout: default
 ---
+<div class="jumbotron mb-0 {% if page.video %}jumbo-wrap{% endif %}">
+	<div class="dim"></div>
+	{% if page.video %}
+	<video autoplay loop id="video-background" muted plays-inline>
+		<source src="{{page.video}}" type="video/webm">
+	</video>
+	
+	{% endif %}
+	<div class="intro py-5">
+		<div class="container py-5 {% if page.video %}my-5{% endif %}">
+			<div class="row">
+				<div class="col-lg-6">
+						<h1>{% if page.header %}{{ page.header }}{% else %}{{ page.title }}{% endif %}</h1>
+						<p>{% if page.subheader %}{{ page.subheader }}{% endif %}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3 col-6">
+					<hr class="my-4">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="post container my-5"> 
-  <header class="post-header row"> 
-		<div class="col-lg-8">
-			<h1 class="post-title">{% if page.header %}{{ page.header }}{% else %}{{ page.title }}{% endif %}</h1>
-		</div> 
-  </header>
-
   <article class="row post-content">
 		<div class="col-lg-8">
 			{{ content }}
 		</div>
   </article>
 </div>
+

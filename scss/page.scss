@@ -1,3 +1,46 @@
+.jumbo-wrap {
+	position: relative;
+	background: transparent;
+	color: white;
+	margin-top: -60px;
+}
+
+.dim {
+	/*  making the video fullscreen  */
+		background: rgba(38, 12, 12, 0.24);
+		position: absolute;
+		right: 0; 
+		bottom: 0;
+		min-width: 100%; 
+		min-height: 100%;
+		height: auto;
+		z-index: -99;
+	}
+
+#video-background {
+/*  making the video fullscreen  */
+	position: absolute;
+	right: 0; 
+	bottom: 0;
+	min-width: 100%; 
+	min-height: 100%;
+	height: auto;
+	z-index: -100;
+}
+
+.navbar-dark {       
+	@include media-breakpoint-up(xs) { 
+			background: $brand-color;
+	}
+
+	@include media-breakpoint-up(lg) { 
+		background: transparent;
+	}
+
+	
+}
+
+
 .job-box {
 	@extend .service-box;
  
