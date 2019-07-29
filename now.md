@@ -45,4 +45,4 @@ I don't know really what the aim is, but I'm tired of being interrupted all day 
 </div>
 </div>
 
-<small markdown="1">P.S—This page was inspired by the ['Now' page project.](https://sivers.org/nowff)</small>
+<small markdown="1">P.S—This page was inspired by the ['Now' page project.](https://sivers.org/nowff) Also, the drone video at the top of the page was shot on a Skydio R1 at the Three Sisters in New Zealand.</small>
