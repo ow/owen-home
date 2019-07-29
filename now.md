@@ -29,14 +29,14 @@ For a long time I've found myself frustrated by how distracting the internet and
 I don't know really what the aim is, but I'm tired of being interrupted all day and feeling fragemented by the bleeps and boops that just never stop.
 
 <div class="row mt-3">
-<div class="col-6" markdown="1">
+<div class="col-12 col-md-6" markdown="1">
 ### I'm listening to...
 
 - [I'm Good — Wafia](https://open.spotify.com/album/77VKAhpS4mDOFRGSVqTghv?si=zTV7VxN0QQq7469DMNdK5g)
 - [Little by Little — Lane8](https://open.spotify.com/playlist/078E5Nx5UoBcaJdtjKnpi4?si=5QETJRAYRWugZ6r_dlruHw)
 - [Avalon — Gabrielle Aplin](https://open.spotify.com/album/5SrjK7Kd2bhNDS9ORdvUUw?si=o527kjOfSpWqS2Kd4OIasQ)
 </div>
-<div class="col-6" markdown="1">
+<div class="col-6 col-12 col-md-6" markdown="1">
 ### Some great podcasts
 
 - [Darknet Diaries](https://open.spotify.com/show/4XPl3uEEL9hvqMkoZrzbx5?si=GG7hKJyYRui0xtELVEYyIg)
