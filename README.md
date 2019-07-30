@@ -1,6 +1,6 @@
 # owen
 
-> My website, running here: https://owenwillia.ms.
+ My website, running [here](https://owenwillia.ms) and a handy starter/template for anyone looking to build a portfolio/freelance website. You can use this to build your own site!
 
 ![https://i.imgur.com/ijqtbvb.jpg](https://i.imgur.com/ijqtbvb.jpg)
 
