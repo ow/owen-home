@@ -2,7 +2,7 @@
 
  My website, running [here](https://owenwillia.ms) and a handy starter/template for anyone looking to build a portfolio/freelance website. You can use this to build your own site!
 
-![https://i.imgur.com/ijqtbvb.jpg](https://i.imgur.com/ijqtbvb.jpg)
+![https://i.char.gd/2019/07/chrome_2019-07-30_11-42-47.png](https://i.char.gd/2019/07/chrome_2019-07-30_11-42-47.png)
 
 ## Prerequisites
 
