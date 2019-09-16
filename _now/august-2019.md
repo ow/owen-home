@@ -1,15 +1,12 @@
 ---
-layout: page
-title: Now
+layout: now
 header: What Owen is doing now 
-permalink: /now/
-description: Here's what Owen is up to right now.
+description: Here's what Owen was up to in August.
 image: "/images/card.png"
 video: "/images/drone.webm"
 videoFallback: "/images/drone.mp4"
+date: 2019-08-01 11:56:39 +0300
 ---
-*Last updated: July 29, 2019*
-
 ## Moving to Canada
 
 We're [moving to Toronto, Canada](https://twitter.com/ow/status/1154454769894744066) in August!  It's sad to leave Amsterdam, which has been a fabulous place to live, but it's time for something new after living in Europe for almost five years. 

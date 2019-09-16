@@ -136,7 +136,17 @@ nav:
 collections:
   work:
     output: false
+  now:
+    permalink: /now/:path/
+    output: true
 
+autopages:
+  collections:
+      layouts: 
+        - 'now.html'
+      title: 'Posts in Now :coll' # :coll is replaced by the collection name
+      permalink: '/collection/:coll'
+      
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
