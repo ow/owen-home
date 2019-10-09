@@ -57,12 +57,18 @@ services:
     color: yellow
 
 career:
+  - title: Content Strategy Manager
+    company: Shopify
+    description: I lead a team of talented content strategists working on hairy developer platform problems at Shopify. We're a part of the UX discipline, and are working to build the best developer experience possible.
+    icon: "images/career/shopify.png"
+    color: shopify
+    dates: 2019 - Present
   - title: Founder / Freelancer
     company: Charged
     description: I help brands with copy, strategy and more, as a for-hire resource. Working with a group of companies in every stage to help them get the most from their resources, and grow products with great copy.
     icon: "/images/career/charged.jpg"
     color: charged
-    dates: 2017 - Present
+    dates: 2017 - 2019
   - title: Digital Director
     company: VanMoof
     description: <p>Built the digital marketing organization from the ground up to focus on data-driven decision making and moved app + web development in-house.</p><p>I led the engineering team, built out a digital marketing + voice strategy, and helped launch the brand into new countries (including Japan) online.</p>
@@ -75,12 +81,6 @@ career:
     icon: "/images/career/tnw.png"
     color: tnw
     dates: 2013 - 2016
-  - title: Head of marketing / growth 
-    company: Hoist
-    description: Developing marketing strategy and executing it autonomously, reaching out to developers and coding our marketing site. Use wide range of analytics tools (Mixpanel, Crazyegg, Google Analytics) to iterate in real-time on strategy.
-    icon: "/images/career/hoist.png"
-    color: hoist
-    dates: 2013 - 2014
   - title: Infrastructure/Devops Engineer
     company: Xero
     description: Engineer on critical infrastructure team responsible for scaling the platform to millions of users. Supported product team to debug issues on the platform, optimized performance and built out a deployment pipeline for high availability.
