@@ -95,12 +95,12 @@ projects:
     action: Join waitlist
     emoji: 📡
     url: https://producthunt.co/upcoming/hubble
-  - title: re:Charged
-    description: Paid morning technology briefing and community, without clickbait or advertising.
+  - title: Charged
+    description: Independent technology blog and newsletter, keeping people like you up to date with the latest trends.
     color: charged
-    action: Subscribe now
+    action: Read now
     emoji: ⚡
-    url: https://char.gd/recharged
+    url: https://char.gd/
   - title: Write Together
     description: Learn to write through the power of habit-building. It's a social platform that encourages writing anything.
     color: call-me-maybe
@@ -123,9 +123,6 @@ nav:
 
 - title: Blog
   url: blog
-
-- title: Services
-  url: services
 
 - title: My work
   url: work
