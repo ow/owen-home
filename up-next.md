@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Up Next 
-header: Hello
-description: Owen Williams is a UX Writer, developer and marketing strategist in Toronto, Canada.
+header: Up Next
+description: Up Next is a simple Chrome extension that helps you keep on top of your day.
 permalink: /up-next/
 image: "/images/card.png"
 ---
@@ -12,7 +12,9 @@ image: "/images/card.png"
 ## Up Next
 Up Next is a simple Chrome extension that shows your next calendar appointment every time you open a tab. No more opening Google Calendar to check on your meetings.
 
-Our privacy policy is available [here](/privacy).
+![Up Next Beta Screenshot](/images/up-next.png)
+
+**Up Next is currently in beta, and under development.** Our privacy policy is available [here](/privacy).
 </div>
 </div>
 </div>
