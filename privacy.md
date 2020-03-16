@@ -9,6 +9,7 @@ image: "/images/card.png"
 <div class="container mt-4">
   <div class="row">
     <div class="col-6 offset-3" markdown="1">
+    [< Back to Up Next](/up-next)
 ## Up Next: Privacy Policy
 [Up Next](/up-next) is a free extension for the Google Chrome browser that shows the next calendar appointment in your day. It currently only supports Google Calendar, and Chrome version 78 and higher.
 
