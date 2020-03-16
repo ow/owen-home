@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Up Next 
+title: Up Next | Privacy Policy
 header: Hello
 description: Owen Williams is a UX Writer, developer and marketing strategist in Toronto, Canada.
 permalink: /privacy/
@@ -9,7 +9,7 @@ image: "/images/card.png"
 <div class="container mt-4">
   <div class="row">
     <div class="col-6 offset-3" markdown="1">
-## What's Up Next?
+## Up Next: Privacy Policy
 [Up Next](/up-next) is a free extension for the Google Chrome browser that shows the next calendar appointment in your day. It currently only supports Google Calendar, and Chrome version 78 and higher.
 
 ### The privacy policy for Up Next is simple:
