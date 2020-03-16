@@ -24,6 +24,8 @@ We do not, and will not, collect any personal data. Our Chrome extension operate
 The Chrome extension does not share any data about your calendar, usage, or any other information with third parties. Any changes to this privacy policy will be posted here, and you will be notified via the Chrome extension if this occurs.
 
 If you have any questions about our privacy policy, or want to know more, contact: [owen@char.gd](mailto:owen@char.gd).
+
+_Last updated: March 15, 2020_
 </div>
   </div>
 </div>
