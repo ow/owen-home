@@ -14,9 +14,9 @@ Up Next is a simple Chrome extension that shows your next calendar appointment e
 
 [Download Up Next from the Chrome Web Store](https://chrome.google.com/webstore/detail/up-next/bheadjenigpffjihhfhbancdcolkfpeh)
 
-![Up Next Beta Screenshot](/images/up-next.png)
+![Up Next Screenshot](/images/up-next.png)
 
-**Up Next is currently in preview and under development.** Our [development roadmap is available to the public](https://www.notion.so/chargedtech/Roadmap-Known-Issues-6f699ae9339d49eeaf3cb8956e545d42), and answers to [frequently asked questions](https://www.notion.so/chargedtech/Roadmap-Known-Issues-6f699ae9339d49eeaf3cb8956e545d42) can be found here.
+**Up Next is currently in preview, pending Google's cloud team reviewing it so we can go live.** Our [development roadmap is available to the public](https://www.notion.so/chargedtech/Roadmap-Known-Issues-6f699ae9339d49eeaf3cb8956e545d42), and answers to [frequently asked questions](https://www.notion.so/chargedtech/Roadmap-Known-Issues-6f699ae9339d49eeaf3cb8956e545d42) can be found here.
 
 For support, contact: [owen@char.gd](mailto:owen@char.gd) or [ping Owen on Twitter](https://twitter.com/ow). 
 
