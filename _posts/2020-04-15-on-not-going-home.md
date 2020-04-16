@@ -1,7 +1,9 @@
 ---
 layout: post
 title:  "On (not) going home."
+description: "COVID19 forced us to consider: where is home? And should we even go?"
 date:   2020-04-15 21:56:39 +0300
+image: /images/home.jpg
 categories: personal
 ---
 COVID19 has forced many of us to make difficult decisions about our lives, jobs, and even where we live. For us, when it arrived in Canada and lockdown began in Ontario back in early March, it posed a deeply painful choice, as a person living away from New Zealand on a visa: do we go home? 
@@ -14,9 +16,9 @@ As someone living away from 'home' for so long, this presented a difficult cross
 
 Of course, such a move is not trivial when you're invested in a country and deeply bought into staying there. I have a house full of things I like, a job + team at Shopify I love, and a cat–jumping on a plane isn't that easy, let alone wise. Even if we were to consider it, such a move would be difficult to undo, given the circumstances, especially in Canada: as visaholders, if we leave the country right now, we aren't eligble to come back in until the border re-opens, a process that may take months. 
 
-But, most confronting of all was a question I'd never needed to actually grapple with: where is _home_ after so long abroad? What would it even mean to return, and try to slip back into life there, all of a sudden? New Zealand will always be toku kainga (my home) in spirit, but actually deciding to return was never something we had on any meaningful time horizon to do.
+But, most confronting of all was a question I'd never needed to actually grapple with: where is _home_ after so long abroad? What would it even mean to return, and try to slip back into life there, all of a sudden? New Zealand will always be toku kainga (my home) in spirit, but actually deciding to return was never something we had on any meaningful time horizon to do. Choosing to stay in Canada felt similarly fraught: what if someone close to us were to get sick? The choice felt impossible.
 
-In the end, the decision was fairly obvious: the right thing to do for everyone, to prevent any spread, was to stay put in Canada, no matter the temptation of a far away land that feels safe for weathering a storm like this. And in the meantime, it meant making a decision that I'd never really conciously come to in the first few years away: that here, Canada, is where we've made home, at least for now. 
+In the end, the decision was fairly clear: the right thing to do for everyone, to prevent any spread, was to stay put in Canada, no matter the temptation of a far away land that feels safe for weathering a storm like this. And in the meantime, it meant making a decision that I'd never really conciously come to in the first few years away: that here, Canada, is where we've made home, at least for now. 
 
 I know that many other kiwis around the world must have been in similar positions, and have been forced to make the same difficult choice as well. The hard truth is that it's painful to make this decision, especially when all you want is to be with family and friends on the other side of the planet. 
 
