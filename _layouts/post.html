@@ -4,6 +4,7 @@ layout: default
 <div class="post container my-5">
 	<div class="row">
 		<div class="col-lg-7">
+			<div class="crumbs"><a href="/blog">Blog</a> \ {{ page.date | date: "%Y"}} \ {{ page.title }}</div>
 			<header class="post-header">
 				<h1 class="post-title">{{ page.title }}</h1>
 				<p class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
