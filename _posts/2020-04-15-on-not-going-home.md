@@ -18,4 +18,4 @@ But, most confronting of all was a question I'd never needed to actually grapple
 
 In the end, the decision was fairly obvious: the right thing to do for everyone, to prevent any spread, was to stay put in Canada, no matter the temptation of a far away land that feels safe for weathering a storm like this. And in the meantime, it meant making a decision that I'd never really conciously come to in the first few years away: that here, Canada, is where we've made home, at least for now. 
 
-I know that many other kiwis around the world must have been in similar positions, and have been forced to make the same difficult choice as well. No matter what you decided, Kia kaha, we'll make it through this.
+I know that many other kiwis around the world must have been in similar positions, and have been forced to make the same difficult choice as well. The hard truth is that it's painful to make this decision, especially when all you want is to be with family and friends on the other side of the planet. No matter what you decided, Kia kaha, we'll make it through this.
