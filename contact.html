@@ -29,15 +29,15 @@ image: "/images/card.png"
                 <form class="mt-4" name="contact" method="POST" data-netlify="true">
                     <div class="form-group">
                         <label for="emailinputcontrol">Your name</label>
-                        <input type="text" class="form-control" id="textinputcontrol" name="name" placeholder="Jerry Seinfeld">
+                        <input type="text" class="form-control" id="textinputcontrol" name="name" placeholder="Jerry Seinfeld" required>
                     </div>
                     <div class="form-group">
                         <label for="emailinputcontrol">Email address</label>
-                        <input type="email" class="form-control" id="emailinputcontrol" name="email" placeholder="jerry@seinfeld.net">
+                        <input type="email" class="form-control" id="emailinputcontrol" name="email" placeholder="jerry@seinfeld.net" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">How can I help?</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" name="message" rows="5" placeholder="I really need help with my fish tacos. What would you do?"></textarea>
+                        <textarea required class="form-control" id="exampleFormControlTextarea1" name="message" rows="5" placeholder="I really need help with my fish tacos. What would you do?"></textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Send message</button>
