@@ -13,6 +13,7 @@ gem "jekyll", ">= 3.8.4"
 gem 'jekyll-seo-tag'
 gem 'jekyll-sitemap'
 gem 'jekyll-paginate-v2'
+gem "kramdown-parser-gfm"
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
