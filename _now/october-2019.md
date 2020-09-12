@@ -1,8 +1,9 @@
 ---
 layout: now
 header: What Owen is doing now 
-description: Here's what Owen was up to in October.
+description: Here's what Owen was up to in October, 2019.
 image: "/images/now-october.jpg"
+background: "/images/now-october.jpg"
 date: 2019-10-01 11:56:39 +0300
 ---
 ## Hello, Toronto!
@@ -13,7 +14,7 @@ We've been lucky enough to have friends from Amsterdam that moved here before us
 
 ## Back to work
 
-I've officially started at Shopify now and we're already knee-deep in making the world better with words for the developer experience there. As a coincedence, I'm [hiring a content strategist for my team, so join me!](https://www.shopify.com/careers/product-content-strategist-developer-experience-1ef1f0)
+I've officially started at Shopify now and we're already knee-deep in making the world better with words for the developer experience there. As a coincedence, I'm hiring a content strategist for my team, [so join me!](https://www.shopify.com/careers/product-content-strategist-developer-experience-1ef1f0)
 
 ## What even is a routine?
 

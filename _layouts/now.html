@@ -1,17 +1,20 @@
 ---
 layout: default
 ---
-<div class="jumbotron mb-0 {% if page.video %}jumbo-wrap{% endif %}">
+<div class="jumbotron mb-0 {% if page.video %}jumbo-wrap{% endif %}{% if page.background %}jumbo-wrap{% endif %}">
 	<div class="dim"></div>
 	{% if page.video %}
 	<video autoplay loop id="video-background" muted plays-inline>
 		<source src="{{page.video}}" type="video/webm">
 		<source src="{{page.videoFallback}}" type="video/mp4" />
 	</video>
-	
+	{% endif %}
+
+	{% if page.background %}
+		<div class="image-bleed" style="background: url({{ page.background }}) no-repeat center center fixed;"></div>
 	{% endif %}
 	<div class="intro py-5">
-		<div class="container py-5 {% if page.video %}my-5{% endif %}">
+		<div class="container py-5 {% if page.video %} my-5 {% endif %}">
 			<div class="row">
 				<div class="col-lg-6">
 						<h1>{% if page.header %}{{ page.header }}{% else %}{{ page.title }}{% endif %}</h1>
@@ -33,6 +36,8 @@ layout: default
 
 			{{ content }}
 		</div>
-  </article>
+	</article>
+	
+	
 </div>
 

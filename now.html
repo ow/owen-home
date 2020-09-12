@@ -6,7 +6,7 @@ description: What Owen Williams is doing now
 image: "/images/card.png"
 video: true
 ---
-{% assign items = site.now | sort: 'date' %}
+{% assign items = site.now | sort: 'date' | reverse %}
 {% assign latest = items[0] %}
 
 <div class="jumbotron mb-0 jumbo-wrap">
@@ -16,7 +16,9 @@ video: true
 		<source src="{{latest.video}}" type="video/webm">
 		<source src="{{latest.videoFallback}}" type="video/mp4" />
 	</video>
-	
+	{% endif %}
+	{% if latest.background %}
+		<div class="image-bleed" style="background: url({{ latest.background }}) no-repeat center center fixed;"></div>
 	{% endif %}
 	<div class="intro py-5">
 		<div class="container py-5 {% if page.video %}my-5{% endif %}">
@@ -43,14 +45,14 @@ video: true
 			{{ latest.content }}
 		</div>
 	</article>
-	
-	{% if forloop.length > 1 %}
+
+	{% if items | size >= 1 %}
 		<hr class="py-3" />
-		<h3>Previous Now Updates</h3>
+		<h3>Previous Now updates</h3>
 
 		{% for item in items %}
 			{% if forloop.index != 1 %}
-				<a href="{{ item.url }}">{{ item.title }}</a>
+				<p><a href="{{ item.url }}">{{ item.title }}</a>
 			{% endif %}
 		{% endfor %}
 	{% endif %}
