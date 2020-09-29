@@ -57,9 +57,9 @@ services:
     color: yellow
 
 career:
-  - title: Content Strategy Manager
+  - title: Content Design Manager
     company: Shopify
-    description: I lead a team of talented content strategists working on hairy developer platform problems at Shopify. We're a part of the UX discipline, and are working to build the best developer experience possible.
+    description: I lead a team of talented content designers working on hairy developer platform problems at Shopify. We're a part of the UX discipline at Shopify, working to build the best developer experience possible.
     icon: "images/career/shopify.png"
     color: shopify
     dates: 2019 - Present
