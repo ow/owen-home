@@ -57,9 +57,9 @@ services:
     color: yellow
 
 career:
-  - title: Content Design Manager
+  - title: UX Manager
     company: Shopify
-    description: I lead a team of talented content designers working on hairy developer platform problems at Shopify. We're a part of the UX discipline at Shopify, working to build the best developer experience possible.
+    description: I lead a team of talented UXers working on developer platform at Shopify. We're focused on building the best developer experience, from API design to developer tooling.
     icon: "images/career/shopify.png"
     color: shopify
     dates: 2019 - Present
