@@ -16,7 +16,7 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen Williams is trying to make tech friendlier with words at Shopify in Toronto, Canada. Come and say hello!
+  Owen Williams is a UX manager leading a team building tools developers love at Shopify in Toronto, Canada. He's also a developer, writer, and maker.
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 client_availability: false
