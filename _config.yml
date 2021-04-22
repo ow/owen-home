@@ -39,33 +39,33 @@ telegram: https://t.me/owenwil
 instagram: https://instagram.com/findingnewo
 location: Toronto, Canada
 services:
-  - title: UX Writing
-    description: Give your product a voice. UX Writing can help your users get more done, and make your product easier to use. 
-    icon: far fa-pencil
-    color: blue
-  - title: Content
-    description: Get your product in front of the right people. I'll help you build content that readers love and converts into customers.
+  - title: Leadership
+    description: I've lead multi-disciplinary UX teams that get things done, made up of product designers, content designers, and researchers.
     icon: far fa-rocket
     color: green
   - title: Product
     description: Building a design system, internal marketing or a new product? I've helped companies big and small with words and code to get it done.
     icon: far fa-laptop-code
     color: pink
-  - title: Technical Product Marketing
+  - title: Technical Product Go-To-Market
     description: Developers can smell marketing a mile away. Get your tools in the hands of the right people, with authentic marketing that doesn't put them off.
     icon: far fa-bullhorn
     color: yellow
+  - title: Content Design
+    description: I've helped companies from Stripe to Spotify make their products easier to use and understand with high-quality content design.
+    icon: far fa-pencil
+    color: blue
 
 career:
   - title: UX Manager
     company: Shopify
-    description: I lead a team of talented UXers working on developer platform at Shopify. We're focused on building the best developer experience, from API design to developer tooling.
+    description: Leading a multi-discipline UX team working on developer tools at Shopify. We build tools developers love, from API design to the CLI.
     icon: "images/career/shopify.png"
     color: shopify
     dates: 2019 - Present
   - title: Founder / Freelancer
     company: Charged
-    description: I help brands with copy, strategy and more, as a for-hire resource. Working with a group of companies in every stage to help them get the most from their resources, and grow products with great copy.
+    description: I helped brands with content, UX strategy and more. Working with a group of companies in every stage to help them get the most from their resources, and grow products with great copy.
     icon: "/images/career/charged.jpg"
     color: charged
     dates: 2017 - 2019
@@ -89,12 +89,6 @@ career:
     dates: 2011 - 2013
 
 projects: 
-  - title: Hubble
-    description: Custom-engineered platform for building your community, and getting paid for your work.
-    color: hubble
-    action: Join waitlist
-    emoji: 📡
-    url: https://producthunt.co/upcoming/hubble
   - title: Charged
     description: Independent technology blog and newsletter, keeping people like you up to date with the latest trends.
     color: charged
