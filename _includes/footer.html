@@ -59,9 +59,11 @@
 					<li class="font-weight-bold">Keep clicking</li>
 					{% for page in site.pages %}
 						{% if page.title %}
+						{% if page.index != true %}
 						<li class="mr-5">
 							<a class="nav-link smaller" href="{{ page.url | relative_url }}">{{ page.title }}</a>
 						</li>
+						{% endif %}
 						{% endif %}
 					{% endfor %}
 				</ul>
