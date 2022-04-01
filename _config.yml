@@ -57,12 +57,18 @@ services:
     color: blue
 
 career:
+  - title: Product Design Manager
+    company: Stripe
+    description: I lead product design for Stripe's developer experience + platform teams.
+    icon: "images/career/stripe.jpg"
+    color: stripe
+    dates: 2022 - Present
   - title: UX Manager
     company: Shopify
     description: Leading a multi-discipline UX team working on developer tools at Shopify. We build tools developers love, from API design to the CLI.
     icon: "images/career/shopify.png"
     color: shopify
-    dates: 2019 - Present
+    dates: 2019 - 2022
   - title: Founder / Freelancer
     company: Charged
     description: I helped brands with content, UX strategy and more. Working with a group of companies in every stage to help them get the most from their resources, and grow products with great copy.
