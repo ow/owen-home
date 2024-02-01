@@ -59,13 +59,13 @@ services:
 career:
   - title: Product Design Manager
     company: Stripe
-    description: I lead product design for Stripe's developer experience + platform teams.
+    description: I lead product design for Stripe’s developer experience, docs, and AI. We push the boundaries of developer tools to help our users focus more on growing their business, rather than building. 
     icon: "images/career/stripe.jpg"
     color: stripe
     dates: 2022 - Present
   - title: UX Manager
     company: Shopify
-    description: Leading a multi-discipline UX team working on developer tools at Shopify, building tools developers love, from API design to the CLI. Mostly recently, I lead the custom storefronts group working on Hydrogen and Oxygen.
+    description: I led a large UX team working on developer tools at Shopify, from API design to the CLI, and deep in the weeds of extensibility. Mostly recently, I lead the custom storefronts group working on Hydrogen and Oxygen.
     icon: "images/career/shopify.png"
     color: shopify
     dates: 2019 - 2022
