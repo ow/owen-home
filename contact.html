@@ -26,10 +26,14 @@ image: "/images/card.png"
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-6">
-                <form class="mt-4" name="contact" method="POST" data-netlify="true">
+                <form class="mt-4" name="contact" method="POST" data-netlify="true" onsubmit="return validateForm()">
                     <div class="form-group">
                         <label for="emailinputcontrol">Your name</label>
                         <input type="text" class="form-control" id="textinputcontrol" name="name" placeholder="Jerry Seinfeld" required>
+                    </div>
+                    <div class="form-group" style="display:none !important;">
+                        <label>Leave this empty</label>
+                        <input type="text" name="bot-field" id="bot-field" />
                     </div>
                     <div class="form-group">
                         <label for="emailinputcontrol">Email address</label>
@@ -43,6 +47,27 @@ image: "/images/card.png"
                         <button type="submit" class="btn btn-primary">Send message</button>
                     </div>
                 </form>
+                
+                <script>
+                function validateForm() {
+                    if (document.getElementById('bot-field').value !== '') {
+                        return false;
+                    }
+                    
+                    if (!window.formLoadTime) {
+                        window.formLoadTime = new Date().getTime();
+                    }
+                    
+                    var timeDiff = new Date().getTime() - window.formLoadTime;
+                    if (timeDiff < 3000) {
+                        return false;
+                    }
+                    
+                    return true;
+                }
+                
+                window.formLoadTime = new Date().getTime();
+                </script>
         </div>
     </div>
 </div>
