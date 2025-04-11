@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width" initial-scale="1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ "/images/favicons/apple-touch-icon.png" | relative_url }}">
@@ -12,12 +12,22 @@
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
     <link rel="manifest" href="{{ "/manifest.json" | relative_url }}">
-		<meta name="theme-color" content="#424242">
-		<meta name="google-site-verification" content="clli-zuXIqHkTVmGd6nv4NoVS8PLdrvaAtojJd-NUkc" />
-    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="google-site-verification" content="clli-zuXIqHkTVmGd6nv4NoVS8PLdrvaAtojJd-NUkc" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     {% seo %}
     
+    <script>
+      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49196912-1"></script>
     <script>
@@ -27,5 +37,4 @@
 
       gtag('config', 'UA-49196912-1');
     </script>
-
 </head>

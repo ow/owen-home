@@ -6,68 +6,71 @@ description: Get in touch with Owen about a project, idea, or just to say hi.
 permalink: /contact/
 image: "/images/card.png"
 ---
-<div class="jumbotron mb-0">
-    <div class="intro py-5">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-lg-6">
-                        <h1>{{ page.header }}</h1>
-                        <p>Let's open the conversation and see what we could do together.</p>
-                </div>
+<div class="min-h-screen py-12 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="glass rounded-2xl p-8 mb-8">
+                <h1 class="text-4xl font-bold mb-4">{{ page.header }}</h1>
+                <p class="text-lg text-slate-600 dark:text-slate-300">Let's open the conversation and see what we could do together.</p>
             </div>
-            <div class="row">
-                <div class="col-lg-3 col-6">
-                    <hr class="my-4">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-md-6">
-                <form class="mt-4" name="contact" method="POST" data-netlify="true" onsubmit="return validateForm()">
-                    <div class="form-group">
-                        <label for="emailinputcontrol">Your name</label>
-                        <input type="text" class="form-control" id="textinputcontrol" name="name" placeholder="Jerry Seinfeld" required>
+
+            <div class="glass rounded-2xl p-8">
+                <form class="space-y-6" name="contact" method="POST" data-netlify="true" onsubmit="return validateForm()">
+                    <div>
+                        <label for="name" class="block text-sm font-medium">Your name</label>
+                        <input type="text" id="name" name="name" required
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="Jerry Seinfeld">
                     </div>
-                    <div class="form-group" style="display:none !important;">
+
+                    <div class="hidden">
                         <label>Leave this empty</label>
                         <input type="text" name="bot-field" id="bot-field" />
                     </div>
-                    <div class="form-group">
-                        <label for="emailinputcontrol">Email address</label>
-                        <input type="email" class="form-control" id="emailinputcontrol" name="email" placeholder="jerry@seinfeld.net" required>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium">Email address</label>
+                        <input type="email" id="email" name="email" required
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="jerry@email.com">
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">How can I help?</label>
-                        <textarea required class="form-control" id="exampleFormControlTextarea1" name="message" rows="5" placeholder="I really need help with my fish tacos. What would you do?"></textarea>
+
+                    <div>
+                        <label for="message" class="block text-sm font-medium">How can I help?</label>
+                        <textarea id="message" name="message" rows="5" required
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="I really need help with my fish tacos. What would you do?"></textarea>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Send message</button>
+
+                    <div>
+                        <button type="submit"
+                            class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors duration-200">
+                            Send message
+                        </button>
                     </div>
                 </form>
-                
-                <script>
-                function validateForm() {
-                    if (document.getElementById('bot-field').value !== '') {
-                        return false;
-                    }
-                    
-                    if (!window.formLoadTime) {
-                        window.formLoadTime = new Date().getTime();
-                    }
-                    
-                    var timeDiff = new Date().getTime() - window.formLoadTime;
-                    if (timeDiff < 3000) {
-                        return false;
-                    }
-                    
-                    return true;
-                }
-                
-                window.formLoadTime = new Date().getTime();
-                </script>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+function validateForm() {
+    if (document.getElementById('bot-field').value !== '') {
+        return false;
+    }
+    
+    if (!window.formLoadTime) {
+        window.formLoadTime = new Date().getTime();
+    }
+    
+    var timeDiff = new Date().getTime() - window.formLoadTime;
+    if (timeDiff < 3000) {
+        return false;
+    }
+    
+    return true;
+}
+
+window.formLoadTime = new Date().getTime();
+</script>

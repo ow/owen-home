@@ -1,88 +1,71 @@
-<footer class="site-footer mt-5">
+<footer>
+    <div class="glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- About section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold">{{ site.title }} 👩‍💻</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Owen is a Product Design Manager at Stripe, and person on the internet. Say hello!</p>
+                    
+                    <div class="space-y-3">
+                        {% if site.location %}
+                        <a href="#" class="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                            <i class="fas fa-map-marker w-5"></i>
+                            <span class="text-sm">{{ site.location }}</span>
+                        </a>
+                        {% endif %}
+                        
+                        <a href="/contact" class="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span class="text-sm">Email me</span>
+                        </a>
+                        
+                        {% if site.github_username %}
+                        <a href="https://github.com/{{ site.github_username }}" class="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                            <i class="fab fa-github w-5"></i>
+                            <span class="text-sm">@{{ site.github_username }}</span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if site.twitter_username %}
+                        <a href="https://twitter.com/{{ site.twitter_username }}" class="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                            <i class="fab fa-twitter w-5"></i>
+                            <span class="text-sm">@{{ site.twitter_username }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3">
-        <ul class="contact-list">
-					<li class="font-weight-bold">{{ site.title }} 👩‍💻 </li>
-					<li class="text smaller">Owen is a Product Design Manager at Stripe, and person on the internet. Say hello!</li>
-        </ul>
-				<ul class="social-media-list smaller">
-						{% if site.location %}
-						<li>
-							<a href="#">
-								<div class="icon">
-									<i class="fas fa-map-marker"></i>
-								</div>
-	
-								<span class="username">{{ site.location }}</span>
-							</a>
-						</li>
-						{% endif %}
-						<li>
-								<a href="/contact">
-									<div class="icon">
-										<i class="fas fa-envelope"></i>
-									</div>
-									<span class="username">Email me</span>
-								</a>
-							</li>
-	
-							{% if site.github_username %}
-							<li>
-								<a href="https://github.com/{{ site.github_username }}">
-									<div class="icon  icon--github">
-										<i class="fab fa-github"></i>
-									</div>
-		
-									<span class="username">@{{ site.github_username }}</span>
-								</a>
-							</li>
-							{% endif %}
-		
-							{% if site.twitter_username %}
-							<li>
-								<a href="https://twitter.com/{{ site.twitter_username }}">
-									<div class="icon icon--twitter">
-										<i class="fab fa-twitter"></i>
-									</div>
-		
-									<span class="username">@{{ site.twitter_username }}</span>
-								</a>
-							</li>
-							{% endif %}
-						</ul>
-      </div>
+                <!-- Navigation -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold">Keep clicking</h3>
+                    <div class="space-y-2">
+                        {% for page in site.pages %}
+                            {% if page.title %}
+                            {% if page.index != true %}
+                            <a href="{{ page.url | relative_url }}" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                                {{ page.title }}
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
 
-      <div class="col-lg-2 offset-lg-1 d-none d-sm-block">
-				<ul class="navbar-nav mr-auto">
-					<li class="font-weight-bold">Keep clicking</li>
-					{% for page in site.pages %}
-						{% if page.title %}
-						{% if page.index != true %}
-						<li class="mr-5">
-							<a class="nav-link smaller" href="{{ page.url | relative_url }}">{{ page.title }}</a>
-						</li>
-						{% endif %}
-						{% endif %}
-					{% endfor %}
-				</ul>
-			</div>
-			
-			<div class="col-lg-2 offset-lg-1 d-none d-sm-block">
-				<ul class="navbar-nav mr-auto">
-					<li class="font-weight-bold">Latest words</li>
-					{% for post in site.posts %}
-						{% if post.title %}
-						<li class="mr-5">
-							<a class="nav-link smaller" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-						</li>
-						{% endif %}
-					{% endfor %}
-				</ul>
-			</div>
+                <!-- Latest posts -->
+                <div class="space-y-4 lg:col-span-2">
+                    <h3 class="text-lg font-bold">Latest words</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for post in site.posts limit:4 %}
+                            {% if post.title %}
+                            <a href="{{ post.url | relative_url }}" class="glass-hover rounded-lg p-4 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200">
+                                {{ post.title }}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-  </div>
-
 </footer>

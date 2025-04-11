@@ -1,41 +1,23 @@
 {
-  "name": "owen",
+  "name": "owen-website",
   "version": "1.0.0",
-  "description": "My website.",
+  "description": "Owen's personal website",
   "scripts": {
-    "start": "gulp serve",
-    "build": "gulp build",
-    "deploy": "gulp deploy"
+    "build:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --minify",
+    "watch:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --watch",
+    "dev": "concurrently \"npm run watch:css\" \"bundle exec jekyll serve --livereload\""
   },
   "author": "ow",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "browser-sync": "^2.21.0",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^4.0.0",
-    "gulp-babel": "^7.0.0",
-    "gulp-clean": "^0.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-replace": "^0.6.1",
-    "gulp-gh-pages": "^0.5.4",
-    "gulp-htmlmin": "3.0.0",
-    "gulp-imagemin": "^4.0.0",
-    "gulp-load-plugins": "1.5.0",
-    "gulp-sass": "^3.1.0",
-    "gulp-shell": "^0.6.3",
-    "gulp-uglify": "^3.0.0",
-    "sw-precache": "^5.2.0",
-    "sw-toolbox": "^3.6.0",
-    "run-sequence": "^2.2.0"
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ow/owen-home"
-  },
-  "dependencies": {
-    "bootstrap": "^4.1.3"
   }
 }

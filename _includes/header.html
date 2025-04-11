@@ -1,32 +1,94 @@
-<header class="site-head">
-	<nav class="navbar navbar-expand-lg {% if page.video %}navbar-dark{% else %}navbar-light{% endif %}">
-		<div class="container">
-			<a class="navbar-brand" href="/">@ow</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto ml-0 ml-md-4 d-flex align-items-middle">
-				{% for item in site.nav %}
-					{% if item.title %}
-						<li class="nav-item mr-5 d-flex align-items-center">
-							<a class="nav-link" href="{{ item.url | relative_url }}">{{ item.title }}</a>
-						</li>
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full bg-transparent border-b border-transparent" id="main-header">
+	<div class="w-full">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<nav class="flex items-center justify-between h-16">
+				<div class="flex-shrink-0">
+					<a href="/" class="text-2xl font-bold text-white hover:text-sky-300 transition-colors duration-200">
+						{{ site.title }}
+					</a>
+				</div>
+
+				<!-- Desktop menu -->
+				<div class="hidden md:flex md:items-center md:space-x-8">
+					{% for page in site.pages %}
+						{% if page.title %}
+							{% if page.index != true %}
+								<a href="{{ page.url | relative_url }}" 
+								   class="text-white hover:text-sky-300 transition-colors duration-200">
+									{{ page.title }}
+								</a>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				</div>
+
+				<!-- Mobile menu button -->
+				<div class="md:hidden">
+					<button type="button" 
+							class="text-white hover:text-sky-300 transition-colors duration-200"
+							aria-controls="mobile-menu" 
+							aria-expanded="false"
+							onclick="toggleMobileMenu()">
+						<span class="sr-only">Open main menu</span>
+						<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						</svg>
+					</button>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+	<!-- Mobile menu -->
+	<div class="md:hidden hidden w-full" id="mobile-menu">
+		<div class="w-full bg-slate-900/95 backdrop-blur-sm">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+				{% for page in site.pages %}
+					{% if page.title %}
+						{% if page.index != true %}
+							<a href="{{ page.url | relative_url }}" 
+							   class="block px-3 py-2 text-white hover:text-sky-300 transition-colors duration-200">
+								{{ page.title }}
+							</a>
+						{% endif %}
 					{% endif %}
 				{% endfor %}
-				</ul>
-				<ul class="social navbar-nav d-none d-lg-flex">
-					<li class="nav-item">
-						<a class="nav-link" href="https://twitter.com/{{ site.twitter_username }}" ><i class="fab fa-twitter"></i></a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/{{ site.github_username }}"><i class="fab fa-github"></i></a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ site.instagram }}"><i class="fab fa-instagram"></i></a>
-					</li>
-				</ul>
 			</div>
 		</div>
-	</nav>
+	</div>
 </header>
+
+<script>
+	// Handle header scroll effect
+	const header = document.getElementById('main-header');
+	let lastScroll = 0;
+
+	window.addEventListener('scroll', () => {
+		const currentScroll = window.pageYOffset;
+		
+		if (currentScroll > 50) {
+			header.classList.add('backdrop-blur-md', 'bg-white/70', 'dark:bg-slate-900/70');
+			header.classList.remove('bg-transparent', 'text-white', 'border-transparent');
+			header.classList.add('border-slate-900/10', 'dark:border-slate-50/10');
+			header.querySelectorAll('a').forEach(link => {
+				link.classList.remove('text-white', 'hover:text-sky-300');
+				link.classList.add('text-slate-900', 'dark:text-white', 'hover:text-sky-600', 'dark:hover:text-sky-400');
+			});
+		} else {
+			header.classList.remove('backdrop-blur-md', 'bg-white/70', 'dark:bg-slate-900/70', 'border-slate-900/10', 'dark:border-slate-50/10');
+			header.classList.add('bg-transparent', 'text-white', 'border-transparent');
+			header.querySelectorAll('a').forEach(link => {
+				link.classList.add('text-white', 'hover:text-sky-300');
+				link.classList.remove('text-slate-900', 'dark:text-white', 'hover:text-sky-600', 'dark:hover:text-sky-400');
+			});
+		}
+		
+		lastScroll = currentScroll;
+	});
+
+	// Handle mobile menu toggle
+	function toggleMobileMenu() {
+		const mobileMenu = document.getElementById('mobile-menu');
+		mobileMenu.classList.toggle('hidden');
+	}
+</script>

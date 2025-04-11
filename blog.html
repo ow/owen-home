@@ -5,38 +5,37 @@ permalink: /blog/
 description: Read Owen Williams' blog for insights on freelancing, coding and more.
 image: "/images/card.png"
 ---
+<div class="min-h-screen py-12 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <div class="glass rounded-2xl p-8 mb-12">
+                <h1 class="text-4xl font-bold mb-4">Latest Posts</h1>
+                <p class="text-lg text-slate-600 dark:text-slate-300">Thoughts on design, development, and the intersection of both.</p>
+            </div>
 
-<div class="blog container my-5">
-		<div class="row">
-			<div class="col-lg-6">
-				<h1 class="page-heading">Latest Posts</h1>
-			</div>
-		</div>
-    
-		<div class="row"> 
-			<div class="col-lg-7">
-				<div class="post-list">
-						{% for post in site.posts %}
-							<div class="post">
-								<span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-				
-								<h2>
-									<a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-								</h2>
-								<p>{{ post.description | escape }}</p>
-							</div>
-						{% endfor %}
-						</div>
-			</div>
-		</div>
-    
-  
-		<div class="row mt-5">
-			<div class="col-lg-6">
-				<h6 class="font-weight-bold">Want more?</h6>
-				<p class="rss-subscribe">Subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
-			</div>
-		</div>
-  
-  </div>
+            <div class="space-y-12">
+                {% for post in site.posts %}
+                <article class="glass rounded-2xl p-6 glass-hover">
+                    <time datetime="{{ post.date | date: "%Y-%m-%d" }}" class="text-sm text-slate-500 dark:text-slate-400">
+                        {{ post.date | date: "%b %-d, %Y" }}
+                    </time>
+                    <h2 class="text-2xl font-bold mt-2 mb-3">
+                        <a href="{{ post.url | relative_url }}" class="hover:text-blue-600 transition-colors duration-200">
+                            {{ post.title | escape }}
+                        </a>
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-300">{{ post.description | escape }}</p>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="glass rounded-2xl p-6 mt-12">
+                <h3 class="text-lg font-semibold mb-2">Want more?</h3>
+                <p class="text-slate-600 dark:text-slate-300">
+                    Subscribe <a href="{{ "/feed.xml" | relative_url }}" class="text-blue-600 hover:text-blue-500">via RSS</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
   

@@ -6,57 +6,185 @@ index: true
 seo:
   type: Person
 ---
-<div class="jumbotron mb-0">
-  <div class="intro py-5">
-    <div class="container py-5">
-      <div class="row">
-        <div class="col-lg-6">
-            <h1 class="display-5">Hi, I'm Owen 👋</h1>
-						<p class="lead">I'm a multi-discipline design manager with a deep technical background. I build tools developers love at Stripe, remote from Victoria, British Columbia. </p>
-						<div class="row">
-							<div class="col-6">
-								<hr class="my-4">
-							</div>
-						</div>
-				</div>
-				<div class="col-xs-6 col-lg-3 col-6 offset-lg-3">
-					<img src="/images/owenwilliams.png">
-				</div>
-      </div>
+<div class="min-h-[90vh] relative overflow-hidden flex items-center">
+    <!-- Background image with overlay -->
+    <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1600996063858-90090075d716?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D%3D" 
+             alt="Abstract technology background" 
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/85 to-slate-900/80 backdrop-blur-[2px]"></div>
     </div>
-  </div>
-</div>
-<div class="container py-5">
-    <div class="row pt-5">
-      <div class="col-lg-7 mb-3">
-        <h2>What I do</h2>
-        <p class="lead">I help developer-focused companies connect with the humans using their products.</p>
-      </div>
-    </div>
-    <div class="row">
-			{% for service in site.services %}
-			<div class="col-lg-6 col-12 mt-2">
-				<div class="thing mb-5">
-					<div class="service-box {{ service.color }} d-flex align-items-center mb-3"><i class="{{ service.icon }}"></i></div>
-					<h6 class="mb-1 font-weight-bold">{{ service.title }}</h6>
-					<p class="mb-0">{{ service.description }}</p>
-				</div>
-			</div>
-			{% endfor %}
-	</div>
-	<div class="row">
-		<div class="col-lg-7  mt-4">
-			<h5>I'm currently not accepting freelance work.</h5>
-			<p>But I'm always open to a yarn over email.</p>
-			<a class="btn btn-outline-primary" href="/contact" role="button" >Say hello</a>    
-		</div>
-	</div>
-</div>
-    
-    </div>
-	</div>
 
-<div class="bg-light">
-		{% include brands.html %}
+    <!-- Content -->
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight">
+                Designing tools developers <span class="text-sky-300">love</span>
+            </h1>
+            <p class="text-xl sm:text-2xl text-slate-200 mb-12 leading-relaxed max-w-2xl mx-auto">
+                I'm Owen, a multi-discipline design manager with a deep technical background, crafting exceptional developer experiences from Victoria, British Columbia.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="/contact" class="inline-flex items-center px-6 py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-500 transition-colors duration-200">
+                    Get in touch
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="#work" class="inline-flex items-center px-6 py-3 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-colors duration-200 backdrop-blur-sm">
+                    View my work
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative gradient at bottom -->
+    <div class="absolute bottom-0 inset-x-0 h-64 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent"></div>
 </div>
-{% include convert.html %}
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6" id="work">
+    <div class="max-w-3xl">
+        <span class="text-sky-600 dark:text-sky-400 font-medium mb-2 block">About me</span>
+        <h2 class="text-3xl font-bold mb-4">What I do</h2>
+        <p class="text-xl text-slate-600 dark:text-slate-300 mb-12">I help developer-focused companies connect with the humans using their products.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for service in site.services %}
+        <div class="glass rounded-2xl p-8 transform hover:scale-[1.02] transition-all duration-300 hover:border-sky-600/50 border border-transparent">
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 {{ service.color }} bg-opacity-10">
+                <i class="{{ service.icon }} text-base"></i>
+            </div>
+            <h3 class="text-lg font-semibold mb-3">{{ service.title }}</h3>
+            <p class="text-slate-600 dark:text-slate-300">{{ service.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Full-bleed portfolio section -->
+<div class="relative w-full bg-slate-900 pt-12 pb-8">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/0 via-slate-900/50 to-slate-900/0"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div class="max-w-2xl">
+            <span class="text-sky-400 font-medium mb-2 block">Let's get to know each other</span>
+            <h3 class="text-3xl font-bold text-white mb-4">See my work</h3>
+            <p class="text-slate-200 text-xl">I've worked with some of the most innovative tech companies, from Spotify to Stripe, DigitalOcean, IKEA, and more. Here's some examples of my work.</p>
+        </div>
+    </div>
+
+    <div id="carousel" class="flex space-x-8 overflow-x-auto pb-8 px-4 sm:px-6 lg:px-8 cursor-grab select-none">
+        <!-- Portfolio cards -->
+        <div class="shrink-0 w-[300px] sm:w-[400px] rounded-2xl overflow-hidden group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-sky-400 to-sky-600 opacity-40 transition-opacity group-hover:opacity-50"></div>
+            <img src="/images/workbench2.png" alt="Stripe Workbench" class="w-full h-[250px] sm:h-[300px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent">
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                    <a href="/work" class="block group-hover:opacity-90 transition-opacity">
+                        <h3 class="text-xl font-semibold text-white mb-2">Workbench</h3>
+                        <p class="text-slate-200 text-sm">Building a next-generation developer tool with an entirely unique UX.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 w-[300px] sm:w-[400px] rounded-2xl overflow-hidden group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 opacity-40 transition-opacity group-hover:opacity-50"></div>
+            <img src="/images/hydrogen.jpg" alt="Shopify Hydrogen" class="w-full h-[250px] sm:h-[300px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent">
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                    <a href="https://hydrogen.shopify.dev/" class="block group-hover:opacity-90 transition-opacity">
+                        <h3 class="text-xl font-semibold text-white mb-2">Hydrogen</h3>
+                        <p class="text-slate-200 text-sm">Leading UX for Shopify's headless commerce platform, building the future of commerce tools.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 w-[300px] sm:w-[400px] rounded-2xl overflow-hidden group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-400 to-indigo-600 opacity-40 transition-opacity group-hover:opacity-50"></div>
+            <img src="/images/encore.png" alt="Encore" class="w-full h-[250px] sm:h-[300px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent">
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                    <a href="/work" class="block group-hover:opacity-90 transition-opacity">
+                        <h3 class="text-xl font-semibold text-white mb-2">Encore</h3>
+                        <p class="text-slate-200 text-sm">Building a next-generation developer platform for deploying and managing cloud applications.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 w-[300px] sm:w-[400px] rounded-2xl overflow-hidden group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-purple-600 opacity-40 transition-opacity group-hover:opacity-50"></div>
+            <img src="/images/argo.png" alt="Shopify Extensibility" class="w-full h-[250px] sm:h-[300px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent">
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                    <a href="/work" class="block group-hover:opacity-90 transition-opacity">
+                        <h3 class="text-xl font-semibold text-white mb-2">Shopify Extensibility</h3>
+                        <p class="text-slate-200 text-sm">Transforming how developers extend Shopify's platform with third-party apps and marketplace solutions.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 w-[300px] sm:w-[400px] rounded-2xl overflow-hidden group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-pink-400 to-pink-600 opacity-40 transition-opacity group-hover:opacity-50"></div>
+            <img src="/images/portfolio/spotify.png" alt="Spotify for Artists" class="w-full h-[250px] sm:h-[300px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent">
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                    <a href="/work" class="block group-hover:opacity-90 transition-opacity">
+                        <h3 class="text-xl font-semibold text-white mb-2">Spotify for Artists</h3>
+                        <p class="text-slate-200 text-sm">Helping artists understand and grow their audience.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const carousel = document.getElementById('carousel');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            carousel.style.cursor = 'grabbing';
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
+            carousel.style.cursor = 'grab';
+        });
+
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
+            carousel.style.cursor = 'grab';
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = x - startX;
+            carousel.scrollBy({
+                left: -walk,
+                behavior: 'instant'
+            });
+            startX = x;
+        });
+    });
+</script>
+
+<div class="w-full">
+    {% include brands.html %}
+</div>
+
+<div class="w-full">
+    {% include convert.html %}
+</div>

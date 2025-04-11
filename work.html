@@ -8,58 +8,55 @@ image: "/images/card.png"
 seo:
   type: Person
 ---
-<div class="jumbotron mb-0">
-		<div class="intro py-5">
-			<div class="container py-5">
-				<div class="row">
-					<div class="col-lg-6">
-							<h1>{{ page.header }}</h1>
-							<p>Over the last few years, I've worked with some of the best global brands and startups to help them craft beautiful content, strategy or just something new. Here's a few examples.</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-3 col-6">
-						<hr class="my-4">
-					</div>
-				</div>
-			</div>
-		</div>
+<div class="min-h-[50vh] py-12 sm:py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <div class="glass rounded-2xl p-8">
+                <h1 class="text-4xl font-bold mb-4">{{ page.header }}</h1>
+                <p class="text-xl text-slate-600 dark:text-slate-300">Over the last few years, I've worked with some of the best global brands and startups to help them craft beautiful content, strategy or just something new. Here's a few examples.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="bg-light mb-5">
-{% include brands.html %}
+<div class="glass mt-16">
+    {% include brands.html %}
 </div>
-	
-<div class="container mb-5 mb-3">
-	<div class="row">
-		<div class="col-lg-6">
-			<h3>Showcase</h3>
-			<p>A non-exhaustive set of projects I've worked on. I update this as often as I can, but it's likely a little dusty.</p>
-		</div> 
-	</div> 
-	{% assign items = site.work | sort: 'date' %}
-	{% for item in items reversed %}
-	<div class="row my-5 d-flex align-items-center">
-				<div class="col-lg-6">
-					<div class="pb-3">
-						<h5 class="font-weight-bold mb-0">{{ item.headline }}</h5> 
-						<span class="post-meta">{{ item.site }} – {{ item.when }}</span>
-					</div>
-					<p>{{ item.content }}</p>
-					{% if item.link %}<a href="{{item.link}}" target="_blank">Read more ></a>{% endif %}
-				</div>
 
-				<div class="col-lg-6 pl-4">
-						<img class="featured" src="{{ item.image }}" alt="Card image cap">
-				</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-3xl mb-12">
+        <h2 class="text-3xl font-bold mb-4">Showcase</h2>
+        <p class="text-lg text-slate-600 dark:text-slate-300">A non-exhaustive set of projects I've worked on. I update this as often as I can, but it's likely a little dusty.</p>
+    </div>
 
-				{% if forloop.last != true %}
-					<div class="col-lg-12">
-						<hr class="mt-5 mb-0">
-					</div>
-				{% endif %}
-
-	</div>	
-	{% endfor %}
+    {% assign items = site.work | sort: 'date' %}
+    <div class="space-y-16">
+        {% for item in items reversed %}
+        <div class="glass rounded-2xl p-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+                <div>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-2">{{ item.headline }}</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ item.site }} – {{ item.when }}</p>
+                    </div>
+                    <div class="prose dark:prose-invert [&>p]:mb-4">
+                        {{ item.content }}
+                    </div>
+                    {% if item.link %}
+                    <a href="{{item.link}}" target="_blank" class="inline-flex items-center mt-4 text-sky-600 hover:text-sky-500">
+                        Visit Site <span class="ml-1">→</span>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="mt-8 lg:mt-0">
+                    <div class="aspect-[1.8] w-full overflow-hidden rounded-xl">
+                        <img class="w-full h-full object-cover" src="{{ item.image }}" alt="{{ item.headline }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
+
 {% include convert.html %}
