@@ -18,6 +18,30 @@ module.exports = {
         'glass-border': {
           DEFAULT: 'rgba(255, 255, 255, 0.2)',
           dark: 'rgba(0, 0, 0, 0.2)',
+        },
+        'stripe': {
+          DEFAULT: '#635BFF',
+          bg: '#635BFF'
+        },
+        'shopify': {
+          DEFAULT: '#96BF47',
+          bg: '#96BF47'
+        },
+        'charged': {
+          DEFAULT: '#0070F3',
+          bg: '#0070F3'
+        },
+        'vanmoof': {
+          DEFAULT: '#0066FF',
+          bg: '#0066FF'
+        },
+        'tnw': {
+          DEFAULT: '#E31E3C',
+          bg: '#E31E3C'
+        },
+        'xero': {
+          DEFAULT: '#13B5EA',
+          bg: '#13B5EA'
         }
       },
       backdropBlur: {
@@ -26,6 +50,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    require('@tailwindcss/forms')
   ],
 } 

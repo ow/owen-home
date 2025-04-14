@@ -1,16 +1,17 @@
-
-	<div class="row">
-		<div class="col-lg-7">
-			<h3>Career</h3>
-		</div>
+<div>
+	<div class="max-w-3xl">
+		<h3 class="text-3xl font-bold mb-8">Career</h3>
 	</div>
 	{% for job in site.career %}
-		<div class="job mt-3 mb-5 d-flex">
-				<div class="job-box {{ job.color }} d-flex align-items-center justify-content-center"><img src="{{ job.icon }}"></div>
-				<div class="pl-1">
-					<h6 class="mb-1"><span class="font-weight-bold pr-1">{{ job.title }}</span> ({{job.company}})</h6>
-					<p class="post-meta text-uppercase smaller">{{ job.dates }}</p>
-					<p class="mb-0">{{ job.description }}</p>
-				</div> 
-		</div> 
+		<div class="flex items-start space-x-8 mb-12">
+			<div class="flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-4">
+				<img src="{{ job.icon }}" alt="{{ job.company }} logo" class="w-full h-full object-contain">
+			</div>
+			<div class="flex-1">
+				<h6 class="text-lg font-semibold mb-1">{{ job.title }} <span class="font-normal text-slate-600 dark:text-slate-400">({{ job.company }})</span></h6>
+				<p class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">{{ job.dates }}</p>
+				<p class="text-slate-600 dark:text-slate-300">{{ job.description }}</p>
+			</div>
+		</div>
 	{% endfor %}
+</div>

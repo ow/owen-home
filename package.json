@@ -5,7 +5,7 @@
   "scripts": {
     "build:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --minify",
     "watch:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --watch",
-    "dev": "concurrently \"npm run watch:css\" \"bundle exec jekyll serve --livereload\""
+    "dev": "concurrently \"npm run watch:css\" \"sleep 1 && bundle exec jekyll serve --livereload\""
   },
   "author": "ow",
   "license": "ISC",

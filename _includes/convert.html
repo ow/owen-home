@@ -1,6 +1,6 @@
-<div class="relative overflow-hidden bg-sky-600 dark:bg-sky-900">
-	<div class="absolute inset-0 bg-gradient-to-br from-sky-600 to-sky-700 dark:from-sky-900 dark:to-sky-800"></div>
-	<div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+<div class="relative overflow-hidden bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 dark:from-sky-800 dark:via-sky-900 dark:to-sky-950">
+	<div class="absolute inset-0 -z-10 bg-gradient-to-t from-sky-800/60 to-transparent"></div>
+	<div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
 		<div class="max-w-2xl">
 			{% if site.client_availability %}
 				<h2 class="text-3xl font-bold text-white mb-4">Let's make something great.</h2>
@@ -11,25 +11,18 @@
 				<p class="text-xl text-sky-100 mb-8">I'm currently working full-time for Stripe from Victoria, British Columbia. Working on something interesting? I'm always open to chat.</p>
 			{% endif %}
 
-			<div class="flex flex-wrap gap-4">
-				<a href="mailto:hello@char.gd" class="inline-flex items-center px-6 py-3 rounded-xl bg-white text-sky-600 hover:bg-sky-50 transition-colors duration-200">
+			<div class="flex flex-wrap gap-4 relative">
+				<a href="/contact" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 text-white hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 transition-all duration-200">
 					Say hello
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-						<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-						<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-					</svg>
 				</a>
 				<a href="/about" class="inline-flex items-center px-6 py-3 rounded-xl bg-sky-500/20 text-white hover:bg-sky-500/30 transition-colors duration-200 backdrop-blur-sm">
-					Learn more
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-						<path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-					</svg>
+					About Owen
 				</a>
 			</div>
 		</div>
 	</div>
 
 	<!-- Decorative blurred circles -->
-	<div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sky-500/30 blur-3xl"></div>
-	<div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-sky-400/20 blur-3xl"></div>
+	<div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-sky-400/40 blur-3xl -z-10"></div>
+	<div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-sky-300/30 blur-3xl -z-10"></div>
 </div>
