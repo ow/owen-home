@@ -1,0 +1,16 @@
+{
+  "name": "jekyll-ascii-background",
+  "version": "1.0.0",
+  "description": "ASCII code background effect for Jekyll sites",
+  "scripts": {
+    "build-ascii": "esbuild jekyll-ascii-background/_src/index.jsx --bundle --minify --format=iife --global-name=AsciiBackground --outfile=assets/js/ascii-background.js",
+    "watch-ascii": "esbuild _src/index.jsx --bundle --watch --outfile=assets/js/ascii-background.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.5"
+  }
+}

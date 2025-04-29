@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Owen's personal website",
   "scripts": {
-    "build:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --minify",
-    "watch:css": "tailwindcss -i ./css/tailwind.css -o ./css/main.css --watch",
-    "dev": "concurrently \"npm run watch:css\" \"sleep 1 && bundle exec jekyll serve --livereload\""
+    "build:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --minify",
+    "watch:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --watch",
+    "build-ascii": "esbuild jekyll-ascii-background/_src/index.jsx --bundle --minify --outfile=assets/js/ascii-background.js --format=iife --global-name=AsciiBackground --jsx=automatic --jsx-import-source=react --format=iife",
+    "copy-css": "cp jekyll-ascii-background/_src/control-panel.css assets/css/control-panel.css && cp jekyll-ascii-background/_src/ascii-background.css assets/css/ascii-background.css",
+    "build": "npm run build-ascii && npm run copy-css",
+    "dev": "concurrently \"npm run watch:css\" \"npm run build-ascii\" \"sleep 1 && bundle exec jekyll serve --livereload\""
   },
   "author": "ow",
   "license": "ISC",
@@ -13,8 +16,13 @@
     "@tailwindcss/forms": "^0.5.7",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
+    "esbuild": "^0.19.5",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "repository": {
     "type": "git",
