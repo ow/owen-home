@@ -5,12 +5,14 @@ _site/
 scripts/
 Gemfile.lock
 .publish/
-css/
 
 # Jekyll build output
-_site
-.jekyll-cache
+_site/
+.sass-cache/
 .jekyll-metadata
+scripts/
+Gemfile.lock
+.publish/
 
 # Node modules
 node_modules
