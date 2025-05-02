@@ -1,41 +1,34 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { formatConfigForCopy } from "./shared/ascii-core"
-
-// Add this function to the top of the file, before the AsciiBackgroundApp component
-function ensureControlPanelIsTopmost() {
-  // This function ensures the control panel is appended to the document body
-  // so it's outside any potential stacking contexts that might limit its z-index
-  document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-      const controlPanel = document.querySelector(".ascii-control-panel")
-      if (controlPanel && controlPanel.parentElement !== document.body) {
-        // Move the control panel to the body to escape any stacking context issues
-        document.body.appendChild(controlPanel)
-      }
-    }, 500) // Small delay to ensure the component is rendered
-  })
-}
 
 export function ControlPanel({ settings, onSettingsChange }) {
   const [isOpen, setIsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("appearance")
   const [copySuccess, setCopySuccess] = useState(false)
+  const portalRef = useRef(null)
+  const [mounted, setMounted] = useState(false)
 
   // Create portal container on mount
   useEffect(() => {
     const portalContainer = document.createElement('div')
     portalContainer.id = 'ascii-control-portal'
     portalContainer.style.position = 'fixed'
-    portalContainer.style.top = '1rem'
+    portalContainer.style.bottom = '1rem'
     portalContainer.style.right = '1rem'
     portalContainer.style.zIndex = '999999'
     document.body.appendChild(portalContainer)
+    portalRef.current = portalContainer
+    setMounted(true)
 
     return () => {
-      document.body.removeChild(portalContainer)
+      if (portalRef.current) {
+        document.body.removeChild(portalRef.current)
+        portalRef.current = null
+        setMounted(false)
+      }
     }
   }, [])
 
@@ -70,8 +63,16 @@ export function ControlPanel({ settings, onSettingsChange }) {
 
   // The control panel content
   const controlPanelContent = (
-    <div className="ascii-control-panel">
-      <button className="ascii-control-button" onClick={togglePanel} type="button">
+    <div className="ascii-control-panel" style={{ 
+      position: 'relative',
+      pointerEvents: 'auto',
+      zIndex: 999999
+    }}>
+      <button className="ascii-control-button" onClick={togglePanel} type="button" style={{
+        position: 'absolute',
+        bottom: 0,
+        right: 0
+      }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -89,7 +90,12 @@ export function ControlPanel({ settings, onSettingsChange }) {
       </button>
 
       {isOpen && (
-        <div className="ascii-control-content">
+        <div className="ascii-control-content" style={{
+          position: 'absolute',
+          bottom: '100%',
+          right: 0,
+          marginBottom: '0.5rem'
+        }}>
           <div className="ascii-tabs">
             <button
               className={activeTab === "appearance" ? "active" : ""}
@@ -366,11 +372,8 @@ export function ControlPanel({ settings, onSettingsChange }) {
     </div>
   )
 
-  // Render using createPortal
-  return document.getElementById('ascii-control-portal') 
-    ? createPortal(controlPanelContent, document.getElementById('ascii-control-portal'))
-    : null
-}
+  // Only render portal when mounted
+  if (!mounted || !portalRef.current) return null
 
-// Call this function at the end of the file
-ensureControlPanelIsTopmost()
+  return createPortal(controlPanelContent, portalRef.current)
+}

@@ -8,27 +8,30 @@ image: "/images/card.png"
 seo:
   type: Person
 ---
-<div class="min-h-[50vh] py-12 sm:py-16 lg:py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-[45vh] relative flex items-center" style="position: relative;">
+    <!-- Background: ASCII Background -->
+    <div 
+    data-ascii-background='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "continuous", "transitionSmoothness": 1.1, "showControls": true, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": true, "entranceDirection": "right", "entranceDuration": 2}'
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+    </div>
+    <!-- Overlay Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-900/55 to-slate-900/50 backdrop-blur-[0.5px]" style="z-index: 2;"></div>
+
+    <!-- Content -->
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style="position: relative; z-index: 4;">
         <div class="max-w-3xl">
-            <div class="glass rounded-2xl p-8">
-                <h1 class="text-4xl font-bold mb-4">{{ page.header }}</h1>
-                <p class="text-xl text-slate-600 dark:text-slate-300">Over the last few years, I've worked with some of the best global brands and startups to help them craft beautiful content, strategy or just something new. Here's a few examples.</p>
-            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-white mb-6">
+                Select work
+            </h1>
+            <p class="text-xl text-slate-200">For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.</p>
         </div>
     </div>
+
+    <!-- Decorative gradient at bottom -->
+    <div class="absolute bottom-0 inset-x-0 h-[16rem] bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent" style="z-index: 3;"></div>
 </div>
 
-<div class="glass mt-16">
-    {% include brands.html %}
-</div>
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="max-w-3xl mb-12">
-        <h2 class="text-3xl font-bold mb-4">Showcase</h2>
-        <p class="text-lg text-slate-600 dark:text-slate-300">A non-exhaustive set of projects I've worked on. I update this as often as I can, but it's likely a little dusty.</p>
-    </div>
-
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-20">
     {% assign items = site.work | sort: 'date' %}
     <div class="space-y-16">
         {% for item in items reversed %}

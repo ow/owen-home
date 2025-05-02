@@ -6,8 +6,7 @@
     "build:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --minify",
     "watch:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --watch",
     "build-ascii": "esbuild jekyll-ascii-background/_src/index.jsx --bundle --minify --outfile=assets/js/ascii-background.js --format=iife --global-name=AsciiBackground --jsx=automatic --jsx-import-source=react --format=iife",
-    "copy-css": "cp jekyll-ascii-background/_src/control-panel.css assets/css/control-panel.css && cp jekyll-ascii-background/_src/ascii-background.css assets/css/ascii-background.css",
-    "build": "npm run build-ascii && npm run copy-css",
+    "build": "npm run build-ascii && npm run build:css",
     "dev": "concurrently \"npm run watch:css\" \"npm run build-ascii\" \"sleep 1 && bundle exec jekyll serve --livereload\""
   },
   "author": "ow",

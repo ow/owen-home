@@ -39,11 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Look for elements with data-ascii-background attribute
   const asciiElements = document.querySelectorAll("[data-ascii-background]")
+  
+  // Look for legacy mount point
+  const legacyMountPoint = document.getElementById("ascii-background-root")
 
+  // If we have data-ascii-background elements, use those
   if (asciiElements.length > 0) {
-    // Process each element with data-ascii-background attribute
     asciiElements.forEach((element) => {
-      // Get config from data attribute if available
+      // Skip if this is the legacy mount point (prevent double mounting)
+      if (element.id === "ascii-background-root") return
+
       let config = {}
       try {
         const configAttr = element.getAttribute("data-ascii-background")
@@ -70,17 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const root = ReactDOM.createRoot(element)
       root.render(<AsciiBackgroundApp initialConfig={config} />)
     })
-  } else {
-    // Backward compatibility with old implementation
-    const mountPoint = document.getElementById("ascii-background-root")
-    if (mountPoint) {
-      // Add the data attribute for future reference
-      if (!mountPoint.hasAttribute("data-ascii-background")) {
-        mountPoint.setAttribute("data-ascii-background", "")
-      }
-
-      const root = ReactDOM.createRoot(mountPoint)
-      root.render(<AsciiBackgroundApp initialConfig={window.asciiConfig || {}} />)
-    }
+  } 
+  // If no data-ascii-background elements found, fall back to legacy mount point
+  else if (legacyMountPoint && !legacyMountPoint.hasAttribute("data-ascii-background")) {
+    const root = ReactDOM.createRoot(legacyMountPoint)
+    root.render(<AsciiBackgroundApp initialConfig={window.asciiConfig || {}} />)
   }
 })
