@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Owen's personal website",
   "scripts": {
-    "build:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --minify",
-    "watch:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/main.css --watch",
+    "build:css": "tailwindcss -i ./src/css/tailwind.css -o ./assets/css/main.css --minify",
+    "watch:css": "tailwindcss -i ./src/css/tailwind.css -o ./assets/css/main.css --watch",
     "build-ascii": "esbuild jekyll-ascii-background/_src/index.jsx --bundle --minify --outfile=assets/js/ascii-background.js --format=iife --global-name=AsciiBackground --jsx=automatic --jsx-import-source=react --format=iife",
     "build": "npm run build-ascii && npm run build:css",
     "dev": "concurrently \"npm run watch:css\" \"npm run build-ascii\" \"sleep 1 && bundle exec jekyll serve --livereload\""
