@@ -47,14 +47,32 @@ seo:
             <div class="max-w-3xl">
                 <span class="text-sky-600 dark:text-sky-400 font-medium mb-2 block">About me</span>
                 <h2 class="text-3xl font-bold mb-4">What I do</h2>
-                <p class="text-xl text-slate-600 dark:text-slate-300 mb-12">I help developer-focused companies connect with the humans using their products.</p>
+                <p class="text-xl text-slate-600 dark:text-slate-300 mb-12">I help developer-focused companies build strong design teams that understand their users and craft industry-leading Developer Experiences.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {% for service in site.services %}
                 <div class="glass rounded-2xl p-8 transform hover:scale-[1.02] transition-all duration-300 hover:border-sky-600/50 border border-transparent">
                     <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 {{ service.color }} bg-opacity-10">
-                        <i class="{{ service.icon }} text-base"></i>
+                        {% case service.title %}
+                        {% when 'Leadership' %}
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
+                        </svg>
+                        {% when 'Product' %}
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M2.25 5.25a3 3 0 013-3h13.5a3 3 0 013 3V15a3 3 0 01-3 3h-3v.257c0 .597.237 1.17.659 1.591l.621.622a.75.75 0 01-.53 1.28h-9a.75.75 0 01-.53-1.28l.621-.622a2.25 2.25 0 00.659-1.59V18h-3a3 3 0 01-3-3V5.25zm1.5 0v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5z" clip-rule="evenodd" />
+                        </svg>
+                        {% when 'Technical Product Go-To-Market' %}
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+                            <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+                        </svg>
+                        {% when 'Content Design' %}
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+                        </svg>
+                        {% endcase %}
                     </div>
                     <h3 class="text-lg font-semibold mb-3">{{ service.title }}</h3>
                     <p class="text-slate-600 dark:text-slate-300">{{ service.description }}</p>
