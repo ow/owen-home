@@ -16,7 +16,7 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen Williams is a product design manager leading a team building tools developers love at Stripe in Victoria, British Columbia, Canada. He's also a developer, writer, and maker.
+  Owen Williams is a product design manager leading a team building tools developers love at Stripe in Victoria, British Columbia. He's also a developer, writer, and maker.
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 client_availability: false
