@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build && jekyll build"
+  publish = "_site"
+
+[build.environment]
+  NODE_VERSION = "20"
+  RUBY_VERSION = "3.2.2" 
