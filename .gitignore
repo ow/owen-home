@@ -18,8 +18,8 @@ Gemfile.lock
 node_modules
 
 # Built assets
-assets/css/main.css
-assets/css/main.css.map
+assets/css/*.css
+assets/css/*.css.map
 
 # Environment files
 .env
