@@ -1,76 +1,21 @@
 ---
 layout: default
 title: About 
-header: Hi, I'm Owen
-description: Owen Williams is a UX Writer, developer and marketing strategist in Victoria, British Columbia, Canada.
+header: Career
+description: Owen Williams is a design manager, developer and marketing strategist in Victoria, British Columbia, Canada.
 permalink: /about/
 image: "/images/card.png"
 seo:
   type: Person
 ---
-<div class="min-h-[85vh] relative flex items-center pt-24 pb-16">
-    <!-- Background: ASCII Background -->
-    <div 
-        data-ascii-background='{"density": 35, "speed": 15, "opacity": 1, "colorPalette": "stripe", "noiseScale": 0.015, "noiseSpeed": 0.5, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "flow", "transitionSmoothness": 0.8, "showControls": true, "fullscreen": false, "entranceDirection": "left", "entranceDuration": 2, "controlPanelZIndex": 100}'
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
-    </div>
-    <!-- Overlay Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-900/55 to-slate-900/50 backdrop-blur-[1px]" style="z-index: 2;"></div>
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings='{"density": 35, "speed": 15, "opacity": 1, "colorPalette": "stripe", "noiseScale": 0.015, "noiseSpeed": 0.5, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "flow", "transitionSmoothness": 0.8, "showControls": true, "fullscreen": false, "entranceDirection": "left", "entranceDuration": 2, "controlPanelZIndex": 100}'
+%}
 
-    <!-- Content -->
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex flex-col justify-center h-full">
-        <div class="lg:grid lg:grid-cols-12 lg:gap-0">
-            <div class="lg:col-span-8 lg:col-start-3 text-center">
-                <h1 class="text-4xl sm:text-5xl font-bold text-white mb-6">
-                    👋 Hi, I'm Owen
-                    <span class="inline-flex items-center justify-center">
-                        <img src="/images/itme.jpg" alt="Owen Williams" class="w-10 h-10 rounded-full object-cover border border-white/20 ml-2">
-                    </span>
-                </h1>
-                <div class="space-y-4 text-slate-200 mb-8">
-                    <p class="text-xl">I'm a product design manager that has worn many different hats, as a content designer, developer, and people leader.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div class="relative h-full">
-                <div class="glass rounded-2xl p-6 h-full">
-                    <h3 class="text-xl font-semibold mb-4 text-white">Work</h3>
-                    <div class="space-y-4 text-slate-200">
-                        Today, I work at <a href="https://stripe.com" class="font-medium text-white hover:text-sky-300">Stripe</a>. I lead a team of designers building tools developers love, the world's best developer documentation, and developer AI.
-                        <p>Before that, I ran a freelance UX strategy and consulting business, as well as building my own products, like <a href="https://char.gd" class="text-sky-300 hover:text-sky-400">Charged</a>.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="relative h-full">
-                <div class="glass rounded-2xl p-6 h-full">
-                    <h3 class="text-xl font-semibold mb-4 text-white">Home</h3>
-                    <div class="space-y-4 text-slate-200">
-                        <p>I live in <strong class="font-semibold">Victoria, British Columbia</strong>, with <a href="https://femke.co.nz" class="text-sky-300 hover:text-sky-400">my partner</a> and our beautiful Duck Tolling Retriever, <a href="https://www.instagram.com/p/CGvcxQZMRIl/" class="text-sky-300 hover:text-sky-400">Kaya</a>.</p>
-                        <p>Before we moved to Canada in 2019, we lived in Amsterdam, The Netherlands for 5 years, but I grew up in Wellington, New Zealand (we invented the flat white).</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="relative h-full">
-                <div class="glass rounded-2xl p-6 h-full">
-                    <h3 class="text-xl font-semibold mb-4 text-white">Beyond</h3>
-                    <div class="space-y-4 text-slate-200">
-                        <p>When I'm not working, I love to read, hike, and hang out with my toddler. We're always on the lookout for the best playgrounds</p>
-                        <p>I'm an <a href="https://twitter.com/ow" target="_blank" class="text-sky-300 hover:text-sky-400">avid Twitter user</a>, and joined the service in 2008. I didn't get my short username until much later, but that's a story for in person.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Decorative gradient at bottom -->
-    <div class="absolute bottom-0 inset-x-0 h-[16rem] bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent" style="z-index: 3;"></div>
-</div>
-
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 relative z-20">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
     <div class="glass rounded-2xl p-8">
         {% include career.html %}
     </div>

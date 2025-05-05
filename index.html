@@ -10,7 +10,7 @@ seo:
 
 <body class="bg-black text-white">
     <div class="min-h-screen">
-        <div id="index-hero" class="min-h-[90vh] relative flex items-center" style="position: relative; height: 90vh;">
+        <div id="index-hero" class="min-h-[100vh] relative flex items-center" style="position: relative; height: 100vh;">
             <!-- Background: ASCII Background -->
             <div 
             data-ascii-background='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "sunset", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "wave", "transitionSmoothness": 1.1, "showControls": true, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": true, "entranceDirection": "top", "entranceDuration": 2}'
@@ -21,67 +21,149 @@ seo:
 
             <!-- Content -->
             <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style="position: relative; z-index: 4;">
-                <div class="max-w-3xl mx-auto text-center">
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight">
-                        Designing tools developers <span class="text-sky-300">love</span>
+                <div class="max-w-xl">
+                    <h1 class="text-5xl sm:text-6xl lg:text-5xl font-bold text-white mb-8 tracking-tight">
+                        Hi, I'm <span class="text-sky-300">Owen</span>
+                        <span class="inline-flex items-center justify-center">
+                            <img src="/images/itme.jpg" alt="Owen Williams" class="w-12 h-12 rounded-full object-cover border border-white/20 ml-2">
+                        </span>
                     </h1>
-                    <p class="text-xl sm:text-2xl text-slate-200 mb-12 leading-relaxed max-w-2xl mx-auto">
-                        Owen is a developer turned design manager, building exceptional design teams that work on complex and developer-focused experiences.
+                    <p class="text-xl sm:text-2xl text-slate-200 mb-6 leading-relaxed">
+                        I'm a product design manager with a passion for building design teams that work on deep, technical complexity.
                     </p>
-                    <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="/about" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 text-white hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 transition-all duration-300 ease-in-out">
-                            Learn more
-                        </a>
-                        <a href="/contact" class="inline-flex items-center px-6 py-3 rounded-xl bg-white/20 text-white hover:bg-white/30 transition-all duration-300 ease-in-out backdrop-blur-sm">
-                            Say hello
-                        </a>
-                    </div>
+
+                    <p class="text-md sm:text-md text-slate-200 mb-6 leading-relaxed">
+                        Here's some of the work by the teams I've led.
+                    </p>
                 </div>
+
+                <!-- Full-bleed scrolling work cards -->
+                {% include card-carousel.html cards=site.data.work_cards %}
             </div>
 
             <!-- Decorative gradient at bottom -->
             <div class="absolute bottom-0 inset-x-0 h-[16rem] bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent" style="z-index: 3;"></div>
         </div>
 
+        <!-- Personal Bento Grid Section -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-14 -mt-28 relative z-10" id="about">
+            <div class="max-w-3xl mb-12">
+                <span class="text-sky-600 dark:text-sky-400 font-medium mb-2 block">Get to know me</span>
+                <h2 class="text-3xl font-bold mb-4">A bit more personal</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-300">I'm a design leader with a passion for building great teams and products. Here's a bit more about me, the human.</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mx-auto">
+                <!-- Home - Large Card -->
+                <div class="col-span-2 glass rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="h-72 relative">
+                        <img src="https://images.unsplash.com/photo-1568745515327-eedc40b0b3cf?q=80&w=2670&auto=format" alt="Victoria BC" class="w-full h-full object-cover absolute inset-0">
+                    </div>
+                    <div class="p-6 relative">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Home</h3>
+                        <div class="text-slate-300">
+                            I've lived all over the world! Today, I live in <strong>Victoria, British Columbia.</strong> Before moving to Canada, I lived in Amsterdam for five years, and I grew up in Wellington, NZ. After so many big moves, I've settled down in Canada for the long run.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work - Regular Card -->
+                <div class="glass rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="h-72 relative">
+                        <img src="/images/stripe-dev.png" alt="Stripe Developers Illustration" class="w-full h-full object-cover absolute inset-0">
+                    </div>
+                    <div class="p-6 relative">
+                        <h3 class="text-lg font-semibold mb-2 text-white">Work</h3>
+                        <div class="text-slate-300">
+                            I work at <a href="https://stripe.com" class="font-medium text-white hover:text-sky-300">Stripe</a>, leading a team of designers building tools developers love, the world's best developer documentation, and developer AI.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writing - Small Card -->
+                <div class="glass rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="h-72 relative">
+                        <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=3164&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Writing" class="w-full h-full object-cover absolute inset-0">
+                    </div>
+                    <div class="p-6 relative">
+                        <h3 class="text-lg font-semibold mb-2 text-white">On the side</h3>
+                        <p class="text-slate-300">I love building my own products. My last company, Charged, was a weekly newsletter delivered to 15,000 people, and grew into a newsletter platform with 1,000 paying subscribers.</p>
+                    </div>
+                </div>
+
+                <!-- Beyond - Wide Card -->
+                <div class="col-span-2 glass rounded-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="h-72 relative">
+                        <img src="/images/mountains.jpg" alt="Femke, Owen, and Kaya in the Rocky Mountains" class="w-full h-full object-cover absolute inset-0">
+                    </div>
+                    <div class="p-6 relative">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Beyond</h3>
+                        <div class="text-slate-300">
+                            Outside of work, I spend my time with my partner <a href="https://femke.co.nz">Femke</a>, my daughter, Saskia, and our Duck Tolling Retriever, <a href="https://www.instagram.com/p/CGvcxQZMRIl/">Kaya.</a> We love hiking, finding the best coffee places, and discovering absolute best playgrounds on Vancouver Island.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include brands.html %}
+
+        <!-- Work Bento Grid Section -->
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6" id="work">
             <div class="max-w-3xl">
                 <span class="text-sky-600 dark:text-sky-400 font-medium mb-2 block">About me</span>
                 <h2 class="text-3xl font-bold mb-4">What I do</h2>
-                <p class="text-xl text-slate-600 dark:text-slate-300 mb-12">I help developer-focused companies build strong design teams that understand their users and craft industry-leading Developer Experiences.</p>
+                <p class="text-lg text-slate-600 dark:text-slate-300 mb-12">I help developer-focused companies build strong design teams that understand their users and craft industry-leading Developer Experiences.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {% for service in site.services %}
-                <div class="glass rounded-2xl p-8 transform hover:scale-[1.02] transition-all duration-300 hover:border-sky-600/50 border border-transparent">
-                    <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 {{ service.color }} bg-opacity-10">
-                        {% case service.title %}
-                        {% when 'Leadership' %}
-                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <div class="grid grid-cols-3 gap-4 mx-auto">
+                <!-- Leadership - Large Card -->
+                <div class="col-span-2 glass rounded-2xl p-8 transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-xl mb-6 text-sky-500 bg-sky-500/10">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
                         </svg>
-                        {% when 'Product' %}
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Design Leadership</h3>
+                    <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">Building and scaling high-performing design teams that deliver exceptional experiences. Focus on mentorship, growth, and creating inclusive environments.</p>
+                </div>
+
+                <!-- Product Design - Small Card -->
+                <div class="glass rounded-2xl p-6 transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 text-emerald-500 bg-emerald-500/10">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" d="M2.25 5.25a3 3 0 013-3h13.5a3 3 0 013 3V15a3 3 0 01-3 3h-3v.257c0 .597.237 1.17.659 1.591l.621.622a.75.75 0 01-.53 1.28h-9a.75.75 0 01-.53-1.28l.621-.622a2.25 2.25 0 00.659-1.59V18h-3a3 3 0 01-3-3V5.25zm1.5 0v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5z" clip-rule="evenodd" />
                         </svg>
-                        {% when 'Technical Product Go-To-Market' %}
-                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
-                            <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
-                        </svg>
-                        {% when 'Content Design' %}
-                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
-                        </svg>
-                        {% endcase %}
                     </div>
-                    <h3 class="text-lg font-semibold mb-3">{{ service.title }}</h3>
-                    <p class="text-slate-600 dark:text-slate-300">{{ service.description }}</p>
+                    <h3 class="text-lg font-semibold mb-2">Product Design</h3>
+                    <p class="text-slate-600 dark:text-slate-300">Crafting intuitive developer tools and experiences that empower builders.</p>
                 </div>
-                {% endfor %}
+
+                <!-- Writing - Small Card -->
+                <div class="glass rounded-2xl p-6 transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 text-indigo-500 bg-indigo-500/10">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16.5 7.5h-9v9h9v-9z" />
+                            <path fill-rule="evenodd" d="M8.25 2.25A.75.75 0 019 3v.75h2.25V3a.75.75 0 011.5 0v.75H15V3a.75.75 0 011.5 0v.75h.75a3 3 0 013 3v.75H21A.75.75 0 0121 9h-.75v2.25H21a.75.75 0 010 1.5h-.75V15H21a.75.75 0 010 1.5h-.75v.75a3 3 0 01-3 3h-.75V21a.75.75 0 01-1.5 0v-.75h-2.25V21a.75.75 0 01-1.5 0v-.75H9V21a.75.75 0 01-1.5 0v-.75h-.75a3 3 0 01-3-3v-.75H3A.75.75 0 013 15h.75v-2.25H3a.75.75 0 010-1.5h.75V9H3a.75.75 0 010-1.5h.75v-.75a3 3 0 013-3h.75V3a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">AI Design</h3>
+                    <p class="text-slate-600 dark:text-slate-300">Designing next-generation AI experiences that enhance developer productivity.</p>
+                </div>
+
+                <!-- Developer Experience - Wide Card -->
+                <div class="col-span-2 glass rounded-2xl p-6 transform hover:scale-[1.01] transition-all duration-300 hover:border-sky-400/50 border border-slate-700/30 shadow-lg ring-1 ring-slate-700/50">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-xl mb-4 text-amber-500 bg-amber-500/10">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M14.447 3.027a.75.75 0 01.527.92l-4.5 16.5a.75.75 0 01-1.448-.394l4.5-16.5a.75.75 0 01.921-.526zM16.72 6.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 010-1.06zm-9.44 0a.75.75 0 010 1.06L2.56 12l4.72 4.72a.75.75 0 11-1.06 1.06L.97 12.53a.75.75 0 010-1.06l5.25-5.25a.75.75 0 011.06 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Developer Experience</h3>
+                    <p class="text-slate-600 dark:text-slate-300">Creating holistic developer experiences that combine powerful functionality with intuitive interfaces.</p>
+                </div>
             </div>
         </div>
-
-        {% include work.html %}
     </div>
+
 </body>
 

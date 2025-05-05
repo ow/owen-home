@@ -1,0 +1,31 @@
+<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden">
+  <div class="flex animate-scroll-left gap-4 py-2 items-stretch">
+    {% for card in include.cards %}
+      {% if card.url %}
+        <a href="{{ card.url }}" class="group" {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
+      {% endif %}
+      <div class="glass rounded-2xl overflow-hidden w-[300px] h-full flex flex-col border border-slate-700/30 hover:border-sky-400/50 transform transition-all duration-300 group-hover:scale-[1.03]">
+        <img src="{{ card.image }}" alt="{{ card.title }}" class="w-full h-40 object-cover rounded-t-2xl">
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="text-lg font-semibold text-white mb-2">{{ card.title }}</h3>
+          <p class="text-slate-200 text-md">{{ card.description }}</p>
+        </div>
+      </div>
+      {% if card.url %}</a>{% endif %}
+    {% endfor %}
+    <!-- Duplicate for seamless loop -->
+    {% for card in include.cards %}
+      {% if card.url %}
+        <a href="{{ card.url }}" class="group" {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
+      {% endif %}
+      <div class="glass rounded-2xl overflow-hidden w-[300px] h-full flex flex-col border border-slate-700/30 hover:border-sky-400/50 transform transition-all duration-300 group-hover:scale-[1.03]">
+        <img src="{{ card.image }}" alt="{{ card.title }}" class="w-full h-40 object-cover rounded-t-2xl">
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="text-lg font-semibold text-white mb-2">{{ card.title }}</h3>
+          <p class="text-slate-200 text-md">{{ card.description }}</p>
+        </div>
+      </div>
+      {% if card.url %}</a>{% endif %}
+    {% endfor %}
+  </div>
+</div>

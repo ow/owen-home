@@ -1,19 +1,21 @@
 ---
 layout: default
-title: Say Hi
+title: Contact
 header: Let's chat
 description: Get in touch with Owen about a project, idea, or just to say hi.
 permalink: /contact/
 image: "/images/card.png"
 ---
-<div class="min-h-screen py-12 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-            <div class="glass rounded-2xl p-8 mb-8">
-                <h1 class="text-4xl font-bold mb-4">{{ page.header }}</h1>
-                <p class="text-lg text-slate-600 dark:text-slate-300">Let's open the conversation and see what we could do together.</p>
-            </div>
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "sunset", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "wave", "transitionSmoothness": 1.1, "showControls": false, "fullscreen": false, "entranceAnimation": true, "entranceDirection": "top", "entranceDuration": 2}'
+%}
 
+<div class="min-h-screen py-12 sm:px-6 lg:px-8 -mt-32 relative z-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
             <div class="glass rounded-2xl p-8">
                 <form class="space-y-6" name="contact" method="POST" data-netlify="true" onsubmit="return validateForm()">
                     <div>
@@ -44,7 +46,7 @@ image: "/images/card.png"
 
                     <div>
                         <button type="submit"
-                            class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors duration-200">
+                            class="rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-200">
                             Send message
                         </button>
                     </div>

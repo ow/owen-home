@@ -1,39 +1,25 @@
 ---
 layout: default
-title: My Work
-header: My work
+title: Work
+header: Select Work
 permalink: /work/
-description: Learn more about Owen Williams' UX writing and marketing strategy work.
+description: For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.
 image: "/images/card.png"
 seo:
   type: Person
 ---
-<div class="min-h-[45vh] relative flex items-center" style="position: relative;">
-    <!-- Background: ASCII Background -->
-    <div 
-    data-ascii-background='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "continuous", "transitionSmoothness": 1.1, "showControls": true, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": true, "entranceDirection": "right", "entranceDuration": 2}'
-    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
-    </div>
-    <!-- Overlay Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-900/55 to-slate-900/50 backdrop-blur-[0.5px]" style="z-index: 2;"></div>
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "continuous", "transitionSmoothness": 1.1, "showControls": true, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": true, "entranceDirection": "right", "entranceDuration": 2}'
+%}
 
-    <!-- Content -->
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style="position: relative; z-index: 4;">
-        <div class="max-w-3xl">
-            <h1 class="text-4xl sm:text-5xl font-bold text-white mb-6">
-                Select work
-            </h1>
-            <p class="text-xl text-slate-200">For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.</p>
-        </div>
-    </div>
 
-    <!-- Decorative gradient at bottom -->
-    <div class="absolute bottom-0 inset-x-0 h-[16rem] bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent" style="z-index: 3;"></div>
-</div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-20">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-24">
     {% assign items = site.work | sort: 'date' %}
-    <div class="space-y-16">
+    <div class="space-y-16 relative z-20">
         {% for item in items reversed %}
         <div class="glass rounded-2xl p-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
@@ -61,5 +47,3 @@ seo:
         {% endfor %}
     </div>
 </div>
-
-{% include convert.html %}

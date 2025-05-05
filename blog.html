@@ -1,10 +1,10 @@
----
-layout: default
-title: Blog
-permalink: /blog/
-description: Read Owen Williams' blog for insights on freelancing, coding and more.
-image: "/images/card.png"
----
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "sunset", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "wave", "transitionSmoothness": 1.1, "showControls": false, "fullscreen": false, "entranceAnimation": true, "entranceDirection": "top", "entranceDuration": 2}'
+%}
+
 <div class="min-h-screen py-12 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">

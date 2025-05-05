@@ -1,6 +1,7 @@
 # Site improvements tracker TODO
 - [ ] Footer is messy/unorganized
 - [ ] Blog section is broken (posts have no layout)
+- [ ] LinkedIn url in the seo file is wrong
 
 # SEO Improvements TODO section
 
@@ -75,4 +76,3 @@ Secondary:
 - UX Strategy
 - Developer Tools Design
 - AI Interface Design
-- Design Systems Leadership 
