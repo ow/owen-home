@@ -5,14 +5,36 @@ header: Select Work
 permalink: /work/
 description: For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.
 image: "/images/card.png"
+color_scheme: ocean
 seo:
   type: Person
 ---
+{% capture ascii_settings %}
+{
+  "density": 30,
+  "speed": 10,
+  "opacity": 1,
+  "colorPalette": "{{ page.color_scheme }}",
+  "noiseScale": 0.02,
+  "noiseSpeed": 0.3,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "continuous",
+  "transitionSmoothness": 1.1,
+  "showControls": true,
+  "fullscreen": false,
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": true,
+  "entranceDirection": "right",
+  "entranceDuration": 2
+}
+{% endcapture %}
 {% include hero.html
     header=page.header
     title=page.title
     description=page.description
-    ascii_settings='{"density": 30, "speed": 10, "opacity": 1, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.3, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "continuous", "transitionSmoothness": 1.1, "showControls": true, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": true, "entranceDirection": "right", "entranceDuration": 2}'
+    ascii_settings=ascii_settings
 %}
 
 

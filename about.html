@@ -2,17 +2,37 @@
 layout: default
 title: About 
 header: Career
-description: Owen Williams is a design manager, developer and marketing strategist in Victoria, British Columbia, Canada.
+description: Owen Williams is a design manager, developer and maker in Victoria, British Columbia, Canada.
 permalink: /about/
 image: "/images/card.png"
+color_scheme: stripe
 seo:
   type: Person
 ---
+{% capture ascii_settings %}
+{
+  "density": 35,
+  "speed": 15,
+  "opacity": 1,
+  "colorPalette": "{{ page.color_scheme }}",
+  "noiseScale": 0.015,
+  "noiseSpeed": 0.5,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "flow",
+  "transitionSmoothness": 0.8,
+  "showControls": true,
+  "fullscreen": false,
+  "entranceDirection": "left",
+  "entranceDuration": 2,
+  "controlPanelZIndex": 100
+}
+{% endcapture %}
 {% include hero.html
     header=page.header
     title=page.title
     description=page.description
-    ascii_settings='{"density": 35, "speed": 15, "opacity": 1, "colorPalette": "stripe", "noiseScale": 0.015, "noiseSpeed": 0.5, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "flow", "transitionSmoothness": 0.8, "showControls": true, "fullscreen": false, "entranceDirection": "left", "entranceDuration": 2, "controlPanelZIndex": 100}'
+    ascii_settings=ascii_settings
 %}
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
