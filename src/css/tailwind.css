@@ -76,12 +76,20 @@
   animation: scroll 120s linear infinite;
 }
 
+.animate-scroll-right {
+  animation: scroll 120s linear infinite reverse;
+}
+
 @media (max-width: 768px) {
   .animate-scroll-left {
     animation: scroll 30s linear infinite;
   }
+  .animate-scroll-right {
+    animation: scroll 30s linear infinite reverse;
+  }
 }
 
-.animate-scroll-left:hover {
+.animate-scroll-left:hover,
+.animate-scroll-right:hover {
   animation-play-state: paused;
 } 
