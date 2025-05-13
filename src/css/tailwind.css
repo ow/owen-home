@@ -27,6 +27,34 @@
   .nav-link {
     @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200;
   }
+
+  /* Font hierarchy utility classes */
+  .heading-hero { @apply text-5xl font-bold; }
+  .heading-section { @apply text-3xl font-bold; }
+  .heading-subsection { @apply text-xl font-semibold; }
+  .heading-widget { @apply text-lg font-semibold; }
+  .lead { @apply text-xl; }
+  .meta { @apply text-sm font-medium; }
+  .tag { @apply text-xs font-semibold uppercase; }
+
+  /* Link styles */
+  .link {
+    @apply text-sky-400 hover:text-sky-300 transition delay-150 duration-300 ease-in-out;
+  }
+  .link-muted {
+    @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition delay-150 duration-300 ease-in-out;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center px-6 py-3 rounded-lg font-semibold shadow-sm transition-all duration-200;
+  }
+  .btn-primary {
+    @apply bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 text-white hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 transition delay-150 duration-300 ease-in-out;
+  }
+  .btn-secondary {
+    @apply bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700;
+  }
 }
 
 @layer utilities {
@@ -45,7 +73,7 @@
 }
 
 .animate-scroll-left {
-  animation: scroll 80s linear infinite;
+  animation: scroll 200s linear infinite;
 }
 
 .animate-scroll-left:hover {
