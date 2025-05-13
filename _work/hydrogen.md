@@ -3,8 +3,8 @@ headline: "Hydrogen: The future of headless commerce"
 site: Shopify
 slug: shopify-hydrogen
 collection: work
-when: 2022
-date: 01-01-2022
+when: 2023
+date: 01-01-2023
 image: /images/hydrogen.jpg
 link: https://hydrogen.shopify.dev/
 tag: Leadership
