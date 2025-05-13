@@ -11,6 +11,9 @@
     <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex flex-col justify-center h-full">
         <div class="lg:grid lg:grid-cols-12 lg:gap-0">
             <div class="lg:col-span-8">
+                {% if include.extra %}
+                  {{ include.extra }}
+                {% endif %}
                 <h1 class="text-4xl sm:text-5xl font-bold text-white mb-6">
                     {{ include.header | default: include.title }}
                 </h1>

@@ -7,7 +7,7 @@
 		
 		<!-- Single scrolling row -->
 		<div class="relative">
-			<div class="animate-scroll flex space-x-8 whitespace-nowrap">
+			<div class="animate-scroll-right flex space-x-8 whitespace-nowrap">
 				<!-- First set -->
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
@@ -94,7 +94,6 @@
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/gcloud.png" alt="Google Cloud logo">
 					</div>
 				</div>
-
 				<!-- Second set (duplicate for seamless loop) -->
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
@@ -135,73 +134,69 @@
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/notion.png" alt="Notion logo">
 					</div>
-				</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/buffer.png" alt="Buffer logo">
-					</div>
-				</div>
+			</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/greylock.png" alt="Greylock logo">
-					</div>
-				</div>
+			</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/messagebird.svg" alt="Messagebird logo">
-					</div>
-				</div>
+			</div>
+		</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/figma.svg" alt="Figma logo">
 					</div>
-				</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/clearbit.svg" alt="Clearbit logo">
-					</div>
-				</div>
+			</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/spotify.svg" alt="Spotify logo">
-					</div>
-				</div>
+			</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/framer.png" alt="Framer logo">
-					</div>
-				</div>
+			</div>
+		</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/ghost.svg" alt="Ghost logo">
 					</div>
-				</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/vice.svg" alt="Vice logo">
-					</div>
-				</div>
+			</div>
+			</div>
 				<div class="glass rounded-md p-3 w-40 h-14 flex items-center justify-center shrink-0">
 					<div class="w-28 h-6 flex items-center justify-center">
 						<img class="min-h-[16px] min-w-[32px] max-h-6 w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-200" src="/images/logo/gcloud.png" alt="Google Cloud logo">
-					</div>
-				</div>
+			</div>
+			</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-@keyframes scroll {
-	from {
-		transform: translateX(0);
-	}
-	to {
-		transform: translateX(-50%);
-	}
+@keyframes scroll-right {
+	0% { transform: translateX(-50%); }
+	100% { transform: translateX(0); }
 }
 
-.animate-scroll {
-	animation: scroll 60s linear infinite;
+.animate-scroll-right {
+	animation: scroll-right 60s linear infinite;
 }
 </style>

@@ -6,6 +6,7 @@ when: January 2018
 date: 01-01-2018
 link: https://increment.com/
 image: /images/stripe.jpg
+tag: Writing
 ---
 For Stripe's Increment Magazine, I spent a few weeks tracing every part of the puzzle of the energy involved in your phone every day.
 

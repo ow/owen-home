@@ -33,14 +33,9 @@ color_scheme: sunset
     ascii_settings=ascii_settings
 %}
 
-<div class="min-h-screen py-12 sm:px-6 lg:px-8">
+<div class="min-h-screen py-12 sm:px-6 lg:px-8 -mt-32 relative z-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-            <div class="glass rounded-2xl p-8 mb-12">
-                <h1 class="text-4xl font-bold mb-4">Latest Posts</h1>
-                <p class="text-lg text-slate-600 dark:text-slate-300">Thoughts on design, development, and the intersection of both.</p>
-            </div>
-
             <div class="space-y-12">
                 {% for post in site.posts %}
                 <article class="glass rounded-2xl p-6 glass-hover">

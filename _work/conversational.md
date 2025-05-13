@@ -6,6 +6,7 @@ when: December 2016
 date: 15-12-2016
 link: https://medium.com/conversational-interfaces/conversational-interfaces-arent-new-but-they-re-changing-the-game-67578e37ac3#.6i2phgizt
 image: /images/hello.png
+tag: Writing
 ---
 Conversational interfaces, like Facebook Messenger bots, feel like they're out of science fiction... but their dirty little secret is that we've been trying to perfect them since the 1980's. 
 

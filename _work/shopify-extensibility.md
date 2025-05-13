@@ -1,10 +1,12 @@
 ---
 headline: "Deep platform extensibility"
 site: Shopify
+slug: shopify-extensibility
 collection: work
 when: 2021
 date: 01-01-2021
 image: /images/argo.png
+tag: Leadership
 ---
 I led a team working on a transformation of how developers can extend into the Shopify dashboard, checkout, and beyond, with third-party apps. 
 
