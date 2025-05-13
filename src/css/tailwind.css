@@ -73,7 +73,13 @@
 }
 
 .animate-scroll-left {
-  animation: scroll 200s linear infinite;
+  animation: scroll 120s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .animate-scroll-left {
+    animation: scroll 30s linear infinite;
+  }
 }
 
 .animate-scroll-left:hover {
