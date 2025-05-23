@@ -14,6 +14,25 @@ export function AsciiBackground(props) {
   const containerRef = useRef(null)
   const animationRef = useRef(null)
 
+  // Performance monitoring (local development only)
+  const [fps, setFps] = useState(0)
+  const fpsCounterRef = useRef({ frameCount: 0, lastTime: performance.now() })
+  const isLocalDevelopment = typeof window !== "undefined" && 
+    (window.location.hostname === "localhost" || 
+     window.location.hostname === "127.0.0.1" || 
+     window.location.hostname === "0.0.0.0" ||
+     window.location.port === "4000" || // Jekyll default
+     window.location.hostname.includes("local"))
+
+  // Debug logging for local development detection
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("Hostname:", window.location.hostname)
+      console.log("Port:", window.location.port)
+      console.log("Is Local Development:", isLocalDevelopment)
+    }
+  }, [])
+
   // Detect prefers-reduced-motion preference
   useEffect(() => {
     // Check if the browser supports matchMedia
@@ -120,6 +139,20 @@ export function AsciiBackground(props) {
 
     // Pass empty array for ripples since we're removing that functionality
     renderAsciiBackground(ctx, dimensions, time, settings, [], useReducedMotion, backgroundColor)
+
+    // Performance monitoring (local development only)
+    if (isLocalDevelopment) {
+      const now = performance.now()
+      fpsCounterRef.current.frameCount++
+      
+      if (now - fpsCounterRef.current.lastTime >= 1000) {
+        const calculatedFps = fpsCounterRef.current.frameCount
+        console.log("FPS Update:", calculatedFps)
+        setFps(calculatedFps)
+        fpsCounterRef.current.frameCount = 0
+        fpsCounterRef.current.lastTime = now
+      }
+    }
   }, [
     dimensions,
     time,
@@ -144,20 +177,38 @@ export function AsciiBackground(props) {
     settings.reducedMotionStyle,
     settings.reducedMotionFadeIn,
     prefersReducedMotion,
+    isLocalDevelopment,
   ])
 
   return (
-    <div
-      ref={containerRef}
-      className={
-        settings.fullscreen
-          ? "fixed inset-0 overflow-hidden pointer-events-none z-[-1]"
-          : "absolute inset-0 overflow-hidden pointer-events-none z-0"
-      }
-      aria-hidden="true"
-      style={{ opacity: settings.opacity }}
-    >
-      <canvas ref={canvasRef} className="w-full h-full" />
-    </div>
+    <>
+      <div
+        ref={containerRef}
+        className={
+          settings.fullscreen
+            ? "fixed inset-0 overflow-hidden pointer-events-none z-[-1]"
+            : "absolute inset-0 overflow-hidden pointer-events-none z-0"
+        }
+        aria-hidden="true"
+        style={{ opacity: settings.opacity }}
+      >
+        <canvas ref={canvasRef} className="w-full h-full" />
+      </div>
+      
+      {/* FPS Counter - Local Development Only - Rendered outside container */}
+      {isLocalDevelopment && (
+        <div 
+          className="fixed top-4 left-4 bg-red-500 text-white px-3 py-1 rounded text-sm font-mono pointer-events-none"
+          style={{ 
+            fontSize: '14px', 
+            fontWeight: 'bold',
+            zIndex: 99999,
+            position: 'fixed'
+          }}
+        >
+          FPS: {fps || 'Loading...'}
+        </div>
+      )}
+    </>
   )
 }

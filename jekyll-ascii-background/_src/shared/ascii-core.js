@@ -439,49 +439,53 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       let isVisible = true
       let cellOpacity = 1.0
 
-      if (reducedMotion && reducedMotionFadeIn && !ctx.isReducedMotionFadeComplete) {
-        // For reduced motion, use a simple fade-in effect
-        cellOpacity = entranceProgress
-        isVisible = true
-      } else if (!reducedMotion && entranceAnimation && !ctx.isEntranceComplete) {
-        // For normal motion, use the directional entrance animation
-        // Calculate position-based visibility based on entrance direction
-        let positionFactor = 0
+      // Skip entrance animation calculations if both animations are complete
+      if (!ctx.isEntranceComplete || !ctx.isReducedMotionFadeComplete) {
+        if (reducedMotion && reducedMotionFadeIn && !ctx.isReducedMotionFadeComplete) {
+          // For reduced motion, use a simple fade-in effect
+          cellOpacity = entranceProgress
+          isVisible = true
+        } else if (!reducedMotion && entranceAnimation && !ctx.isEntranceComplete) {
+          // For normal motion, use the directional entrance animation
+          // Calculate position-based visibility based on entrance direction
+          let positionFactor = 0
 
-        switch (entranceDirection) {
-          case "top":
-            positionFactor = y / dimensions.height
-            break
-          case "bottom":
-            positionFactor = 1 - y / dimensions.height
-            break
-          case "left":
-            positionFactor = x / dimensions.width
-            break
-          case "right":
-            positionFactor = 1 - x / dimensions.width
-            break
-          case "center":
-            const centerX = dimensions.width / 2
-            const centerY = dimensions.height / 2
-            const distanceFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2))
-            const maxDistance = Math.sqrt(Math.pow(dimensions.width / 2, 2) + Math.pow(dimensions.height / 2, 2))
-            positionFactor = 1 - distanceFromCenter / maxDistance
-            break
-          default:
-            positionFactor = 1 // Fully visible
+          switch (entranceDirection) {
+            case "top":
+              positionFactor = y / dimensions.height
+              break
+            case "bottom":
+              positionFactor = 1 - y / dimensions.height
+              break
+            case "left":
+              positionFactor = x / dimensions.width
+              break
+            case "right":
+              positionFactor = 1 - x / dimensions.width
+              break
+            case "center":
+              const centerX = dimensions.width / 2
+              const centerY = dimensions.height / 2
+              const distanceFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2))
+              const maxDistance = Math.sqrt(Math.pow(dimensions.width / 2, 2) + Math.pow(dimensions.height / 2, 2))
+              positionFactor = 1 - distanceFromCenter / maxDistance
+              break
+            default:
+              positionFactor = 1 // Fully visible
+          }
+
+          // Add some randomness to make it look more natural
+          const randomOffset = Math.random() * 0.2
+
+          // Cell is visible if entrance progress exceeds position factor
+          isVisible = entranceProgress > positionFactor - randomOffset
         }
 
-        // Add some randomness to make it look more natural
-        const randomOffset = Math.random() * 0.2
-
-        // Cell is visible if entrance progress exceeds position factor
-        isVisible = entranceProgress > positionFactor - randomOffset
+        if (!isVisible) {
+          continue // Skip rendering this cell
+        }
       }
-
-      if (!isVisible) {
-        continue // Skip rendering this cell
-      }
+      // If both animations are complete, all cells are visible with full opacity
 
       // Get noise value for this position and time
       const noiseValue =
