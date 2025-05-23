@@ -9,50 +9,53 @@ export function AsciiBackground(props) {
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [time, setTime] = useState(0)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const canvasRef = useRef(null)
+  const containerRef = useRef(null)
   const animationRef = useRef(null)
+
+  // Detect prefers-reduced-motion preference
+  useEffect(() => {
+    // Check if the browser supports matchMedia
+    if (typeof window !== "undefined" && window.matchMedia) {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+      // Set initial value
+      setPrefersReducedMotion(mediaQuery.matches)
+
+      // Add listener for changes
+      const handleChange = (e) => {
+        setPrefersReducedMotion(e.matches)
+      }
+
+      // Modern browsers
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener("change", handleChange)
+        return () => mediaQuery.removeEventListener("change", handleChange)
+      }
+      // Older browsers
+      else if (mediaQuery.addListener) {
+        mediaQuery.addListener(handleChange)
+        return () => mediaQuery.removeListener(handleChange)
+      }
+    }
+  }, [])
 
   // Calculate grid dimensions and initialize
   useEffect(() => {
     const updateDimensions = () => {
       const charWidth = Math.max(8, settings.density / 3)
+      const width = Math.floor(window.innerWidth / charWidth)
+      const height = Math.floor(window.innerHeight / charWidth)
 
-      if (settings.fullscreen) {
-        // For fullscreen mode, use window dimensions
-        const width = Math.floor(window.innerWidth / charWidth)
-        const height = Math.floor(window.innerHeight / charWidth)
-        setDimensions({ width, height })
-      } else {
-        // For container mode, use parent element dimensions
-        const parent = canvasRef.current?.parentElement
-        if (parent) {
-          const rect = parent.getBoundingClientRect()
-          const width = Math.floor(rect.width / charWidth)
-          const height = Math.floor(rect.height / charWidth)
-          setDimensions({ width, height })
-        }
-      }
+      setDimensions({ width, height })
     }
 
     updateDimensions()
-
-    // Add resize observer for container mode
-    let resizeObserver
-    if (!settings.fullscreen && canvasRef.current?.parentElement) {
-      resizeObserver = new ResizeObserver(updateDimensions)
-      resizeObserver.observe(canvasRef.current.parentElement)
-    }
-
-    // Always listen to window resize for fullscreen mode
     window.addEventListener("resize", updateDimensions)
 
-    return () => {
-      window.removeEventListener("resize", updateDimensions)
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      }
-    }
-  }, [settings.density, settings.fullscreen])
+    return () => window.removeEventListener("resize", updateDimensions)
+  }, [settings.density])
 
   // Animation using requestAnimationFrame
   useEffect(() => {
@@ -63,8 +66,24 @@ export function AsciiBackground(props) {
 
     if (dimensions.width === 0 || dimensions.height === 0) return
 
+    // Determine if we should use reduced motion
+    const useReducedMotion = settings.respectReducedMotion && prefersReducedMotion
+
+    // For reduced motion, we might want to slow down or stop the animation
     const animate = () => {
-      setTime((prevTime) => prevTime + settings.speed * 0.0001)
+      // If using reduced motion with static style, don't update time
+      if (useReducedMotion && settings.reducedMotionStyle === "static") {
+        // Only update time once for the initial render
+        if (time === 0) {
+          setTime(0.1) // Just enough to initialize
+        }
+      } else {
+        // For normal motion or minimal/slow reduced motion, update time
+        // Possibly at a slower rate for reduced motion
+        const speedFactor = useReducedMotion && settings.reducedMotionStyle === "slow" ? 0.2 : 1.0
+        setTime((prevTime) => prevTime + settings.speed * 0.0001 * speedFactor)
+      }
+
       animationRef.current = requestAnimationFrame(animate)
     }
 
@@ -75,7 +94,15 @@ export function AsciiBackground(props) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [dimensions, settings.speed, settings.noiseSpeed, settings.transitionSmoothness])
+  }, [
+    dimensions,
+    settings.speed,
+    settings.respectReducedMotion,
+    settings.reducedMotionStyle,
+    prefersReducedMotion,
+    time,
+    settings.reducedMotionFadeIn,
+  ])
 
   // Render to canvas
   useEffect(() => {
@@ -85,24 +112,43 @@ export function AsciiBackground(props) {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    renderAsciiBackground(ctx, dimensions, time, settings)
+    // Determine if we should use reduced motion
+    const useReducedMotion = settings.respectReducedMotion && prefersReducedMotion
+
+    // Use slate-900 background color to match the page background
+    const backgroundColor = "rgb(15, 23, 42)" // Tailwind slate-900
+
+    // Pass empty array for ripples since we're removing that functionality
+    renderAsciiBackground(ctx, dimensions, time, settings, [], useReducedMotion, backgroundColor)
   }, [
     dimensions,
     time,
     settings.density,
-    settings.characterSet,
+    settings.speed,
+    settings.opacity,
     settings.colorPalette,
-    settings.customCharacters,
     settings.customColors,
     settings.noiseScale,
     settings.noiseSpeed,
+    settings.characterSet,
+    settings.customCharacters,
     settings.gradientSize,
     settings.animationStyle,
     settings.transitionSmoothness,
+    settings.flowAwareness,
+    settings.flowSmoothing,
+    settings.entranceAnimation,
+    settings.entranceDirection,
+    settings.entranceDuration,
+    settings.respectReducedMotion,
+    settings.reducedMotionStyle,
+    settings.reducedMotionFadeIn,
+    prefersReducedMotion,
   ])
 
   return (
     <div
+      ref={containerRef}
       className={
         settings.fullscreen
           ? "fixed inset-0 overflow-hidden pointer-events-none z-[-1]"
@@ -111,7 +157,7 @@ export function AsciiBackground(props) {
       aria-hidden="true"
       style={{ opacity: settings.opacity }}
     >
-      <canvas ref={canvasRef} className="w-full h-full" style={{ backgroundColor: "#000" }} />
+      <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   )
 }

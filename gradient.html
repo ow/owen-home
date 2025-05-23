@@ -1,0 +1,42 @@
+---
+layout: fullscreen
+title: Gradient playground
+description: ASCII art playground
+permalink: /gradient/
+image: "/images/card.png"
+color_scheme: sunset
+nav_exclude: true
+---
+
+<body class="bg-black text-white overflow-hidden">
+    <div class="fixed inset-0 w-full h-full">
+        <!-- Full-screen ASCII Background -->
+        <div 
+            data-ascii-background='{"density": 35, "speed": 12, "opacity": 1, "colorPalette": "sunset", "noiseScale": 0.015, "noiseSpeed": 0.4, "characterSet": "code", "gradientSize": 2, "animationStyle": "wave", "transitionSmoothness": 0.9, "showControls": true, "fullscreen": true, "flowAwareness": 0.6, "flowSmoothing": 0.5, "entranceAnimation": true, "entranceDirection": "center", "entranceDuration": 3}'
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+        </div>
+        
+        <!-- Optional overlay for subtle depth -->
+        <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10" style="z-index: 2;"></div>
+        
+        <!-- Minimal UI overlay -->
+        <div class="absolute top-6 left-6 z-50">
+            <a href="/" class="inline-flex items-center text-white/70 hover:text-white transition-colors duration-200 text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+        
+        <!-- Title overlay (optional, can be removed for pure gradient) -->
+        <div class="absolute bottom-6 left-6 z-50">
+            <!-- Subtle backdrop for better text readability -->
+            <div class="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg -m-2"></div>
+            <div class="relative">
+                <h1 class="text-2xl font-light text-white/80 tracking-wide">ASCII Gradient Playground</h1>
+                <p class="text-sm text-white/60 mt-1">Play with the ASCII art tool configuration in the settings icon on the lower right.</p>
+            </div>
+        </div>
+    </div>
+</body> 

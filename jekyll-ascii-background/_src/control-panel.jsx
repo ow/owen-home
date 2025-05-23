@@ -8,17 +8,29 @@ export function ControlPanel({ settings, onSettingsChange }) {
   const [isOpen, setIsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("appearance")
   const [copySuccess, setCopySuccess] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const portalRef = useRef(null)
   const [mounted, setMounted] = useState(false)
 
+  // Detect prefers-reduced-motion preference
+  useEffect(() => {
+    // Check if the browser supports matchMedia
+    if (typeof window !== "undefined" && window.matchMedia) {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+      // Set initial value
+      setPrefersReducedMotion(mediaQuery.matches)
+    }
+  }, [])
+
   // Create portal container on mount
   useEffect(() => {
-    const portalContainer = document.createElement('div')
-    portalContainer.id = 'ascii-control-portal'
-    portalContainer.style.position = 'fixed'
-    portalContainer.style.bottom = '1rem'
-    portalContainer.style.right = '1rem'
-    portalContainer.style.zIndex = '999999'
+    const portalContainer = document.createElement("div")
+    portalContainer.id = "ascii-control-portal"
+    portalContainer.style.position = "fixed"
+    portalContainer.style.bottom = "1rem"
+    portalContainer.style.right = "1rem"
+    portalContainer.style.zIndex = "999999"
     document.body.appendChild(portalContainer)
     portalRef.current = portalContainer
     setMounted(true)
@@ -63,16 +75,24 @@ export function ControlPanel({ settings, onSettingsChange }) {
 
   // The control panel content
   const controlPanelContent = (
-    <div className="ascii-control-panel" style={{ 
-      position: 'relative',
-      pointerEvents: 'auto',
-      zIndex: 999999
-    }}>
-      <button className="ascii-control-button" onClick={togglePanel} type="button" style={{
-        position: 'absolute',
-        bottom: 0,
-        right: 0
-      }}>
+    <div
+      className="ascii-control-panel"
+      style={{
+        position: "relative",
+        pointerEvents: "auto",
+        zIndex: 999999,
+      }}
+    >
+      <button
+        className="ascii-control-button"
+        onClick={togglePanel}
+        type="button"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -90,12 +110,17 @@ export function ControlPanel({ settings, onSettingsChange }) {
       </button>
 
       {isOpen && (
-        <div className="ascii-control-content" style={{
-          position: 'absolute',
-          bottom: '100%',
-          right: 0,
-          marginBottom: '0.5rem'
-        }}>
+        <div
+          className="ascii-control-content"
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            right: 0,
+            marginBottom: "0.5rem",
+            zIndex: 999999, // Ensure high z-index
+            pointerEvents: "auto", // Ensure clicks are captured
+          }}
+        >
           <div className="ascii-tabs">
             <button
               className={activeTab === "appearance" ? "active" : ""}
@@ -111,6 +136,13 @@ export function ControlPanel({ settings, onSettingsChange }) {
             >
               Animation
             </button>
+            <button
+              className={activeTab === "accessibility" ? "active" : ""}
+              onClick={() => setActiveTab("accessibility")}
+              type="button"
+            >
+              Accessibility
+            </button>
           </div>
 
           {activeTab === "appearance" && (
@@ -120,6 +152,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                 <select
                   value={settings.colorPalette}
                   onChange={(e) => onSettingsChange({ colorPalette: e.target.value })}
+                  style={{ zIndex: 1000000, pointerEvents: "auto" }}
                 >
                   <option value="stripe">Stripe</option>
                   <option value="ocean">Ocean</option>
@@ -147,6 +180,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                 <select
                   value={settings.characterSet}
                   onChange={(e) => onSettingsChange({ characterSet: e.target.value })}
+                  style={{ zIndex: 1000000, pointerEvents: "auto" }}
                 >
                   <option value="minimal">Minimal</option>
                   <option value="dots">Dots</option>
@@ -198,6 +232,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                 <select
                   value={settings.fullscreen ? "true" : "false"}
                   onChange={(e) => onSettingsChange({ fullscreen: e.target.value === "true" })}
+                  style={{ zIndex: 1000000, pointerEvents: "auto" }}
                 >
                   <option value="true">Yes</option>
                   <option value="false">No</option>
@@ -213,6 +248,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                 <select
                   value={settings.animationStyle}
                   onChange={(e) => onSettingsChange({ animationStyle: e.target.value })}
+                  style={{ zIndex: 1000000, pointerEvents: "auto" }}
                 >
                   <option value="continuous">Continuous</option>
                   <option value="wave">Wave</option>
@@ -305,7 +341,6 @@ export function ControlPanel({ settings, onSettingsChange }) {
                 />
               </div>
 
-              {/* Add entrance animation controls */}
               <div
                 className="ascii-control-group"
                 style={{ borderTop: "1px solid #333", paddingTop: "15px", marginTop: "15px" }}
@@ -317,6 +352,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                   <select
                     value={settings.entranceAnimation !== false ? "true" : "false"}
                     onChange={(e) => onSettingsChange({ entranceAnimation: e.target.value === "true" })}
+                    style={{ zIndex: 1000000, pointerEvents: "auto" }}
                   >
                     <option value="true">Enabled</option>
                     <option value="false">Disabled</option>
@@ -330,6 +366,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                       <select
                         value={settings.entranceDirection || "bottom"}
                         onChange={(e) => onSettingsChange({ entranceDirection: e.target.value })}
+                        style={{ zIndex: 1000000, pointerEvents: "auto" }}
                       >
                         <option value="bottom">Bottom</option>
                         <option value="top">Top</option>
@@ -352,6 +389,105 @@ export function ControlPanel({ settings, onSettingsChange }) {
                     </div>
                   </>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* New Accessibility Tab */}
+          {activeTab === "accessibility" && (
+            <div className="ascii-tab-content">
+              <div className="ascii-control-group">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <label style={{ fontWeight: "bold" }}>Reduced Motion</label>
+                  {prefersReducedMotion && (
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        backgroundColor: "#3B82F6",
+                        color: "white",
+                        padding: "2px 8px",
+                        borderRadius: "9999px",
+                      }}
+                    >
+                      Detected
+                    </span>
+                  )}
+                </div>
+
+                <div className="ascii-control-group">
+                  <label>Respect System Preference</label>
+                  <select
+                    value={settings.respectReducedMotion !== false ? "true" : "false"}
+                    onChange={(e) => onSettingsChange({ respectReducedMotion: e.target.value === "true" })}
+                  >
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+
+                <div className="ascii-control-group">
+                  <label>Reduced Motion Style</label>
+                  <select
+                    value={settings.reducedMotionStyle || "static"}
+                    onChange={(e) => onSettingsChange({ reducedMotionStyle: e.target.value })}
+                  >
+                    <option value="static">Static (No Animation)</option>
+                    <option value="minimal">Minimal Motion</option>
+                    <option value="slow">Slow Motion</option>
+                  </select>
+                </div>
+
+                <div className="ascii-control-group">
+                  <label>Fade In Static Background</label>
+                  <select
+                    value={settings.reducedMotionFadeIn !== false ? "true" : "false"}
+                    onChange={(e) => onSettingsChange({ reducedMotionFadeIn: e.target.value === "true" })}
+                  >
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+
+                {settings.reducedMotionFadeIn && (
+                  <div className="ascii-control-group">
+                    <label>Fade Duration: {settings.reducedMotionFadeDuration || 1.0}s</label>
+                    <input
+                      type="range"
+                      min="0.5"
+                      max="3.0"
+                      step="0.1"
+                      value={settings.reducedMotionFadeDuration || 1.0}
+                      onChange={(e) =>
+                        onSettingsChange({ reducedMotionFadeDuration: Number.parseFloat(e.target.value) })
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div
+                className="ascii-control-group"
+                style={{ borderTop: "1px solid #333", paddingTop: "15px", marginTop: "15px" }}
+              >
+                <div style={{ fontSize: "14px", color: "#9ca3af" }}>
+                  <p style={{ marginBottom: "8px" }}>
+                    <strong>Current Status:</strong>{" "}
+                    {prefersReducedMotion
+                      ? "Reduced motion preference detected"
+                      : "No reduced motion preference detected"}
+                  </p>
+                  <p>
+                    When reduced motion is active, animations will be simplified or disabled based on your settings
+                    above.
+                  </p>
+                </div>
               </div>
             </div>
           )}

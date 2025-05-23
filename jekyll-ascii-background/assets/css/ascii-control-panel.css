@@ -1,3 +1,12 @@
+/* Ensure the control panel is always on top */
+#ascii-control-portal {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 999999;
+  pointer-events: auto;
+}
+
 /* Control Panel Styles */
 .ascii-control-panel {
   position: fixed;
@@ -84,6 +93,10 @@
   border: 1px solid #444;
   border-radius: 4px;
   color: #fff;
+  cursor: pointer;
+  position: relative;
+  z-index: 999999; /* Ensure high z-index */
+  pointer-events: auto; /* Ensure clicks are captured */
 }
 
 .ascii-control-group input[type="range"] {
@@ -123,4 +136,16 @@
   font-size: 12px;
   color: #9ca3af;
   text-align: center;
+}
+
+/* Ensure the control panel is always on top and clickable */
+.ascii-control-panel,
+.ascii-control-content,
+.ascii-tabs,
+.ascii-tab-content,
+.ascii-control-group,
+.ascii-copy-button {
+  position: relative;
+  z-index: 999999;
+  pointer-events: auto !important;
 }

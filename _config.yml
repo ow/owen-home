@@ -147,7 +147,7 @@ plugins:
 
 # Build settings
 markdown: kramdown
-permalink: pretty
+permalink: /:year/:month/:day/:title/
 exclude: [
   "node_modules",
   "LICENSE",

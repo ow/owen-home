@@ -78,7 +78,7 @@
                         <div class="space-y-2">
                             {% for page in site.pages %}
                                 {% if page.title %}
-                                {% if page.index != true %}
+                                {% if page.index != true and page.nav_exclude != true %}
                                 <a href="{{ page.url | relative_url }}" class="link-muted block text-sm">
                                     {{ page.title }}
                                 </a>
