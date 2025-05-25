@@ -192,7 +192,14 @@ export function AsciiBackground(props) {
         aria-hidden="true"
         style={{ opacity: settings.opacity }}
       >
-        <canvas ref={canvasRef} className="w-full h-full" />
+        <canvas 
+          ref={canvasRef} 
+          style={{
+            width: '100%',
+            height: '100%',
+            imageRendering: 'pixelated' // Ensures crisp character rendering
+          }}
+        />
       </div>
       
       {/* FPS Counter - Local Development Only - Rendered outside container */}

@@ -262,7 +262,95 @@ export function interpolateColors(color1, color2, t) {
   }
 }
 
-// Update the renderAsciiBackground function to use optical flow and ripples
+// Add dirty region tracking utilities
+function createDirtyRegionTracker(width, height) {
+  return {
+    regions: [],
+    cellChanges: Array(height).fill().map(() => Array(width).fill(false)),
+    
+    markDirty(x, y) {
+      if (x >= 0 && x < width && y >= 0 && y < height) {
+        this.cellChanges[y][x] = true
+      }
+    },
+    
+    // Batch nearby dirty cells into rectangular regions for efficient clearing
+    calculateDirtyRegions(charWidth) {
+      this.regions = []
+      const visited = Array(height).fill().map(() => Array(width).fill(false))
+      
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (this.cellChanges[y][x] && !visited[y][x]) {
+            // Find the bounds of this dirty region
+            let minX = x, maxX = x, minY = y, maxY = y
+            
+            // Expand region to include nearby dirty cells (simple rectangular expansion)
+            for (let dy = 0; dy < Math.min(8, height - y); dy++) {
+              for (let dx = 0; dx < Math.min(8, width - x); dx++) {
+                if (this.cellChanges[y + dy] && this.cellChanges[y + dy][x + dx]) {
+                  maxX = Math.max(maxX, x + dx)
+                  maxY = Math.max(maxY, y + dy)
+                }
+              }
+            }
+            
+            // Mark all cells in this region as visited
+            for (let ry = minY; ry <= maxY; ry++) {
+              for (let rx = minX; rx <= maxX; rx++) {
+                if (ry < height && rx < width) {
+                  visited[ry][rx] = true
+                }
+              }
+            }
+            
+            // Add the region (convert to canvas coordinates)
+            this.regions.push({
+              x: minX * charWidth,
+              y: minY * charWidth,
+              width: (maxX - minX + 1) * charWidth,
+              height: (maxY - minY + 1) * charWidth,
+              cellMinX: minX,
+              cellMaxX: maxX,
+              cellMinY: minY,
+              cellMaxY: maxY
+            })
+          }
+        }
+      }
+    },
+    
+    clear() {
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          this.cellChanges[y][x] = false
+        }
+      }
+      this.regions = []
+    },
+    
+    isEmpty() {
+      return this.regions.length === 0
+    }
+  }
+}
+
+// Helper function to detect if a cell has changed significantly
+function hasCellChanged(newState, oldState, threshold = 0.1) {
+  if (!oldState) return true
+  
+  // Check if character changed
+  if (newState.charIndex !== oldState.charIndex) return true
+  
+  // Check if color changed significantly
+  if (Math.abs(newState.colorIndex - oldState.colorIndex) > threshold) return true
+  
+  // Check if noise value changed significantly
+  if (Math.abs(newState.noiseValue - oldState.noiseValue) > threshold) return true
+  
+  return false
+}
+
 export function renderAsciiBackground(ctx, dimensions, time, settings, ripples = [], reducedMotion = false, backgroundColor = "#000") {
   const {
     density,
@@ -288,8 +376,15 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
   // Calculate canvas dimensions
   const charWidth = Math.max(8, density / 3)
-  const canvasWidth = dimensions.width * charWidth
-  const canvasHeight = dimensions.height * charWidth
+  
+  // Get the actual display size of the canvas
+  const rect = ctx.canvas.getBoundingClientRect()
+  const displayWidth = rect.width
+  const displayHeight = rect.height
+  
+  // Set canvas internal dimensions to match display size for crisp rendering
+  const canvasWidth = displayWidth
+  const canvasHeight = displayHeight
 
   // Only resize canvas if dimensions have actually changed
   if (ctx.canvas.width !== canvasWidth || ctx.canvas.height !== canvasHeight) {
@@ -305,6 +400,9 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     ctx._cachedWidth = canvasWidth
     ctx._cachedHeight = canvasHeight
     ctx._cachedCharWidth = charWidth
+    
+    // Reset dirty region tracker on canvas resize
+    ctx._dirtyTracker = null
   }
 
   // Only update font if character width changed (density changed)
@@ -313,9 +411,19 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     ctx._cachedCharWidth = charWidth
   }
 
-  // Clear canvas with the specified background color
-  ctx.fillStyle = backgroundColor
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  // Initialize dirty region tracker if it doesn't exist
+  if (!ctx._dirtyTracker) {
+    ctx._dirtyTracker = createDirtyRegionTracker(dimensions.width, dimensions.height)
+    // Force full redraw on first frame or after resize
+    ctx._forceFullRedraw = true
+  }
+
+  // Resize dirty tracker if dimensions changed
+  if (ctx._dirtyTracker.cellChanges.length !== dimensions.height || 
+      (ctx._dirtyTracker.cellChanges[0] && ctx._dirtyTracker.cellChanges[0].length !== dimensions.width)) {
+    ctx._dirtyTracker = createDirtyRegionTracker(dimensions.width, dimensions.height)
+    ctx._forceFullRedraw = true
+  }
 
   const characters = getCharacters(characterSet, customCharacters)
   const colors = getColors(colorPalette, customColors)
@@ -346,6 +454,9 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     // Initialize reduced motion fade-in state
     ctx.reducedMotionFadeStartTime = time
     ctx.isReducedMotionFadeComplete = false
+    
+    // Force full redraw when state is initialized
+    ctx._forceFullRedraw = true
   }
 
   // Resize previous state if dimensions changed
@@ -374,10 +485,13 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     // Reset reduced motion fade-in on resize
     ctx.reducedMotionFadeStartTime = time
     ctx.isReducedMotionFadeComplete = false
+    
+    // Force full redraw on resize
+    ctx._forceFullRedraw = true
   }
 
-  // Draw ASCII gradient
-  // Canvas properties are now set only when canvas is resized or font changes
+  // Clear dirty regions from previous frame
+  ctx._dirtyTracker.clear()
 
   // Pre-calculate some values for optimization
   const timeOffset = time * noiseSpeed
@@ -432,7 +546,9 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     }
   }
 
-  // Second pass: render with flow awareness and entrance animation
+  // Second pass: calculate new states and detect changes
+  const newStates = Array(dimensions.height).fill().map(() => Array(dimensions.width).fill(null))
+  
   for (let y = 0; y < dimensions.height; y++) {
     for (let x = 0; x < dimensions.width; x++) {
       // Apply entrance animation - determine if this cell should be visible yet
@@ -482,10 +598,11 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         }
 
         if (!isVisible) {
-          continue // Skip rendering this cell
+          // Store null state for invisible cells
+          newStates[y][x] = null
+          continue
         }
       }
-      // If both animations are complete, all cells are visible with full opacity
 
       // Get noise value for this position and time
       const noiseValue =
@@ -575,28 +692,107 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       // Interpolate between colors for smoother transitions
       const color = interpolateColors(color1, color2, colorMix)
 
-      // Update the previous state
-      ctx.previousState[y][x] = {
+      // Create new state
+      const newState = {
         charIndex,
         colorIndex,
         noiseValue: currentNoiseValue,
         flowX: flow.dx,
         flowY: flow.dy,
+        char,
+        color,
+        cellOpacity,
+        isVisible: true
       }
 
-      // Apply cell opacity for fade-in effect
-      if (cellOpacity < 1.0) {
-        // Create a semi-transparent version of the color
-        const r = Number.parseInt(color.slice(1, 3), 16)
-        const g = Number.parseInt(color.slice(3, 5), 16)
-        const b = Number.parseInt(color.slice(5, 7), 16)
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${cellOpacity})`
-      } else {
-        ctx.fillStyle = color
-      }
+      newStates[y][x] = newState
 
-      // Draw character
-      ctx.fillText(char, (x + 0.5) * charWidth, (y + 0.5) * charWidth)
+      // Check if this cell has changed and mark as dirty if so
+      if (ctx._forceFullRedraw || hasCellChanged(newState, prevState)) {
+        ctx._dirtyTracker.markDirty(x, y)
+      }
+    }
+  }
+
+  // Calculate dirty regions for efficient rendering
+  ctx._dirtyTracker.calculateDirtyRegions(charWidth)
+
+  // If we have dirty regions or force full redraw, render them
+  if (ctx._forceFullRedraw || !ctx._dirtyTracker.isEmpty()) {
+    if (ctx._forceFullRedraw) {
+      // Full canvas clear and redraw
+      ctx.fillStyle = backgroundColor
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      
+      // Render all visible cells
+      for (let y = 0; y < dimensions.height; y++) {
+        for (let x = 0; x < dimensions.width; x++) {
+          const newState = newStates[y][x]
+          if (newState && newState.isVisible) {
+            // Apply cell opacity for fade-in effect
+            if (newState.cellOpacity < 1.0) {
+              // Create a semi-transparent version of the color
+              const r = Number.parseInt(newState.color.slice(1, 3), 16)
+              const g = Number.parseInt(newState.color.slice(3, 5), 16)
+              const b = Number.parseInt(newState.color.slice(5, 7), 16)
+              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${newState.cellOpacity})`
+            } else {
+              ctx.fillStyle = newState.color
+            }
+
+            // Draw character
+            ctx.fillText(newState.char, (x + 0.5) * charWidth, (y + 0.5) * charWidth)
+          }
+        }
+      }
+      
+      ctx._forceFullRedraw = false
+    } else {
+      // Selective redraw of dirty regions only
+      for (const region of ctx._dirtyTracker.regions) {
+        // Clear this dirty region
+        ctx.fillStyle = backgroundColor
+        ctx.fillRect(region.x, region.y, region.width, region.height)
+        
+        // Redraw only the cells in this region
+        for (let y = region.cellMinY; y <= region.cellMaxY; y++) {
+          for (let x = region.cellMinX; x <= region.cellMaxX; x++) {
+            if (y < dimensions.height && x < dimensions.width) {
+              const newState = newStates[y][x]
+              if (newState && newState.isVisible) {
+                // Apply cell opacity for fade-in effect
+                if (newState.cellOpacity < 1.0) {
+                  // Create a semi-transparent version of the color
+                  const r = Number.parseInt(newState.color.slice(1, 3), 16)
+                  const g = Number.parseInt(newState.color.slice(3, 5), 16)
+                  const b = Number.parseInt(newState.color.slice(5, 7), 16)
+                  ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${newState.cellOpacity})`
+                } else {
+                  ctx.fillStyle = newState.color
+                }
+
+                // Draw character
+                ctx.fillText(newState.char, (x + 0.5) * charWidth, (y + 0.5) * charWidth)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Update previous state with new states
+  for (let y = 0; y < dimensions.height; y++) {
+    for (let x = 0; x < dimensions.width; x++) {
+      if (newStates[y][x]) {
+        ctx.previousState[y][x] = {
+          charIndex: newStates[y][x].charIndex,
+          colorIndex: newStates[y][x].colorIndex,
+          noiseValue: newStates[y][x].noiseValue,
+          flowX: newStates[y][x].flowX,
+          flowY: newStates[y][x].flowY,
+        }
+      }
     }
   }
 }
