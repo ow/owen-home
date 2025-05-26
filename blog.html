@@ -10,20 +10,33 @@ color_scheme: sunset
 {% capture ascii_settings %}
 {
   "density": 30,
-  "speed": 10,
+  "speed": 30,
   "opacity": 1,
   "colorPalette": "{{ page.color_scheme }}",
   "noiseScale": 0.02,
-  "noiseSpeed": 0.3,
+  "noiseSpeed": 0.5,
   "characterSet": "code",
   "gradientSize": 1.5,
   "animationStyle": "wave",
   "transitionSmoothness": 1.1,
-  "showControls": false,
+  "showControls": true,
   "fullscreen": false,
-  "entranceAnimation": true,
-  "entranceDirection": "top",
-  "entranceDuration": 2
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
 }
 {% endcapture %}
 {% include hero.html

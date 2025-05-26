@@ -1,12 +1,12 @@
 <div class="{% if include.height %}{{ include.height }}{% else %}min-h-[40vh]{% endif %} relative flex items-center pt-24 sm:pt-12 pb-8">
     <!-- Background: ASCII Background -->
     <div 
-        data-ascii-background='{{ include.ascii_settings }}'
+        data-ascii-background='{% if include.ascii_settings %}{% if jekyll.environment == "development" %}{{ include.ascii_settings | replace: '"showControls": false', '"showControls": true' }}{% else %}{{ include.ascii_settings }}{% endif %}{% else %}{"density": 25, "speed": 70, "opacity": 0.8, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.1, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "flow", "transitionSmoothness": 1.3, "showControls": {% if jekyll.environment == "development" %}true{% else %}false{% endif %}, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": false, "entranceDirection": "top", "entranceDuration": 3, "interactiveMode": true, "interactiveEffect": "ripple", "interactiveIntensity": 1, "interactiveDuration": 1.5, "interactiveRadius": 10, "respectReducedMotion": true, "reducedMotionStyle": "static", "reducedMotionFadeIn": true, "reducedMotionFadeDuration": 1}{% endif %}'
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"
         class="bg-slate-900">
     </div>
     <!-- Overlay Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/10 via-slate-900/8 to-slate-900/5" style="z-index: 2;"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/40 via-slate-900/35 to-slate-900/35 backdrop-blur-[0.5px]" style="z-index: 2;"></div>
 
     <!-- Hero Content -->
     <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex flex-col justify-center h-full">
@@ -26,5 +26,5 @@
     </div>
 
     <!-- Decorative gradient at bottom -->
-    <div class="absolute bottom-0 inset-x-0 h-[16rem] bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent" style="z-index: 3;"></div>
+    <div class="absolute bottom-0 inset-x-0 h-[30%] bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" style="z-index: 3;"></div>
 </div> 

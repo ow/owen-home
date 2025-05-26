@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { defaultSettings, renderAsciiBackground } from "./shared/ascii-core"
+import { defaultSettings, renderAsciiBackground, resetAnimationState } from "./shared/ascii-core"
 
 export function AsciiBackground(props) {
   // Merge provided props with default settings
@@ -27,9 +27,32 @@ export function AsciiBackground(props) {
   // Debug logging for local development detection
   useEffect(() => {
     if (typeof window !== "undefined") {
-      console.log("Hostname:", window.location.hostname)
-      console.log("Port:", window.location.port)
-      console.log("Is Local Development:", isLocalDevelopment)
+      // Local development detection logic without console logging
+    }
+  }, [])
+
+  // Add event listener for reset functionality
+  useEffect(() => {
+    const handleReset = (event) => {
+      // Get the canvas context
+      const canvas = canvasRef.current
+      if (canvas) {
+        const ctx = canvas.getContext("2d")
+        if (ctx) {
+          // Reset the animation state
+          resetAnimationState(ctx)
+          
+          // Reset time to trigger a fresh start
+          setTime(0)
+        }
+      }
+    }
+
+    // Listen for the custom reset event
+    window.addEventListener('ascii-background-reset', handleReset)
+
+    return () => {
+      window.removeEventListener('ascii-background-reset', handleReset)
     }
   }, [])
 
@@ -147,7 +170,6 @@ export function AsciiBackground(props) {
       
       if (now - fpsCounterRef.current.lastTime >= 1000) {
         const calculatedFps = fpsCounterRef.current.frameCount
-        console.log("FPS Update:", calculatedFps)
         setFps(calculatedFps)
         fpsCounterRef.current.frameCount = 0
         fpsCounterRef.current.lastTime = now

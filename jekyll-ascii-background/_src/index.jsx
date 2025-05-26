@@ -7,20 +7,13 @@ import { ControlPanel } from "./control-panel"
 import "./control-panel.css"
 import { defaultSettings } from "./shared/ascii-core"
 
-// Add this debug logging at the beginning of the file
-console.log("ASCII Background initializing...")
-
-// Add this debug function to the AsciiBackgroundApp component
 function AsciiBackgroundApp({ initialConfig = {} }) {
-  console.log("AsciiBackgroundApp rendering with config:", initialConfig)
-
   // If page has provided config, use it
   const initialSettings = { ...defaultSettings, ...initialConfig }
 
   const [settings, setSettings] = useState(initialSettings)
 
   const handleSettingsChange = (newSettings) => {
-    console.log("Settings changed:", newSettings)
     setSettings((prev) => ({ ...prev, ...newSettings }))
   }
 
@@ -33,10 +26,7 @@ function AsciiBackgroundApp({ initialConfig = {} }) {
   )
 }
 
-// Add this debug logging to the document.addEventListener callback
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, initializing ASCII Background...")
-
   // Look for elements with data-ascii-background attribute
   const asciiElements = document.querySelectorAll("[data-ascii-background]")
 

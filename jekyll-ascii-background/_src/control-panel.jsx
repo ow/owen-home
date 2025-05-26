@@ -67,10 +67,18 @@ export function ControlPanel({ settings, onSettingsChange }) {
       })
   }
 
+  // Function to reset animation state
+  const resetAnimationState = () => {
+    // Dispatch a custom event that the ASCII background can listen for
+    const resetEvent = new CustomEvent('ascii-background-reset', {
+      detail: { timestamp: Date.now() }
+    })
+    window.dispatchEvent(resetEvent)
+  }
+
   // Toggle panel visibility
   const togglePanel = () => {
     setIsOpen(!isOpen)
-    console.log("Panel toggled:", !isOpen) // Debug logging
   }
 
   // The control panel content
@@ -154,7 +162,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
                   onChange={(e) => onSettingsChange({ colorPalette: e.target.value })}
                   style={{ zIndex: 1000000, pointerEvents: "auto" }}
                 >
-                  <option value="stripe">Stripe</option>
+                  <option value="green">Green</option>
                   <option value="ocean">Ocean</option>
                   <option value="sunset">Sunset</option>
                   <option value="purple">Purple</option>
@@ -243,6 +251,31 @@ export function ControlPanel({ settings, onSettingsChange }) {
 
           {activeTab === "animation" && (
             <div className="ascii-tab-content">
+              {/* Reset Animation State Button */}
+              <div className="ascii-control-group" style={{ marginBottom: "20px" }}>
+                <button
+                  className="ascii-reset-button"
+                  onClick={resetAnimationState}
+                  type="button"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    backgroundColor: "#3B82F6",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                  }}
+                >
+                  🔄 Reset Animation State
+                </button>
+                <small style={{ color: "#888", fontSize: "12px", display: "block", marginTop: "5px" }}>
+                  Resets the animation to see changes clearly (keeps your settings)
+                </small>
+              </div>
+
               <div className="ascii-control-group">
                 <label>Animation Style</label>
                 <select
@@ -340,6 +373,73 @@ export function ControlPanel({ settings, onSettingsChange }) {
                   onChange={(e) => onSettingsChange({ noiseSpeed: Number.parseFloat(e.target.value) })}
                 />
               </div>
+
+              {/* Wave-specific controls - only show when wave animation is selected */}
+              {settings.animationStyle === "wave" && (
+                <div
+                  className="ascii-control-group"
+                  style={{ borderTop: "1px solid #333", paddingTop: "15px", marginTop: "15px" }}
+                >
+                  <label style={{ fontWeight: "bold" }}>Wave Settings</label>
+
+                  <div className="ascii-control-group">
+                    <label>Flow Direction: {settings.waveFlowDirection || 45}°</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="360"
+                      step="15"
+                      value={settings.waveFlowDirection || 45}
+                      onChange={(e) => onSettingsChange({ waveFlowDirection: Number.parseInt(e.target.value) })}
+                    />
+                    <small style={{ color: "#888", fontSize: "12px" }}>
+                      0° = Right, 90° = Down, 180° = Left, 270° = Up
+                    </small>
+                  </div>
+
+                  <div className="ascii-control-group">
+                    <label>Wave Intensity: {settings.waveIntensity || 1.0}</label>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="2.0"
+                      step="0.1"
+                      value={settings.waveIntensity || 1.0}
+                      onChange={(e) => onSettingsChange({ waveIntensity: Number.parseFloat(e.target.value) })}
+                    />
+                  </div>
+
+                  <div className="ascii-control-group">
+                    <label>Wave Layers: {settings.waveLayers || 3}</label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      step="1"
+                      value={settings.waveLayers || 3}
+                      onChange={(e) => onSettingsChange({ waveLayers: Number.parseInt(e.target.value) })}
+                    />
+                    <small style={{ color: "#888", fontSize: "12px" }}>
+                      More layers = more complex patterns
+                    </small>
+                  </div>
+
+                  <div className="ascii-control-group">
+                    <label>Organic Factor: {settings.waveOrganicFactor || 0.1}</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="0.5"
+                      step="0.05"
+                      value={settings.waveOrganicFactor || 0.1}
+                      onChange={(e) => onSettingsChange({ waveOrganicFactor: Number.parseFloat(e.target.value) })}
+                    />
+                    <small style={{ color: "#888", fontSize: "12px" }}>
+                      Higher values = more organic, less geometric feel
+                    </small>
+                  </div>
+                </div>
+              )}
 
               <div
                 className="ascii-control-group"

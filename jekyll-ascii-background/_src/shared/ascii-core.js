@@ -9,7 +9,7 @@ export const characterSets = {
   dots: " .·•●".split(""),
   blocks: " ░▒▓█".split(""),
   // Improved code set with more visually distinct characters and better gradation
-  code: [" ", ".", ":", "+", "=", "*", "#", "@", "$", "%", "&", "8", "B", "W", "M"],
+  code: ["(", ")", ".", ";", "+", "=", "*", "#", "@", "$", "%", "&", "<", ">", "{", "}", "/", "~"],
   matrix: [
     " ",
     ".",
@@ -49,7 +49,7 @@ export const characterSets = {
 
 // Color palettes
 export const colorPalettes = {
-  stripe: ["#6366F1", "#EC4899", "#F472B6", "#8B5CF6", "#A855F7", "#3B82F6", "#06B6D4"],
+  green: ["#22c55e", "#16a34a", "#059669", "#0d9488", "#0891b2", "#0e7490", "#0369a1", "#1d4ed8", "#2563eb", "#3b82f6"],
   ocean: ["#0A2463", "#3E92CC", "#2CA6A4", "#44CF6C", "#A6EBC9"],
   sunset: ["#FF0080", "#FF8C00", "#FFD700", "#FF4500", "#FF1493", "#FF00FF", "#FF6347"],
   purple: ["#240046", "#3C096C", "#5A189A", "#7B2CBF", "#9D4EDD", "#C77DFF", "#E0AAFF"],
@@ -61,7 +61,7 @@ export const defaultSettings = {
   density: 30,
   speed: 30,
   opacity: 0.9,
-  colorPalette: "stripe",
+  colorPalette: "green",
   customColors: ["#6366F1", "#EC4899", "#F472B6"],
   noiseScale: 0.015,
   noiseSpeed: 0.5,
@@ -90,21 +90,54 @@ export const defaultSettings = {
   reducedMotionStyle: "static", // "static", "minimal", "slow"
   reducedMotionFadeIn: true, // Fade in the static background
   reducedMotionFadeDuration: 1.0, // seconds
+  // Add wave-specific parameters
+  waveFlowDirection: 45, // degrees (0 = right, 90 = down, 180 = left, 270 = up)
+  waveIntensity: 1.0, // 0.1 to 2.0 - controls wave amplitude
+  waveLayers: 3, // 1 to 5 - number of wave layers
+  waveOrganicFactor: 0.1, // 0 to 0.5 - amount of organic noise
 }
 
 // Helper functions
 export function getCharacters(characterSet, customCharacters) {
-  if (characterSet === "custom" && customCharacters) {
+  // Handle custom characters
+  if (characterSet === "custom" && customCharacters && typeof customCharacters === "string" && customCharacters.length > 0) {
     return customCharacters.split("")
   }
-  return characterSets[characterSet] || characterSets.code
+  
+  // Handle undefined, null, empty string, or invalid character set
+  if (!characterSet || typeof characterSet !== "string" || characterSet.trim() === "") {
+    return characterSets.code // Default fallback
+  }
+  
+  // Get the requested character set or fall back to code
+  const charset = characterSets[characterSet.trim()]
+  if (charset && Array.isArray(charset) && charset.length > 0) {
+    return charset
+  }
+  
+  // Final fallback to code character set
+  return characterSets.code
 }
 
 export function getColors(colorPalette, customColors) {
-  if (colorPalette === "custom" && customColors && customColors.length > 1) {
+  // Handle custom colors
+  if (colorPalette === "custom" && customColors && Array.isArray(customColors) && customColors.length > 1) {
     return customColors
   }
-  return colorPalettes[colorPalette] || colorPalettes.stripe
+  
+  // Handle undefined, null, empty string, or invalid color palette
+  if (!colorPalette || typeof colorPalette !== "string" || colorPalette.trim() === "") {
+    return colorPalettes.ocean // Default fallback
+  }
+  
+  // Get the requested palette or fall back to ocean
+  const palette = colorPalettes[colorPalette.trim()]
+  if (palette && Array.isArray(palette) && palette.length > 0) {
+    return palette
+  }
+  
+  // Final fallback to ocean if the requested palette doesn't exist
+  return colorPalettes.ocean
 }
 
 // Generate a static gradient pattern for reduced motion
@@ -121,7 +154,7 @@ export function generateStaticPattern(x, y, gradientSize, noiseScale) {
 }
 
 // Update the generateNoise function to make ripples more visible
-export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle, ripples = [], reducedMotion = false) {
+export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle, ripples = [], reducedMotion = false, waveSettings = {}) {
   // If reduced motion is enabled, use a static pattern instead
   if (reducedMotion) {
     return generateStaticPattern(x, y, gradientSize, noiseScale)
@@ -135,8 +168,56 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
   let baseNoise = 0
 
   if (animationStyle === "wave") {
-    // Wave-like pattern with continuous movement
-    baseNoise = Math.sin(scaledX * 2 + z) * 0.5 + Math.cos(scaledY * 2 + z * 1.3) * 0.5
+    // Extract wave settings with defaults
+    const {
+      waveFlowDirection = 45,
+      waveIntensity = 1.0,
+      waveLayers = 3,
+      waveOrganicFactor = 0.1
+    } = waveSettings
+
+    // Convert flow direction to radians
+    const flowAngle = (waveFlowDirection * Math.PI) / 180
+    const flowX = Math.cos(flowAngle)
+    const flowY = Math.sin(flowAngle)
+
+    // Primary wave direction based on user setting
+    const primaryFlow = scaledX * flowX + scaledY * flowY + z * 1.5
+    
+    // Main wave with adjustable intensity
+    let waveSum = Math.sin(primaryFlow) * 0.5 * waveIntensity
+    
+    // Add additional wave layers if requested
+    if (waveLayers >= 2) {
+      // Secondary wave (perpendicular to main flow)
+      const perpX = -flowY
+      const perpY = flowX
+      const secondaryWave = Math.sin(scaledX * perpX * 1.5 + scaledY * perpY * 1.5 + z * 0.8) * 0.25 * waveIntensity
+      waveSum += secondaryWave
+    }
+    
+    if (waveLayers >= 3) {
+      // Tertiary wave for subtle texture
+      const tertiaryWave = Math.sin(scaledX * 1.2 + scaledY * 0.8 + z * 1.2) * 0.15 * waveIntensity
+      waveSum += tertiaryWave
+    }
+    
+    if (waveLayers >= 4) {
+      // Quaternary wave for more complexity
+      const quaternaryWave = Math.sin(scaledX * 0.7 + scaledY * 1.3 + z * 0.9) * 0.1 * waveIntensity
+      waveSum += quaternaryWave
+    }
+    
+    if (waveLayers >= 5) {
+      // Fifth wave for maximum detail
+      const fifthWave = Math.sin(scaledX * 1.8 + scaledY * 0.4 + z * 1.6) * 0.08 * waveIntensity
+      waveSum += fifthWave
+    }
+    
+    // Add organic noise based on user setting
+    const organicNoise = Math.sin(scaledX * 2.3 + z * 0.6) * Math.cos(scaledY * 1.8 + z * 0.9) * waveOrganicFactor * waveIntensity
+    
+    baseNoise = waveSum + organicNoise
   } else if (animationStyle === "flow") {
     // Flowing pattern with multiple frequencies
     baseNoise =
@@ -209,15 +290,15 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
 }
 
 // Add the calculateGradient function for optical flow
-function calculateGradient(x, y, z, noiseScale, gradientSize, animationStyle, ripples = [], reducedMotion = false) {
+function calculateGradient(x, y, z, noiseScale, gradientSize, animationStyle, ripples = [], reducedMotion = false, waveSettings = {}) {
   const epsilon = 0.01 // Small value for numerical differentiation
 
   // Calculate noise at current position
-  const center = generateNoise(x, y, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion)
+  const center = generateNoise(x, y, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings)
 
   // Calculate noise at slightly offset positions
-  const right = generateNoise(x + epsilon, y, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion)
-  const up = generateNoise(x, y + epsilon, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion)
+  const right = generateNoise(x + epsilon, y, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings)
+  const up = generateNoise(x, y + epsilon, z, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings)
 
   // Calculate the gradient (direction of steepest change)
   const dx = (right - center) / epsilon
@@ -336,17 +417,20 @@ function createDirtyRegionTracker(width, height) {
 }
 
 // Helper function to detect if a cell has changed significantly
-function hasCellChanged(newState, oldState, threshold = 0.1) {
+function hasCellChanged(newState, oldState, threshold = 0.1, isEarlyFrame = false) {
   if (!oldState) return true
+  
+  // Use a much lower threshold for early frames to ensure everything renders
+  const effectiveThreshold = isEarlyFrame ? 0.01 : threshold
   
   // Check if character changed
   if (newState.charIndex !== oldState.charIndex) return true
   
   // Check if color changed significantly
-  if (Math.abs(newState.colorIndex - oldState.colorIndex) > threshold) return true
+  if (Math.abs(newState.colorIndex - oldState.colorIndex) > effectiveThreshold) return true
   
   // Check if noise value changed significantly
-  if (Math.abs(newState.noiseValue - oldState.noiseValue) > threshold) return true
+  if (Math.abs(newState.noiseValue - oldState.noiseValue) > effectiveThreshold) return true
   
   return false
 }
@@ -370,9 +454,22 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     entranceDuration = 1.5,
     reducedMotionFadeIn = true,
     reducedMotionFadeDuration = 1.0,
+    // Extract wave-specific settings
+    waveFlowDirection = 45,
+    waveIntensity = 1.0,
+    waveLayers = 3,
+    waveOrganicFactor = 0.1,
   } = settings
 
   if (!ctx || dimensions.width === 0 || dimensions.height === 0) return
+
+  // Create wave settings object
+  const waveSettings = {
+    waveFlowDirection,
+    waveIntensity,
+    waveLayers,
+    waveOrganicFactor,
+  }
 
   // Calculate canvas dimensions
   const charWidth = Math.max(8, density / 3)
@@ -447,13 +544,44 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           })),
       )
 
+    // If entrance animation is disabled, pre-populate with a proper wave pattern
+    if (!entranceAnimation || reducedMotion) {
+      const preTimeOffset = time * noiseSpeed
+      for (let y = 0; y < dimensions.height; y++) {
+        for (let x = 0; x < dimensions.width; x++) {
+          // Generate initial noise value for this position
+          const initialNoiseValue = (generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2
+          const enhancedValue = Math.pow(initialNoiseValue, transitionSmoothness)
+          
+          // Set initial character and color indices
+          const charIndex = Math.floor(enhancedValue * characters.length)
+          const colorIndex = Math.floor(enhancedValue * colors.length)
+          
+          ctx.previousState[y][x] = {
+            charIndex: Math.min(charIndex, characters.length - 1),
+            colorIndex: Math.min(colorIndex, colors.length - 1),
+            noiseValue: enhancedValue,
+            flowX: 0,
+            flowY: 0,
+          }
+        }
+      }
+      
+      // Mark that we've pre-populated and need to force render on first frame
+      ctx._isPrePopulated = true
+      ctx._forceFullRedraw = true
+    }
+
     // Initialize entrance animation state
     ctx.entranceStartTime = time
-    ctx.isEntranceComplete = false
+    ctx.isEntranceComplete = !entranceAnimation || reducedMotion // Mark as complete if disabled
 
     // Initialize reduced motion fade-in state
     ctx.reducedMotionFadeStartTime = time
-    ctx.isReducedMotionFadeComplete = false
+    ctx.isReducedMotionFadeComplete = !reducedMotionFadeIn || !reducedMotion
+    
+    // Initialize frame counter for early frame detection
+    ctx._frameCount = 0
     
     // Force full redraw when state is initialized
     ctx._forceFullRedraw = true
@@ -464,6 +592,12 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     ctx.previousState.length !== dimensions.height ||
     (ctx.previousState[0] && ctx.previousState[0].length !== dimensions.width)
   ) {
+    // Store the old state for potential preservation
+    const oldState = ctx.previousState
+    const oldHeight = oldState.length
+    const oldWidth = oldState[0] ? oldState[0].length : 0
+    
+    // Create new state array with correct dimensions
     ctx.previousState = Array(dimensions.height)
       .fill()
       .map(() =>
@@ -478,13 +612,42 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           })),
       )
 
-    // Reset entrance animation on resize
-    ctx.entranceStartTime = time
-    ctx.isEntranceComplete = false
+    // Try to preserve existing state where possible and regenerate the rest
+    const preTimeOffset = time * noiseSpeed
+    for (let y = 0; y < dimensions.height; y++) {
+      for (let x = 0; x < dimensions.width; x++) {
+        // If this position existed in the old state, preserve it
+        if (y < oldHeight && x < oldWidth && oldState[y] && oldState[y][x]) {
+          ctx.previousState[y][x] = { ...oldState[y][x] }
+        } else {
+          // For new positions, generate appropriate initial values
+          const initialNoiseValue = (generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2
+          const enhancedValue = Math.pow(initialNoiseValue, transitionSmoothness)
+          
+          const charIndex = Math.floor(enhancedValue * characters.length)
+          const colorIndex = Math.floor(enhancedValue * colors.length)
+          
+          ctx.previousState[y][x] = {
+            charIndex: Math.min(charIndex, characters.length - 1),
+            colorIndex: Math.min(colorIndex, colors.length - 1),
+            noiseValue: enhancedValue,
+            flowX: 0,
+            flowY: 0,
+          }
+        }
+      }
+    }
 
-    // Reset reduced motion fade-in on resize
-    ctx.reducedMotionFadeStartTime = time
-    ctx.isReducedMotionFadeComplete = false
+    // Don't reset entrance animation on resize - preserve current state
+    // Only reset if we were still in entrance animation
+    if (!ctx.isEntranceComplete) {
+      ctx.entranceStartTime = time
+    }
+
+    // Don't reset reduced motion fade-in on resize - preserve current state
+    if (!ctx.isReducedMotionFadeComplete) {
+      ctx.reducedMotionFadeStartTime = time
+    }
     
     // Force full redraw on resize
     ctx._forceFullRedraw = true
@@ -492,6 +655,10 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
   // Clear dirty regions from previous frame
   ctx._dirtyTracker.clear()
+
+  // Increment frame counter
+  ctx._frameCount = (ctx._frameCount || 0) + 1
+  const isEarlyFrame = ctx._frameCount <= 5 // First 5 frames are considered "early"
 
   // Pre-calculate some values for optimization
   const timeOffset = time * noiseSpeed
@@ -502,7 +669,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
   // For reduced motion, use a simple fade-in instead of directional entrance
   if (reducedMotion && reducedMotionFadeIn && !ctx.isReducedMotionFadeComplete) {
-    const elapsedTime = (time - ctx.reducedMotionFadeStartTime) * 10 // Scale time for faster animation
+    const elapsedTime = (time - ctx.reducedMotionFadeStartTime) // Remove time scaling for proper timing
     entranceProgress = Math.min(elapsedTime / reducedMotionFadeDuration, 1.0)
 
     // Mark fade-in as complete when done
@@ -512,7 +679,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
   }
   // For normal motion, use the directional entrance animation
   else if (!reducedMotion && entranceAnimation && !ctx.isEntranceComplete) {
-    const elapsedTime = (time - ctx.entranceStartTime) * 10 // Scale time for faster animation
+    const elapsedTime = (time - ctx.entranceStartTime) // Remove time scaling for proper timing
     entranceProgress = Math.min(elapsedTime / entranceDuration, 1.0)
 
     // Mark entrance as complete when done
@@ -542,6 +709,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         animationStyle,
         ripples,
         reducedMotion,
+        waveSettings
       )
     }
   }
@@ -590,8 +758,13 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
               positionFactor = 1 // Fully visible
           }
 
-          // Add some randomness to make it look more natural
-          const randomOffset = Math.random() * 0.2
+          // Add some randomness to make it look more natural, but less for wave patterns
+          let randomOffset = Math.random() * 0.2
+          
+          // Reduce randomness for wave and flow patterns to maintain coherence
+          if (animationStyle === "wave" || animationStyle === "flow") {
+            randomOffset *= 0.3 // Much less randomness for wave patterns
+          }
 
           // Cell is visible if entrance progress exceeds position factor
           isVisible = entranceProgress > positionFactor - randomOffset
@@ -606,7 +779,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
       // Get noise value for this position and time
       const noiseValue =
-        (generateNoise(x, y, timeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion) + 1) / 2 // Normalize to 0-1
+        (generateNoise(x, y, timeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2 // Normalize to 0-1
 
       // Apply a more gradual mapping for smoother transitions
       const enhancedValue = Math.pow(noiseValue, transitionSmoothness)
@@ -708,8 +881,14 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       newStates[y][x] = newState
 
       // Check if this cell has changed and mark as dirty if so
-      if (ctx._forceFullRedraw || hasCellChanged(newState, prevState)) {
+      if (ctx._forceFullRedraw || ctx._isPrePopulated || hasCellChanged(newState, prevState, 0.1, isEarlyFrame)) {
         ctx._dirtyTracker.markDirty(x, y)
+      }
+      
+      // Debug: Log if we have cells that should be visible but aren't being marked dirty
+      if (newState.isVisible && !ctx._forceFullRedraw && !ctx._isPrePopulated && !hasCellChanged(newState, prevState, 0.1, isEarlyFrame)) {
+        // This cell is visible but not marked dirty - potential issue
+        // Debug logging removed for production
       }
     }
   }
@@ -747,6 +926,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       }
       
       ctx._forceFullRedraw = false
+      ctx._isPrePopulated = false // Clear pre-populated flag after first render
     } else {
       // Selective redraw of dirty regions only
       for (const region of ctx._dirtyTracker.regions) {
@@ -826,7 +1006,36 @@ window.asciiConfig = {
   respectReducedMotion: ${settings.respectReducedMotion !== undefined ? settings.respectReducedMotion : true},
   reducedMotionStyle: "${settings.reducedMotionStyle || "static"}",
   reducedMotionFadeIn: ${settings.reducedMotionFadeIn !== undefined ? settings.reducedMotionFadeIn : true},
-  reducedMotionFadeDuration: ${settings.reducedMotionFadeDuration || 1.0}
+  reducedMotionFadeDuration: ${settings.reducedMotionFadeDuration || 1.0},
+  waveFlowDirection: ${settings.waveFlowDirection || 45},
+  waveIntensity: ${settings.waveIntensity || 1.0},
+  waveLayers: ${settings.waveLayers || 3},
+  waveOrganicFactor: ${settings.waveOrganicFactor || 0.1}
 };
 </script>`
+}
+
+// Helper function to reset animation state
+export function resetAnimationState(ctx) {
+  if (!ctx) return
+  
+  // Clear all cached states
+  ctx.previousState = null
+  ctx._dirtyTracker = null
+  ctx._forceFullRedraw = true
+  ctx._isPrePopulated = false
+  ctx._frameCount = 0
+  
+  // Reset entrance animation state
+  ctx.entranceStartTime = null
+  ctx.isEntranceComplete = false
+  
+  // Reset reduced motion fade-in state
+  ctx.reducedMotionFadeStartTime = null
+  ctx.isReducedMotionFadeComplete = false
+  
+  // Clear canvas dimensions cache to force recalculation
+  ctx._cachedWidth = null
+  ctx._cachedHeight = null
+  ctx._cachedCharWidth = null
 }

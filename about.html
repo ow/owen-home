@@ -5,27 +5,40 @@ header: Career
 description: Owen Williams is a design manager, developer and maker in Victoria, British Columbia, Canada.
 permalink: /about/
 image: "/images/card.png"
-color_scheme: stripe
+color_scheme: purple
 seo:
   type: Person
 ---
 {% capture ascii_settings %}
 {
-  "density": 35,
-  "speed": 15,
+  "density": 30,
+  "speed": 30,
   "opacity": 1,
   "colorPalette": "{{ page.color_scheme }}",
-  "noiseScale": 0.015,
+  "noiseScale": 0.02,
   "noiseSpeed": 0.5,
   "characterSet": "code",
   "gradientSize": 1.5,
-  "animationStyle": "flow",
-  "transitionSmoothness": 0.8,
-  "showControls": false,
+  "animationStyle": "wave",
+  "transitionSmoothness": 1.1,
+  "showControls": true,
   "fullscreen": false,
-  "entranceDirection": "left",
-  "entranceDuration": 2,
-  "controlPanelZIndex": 100
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
 }
 {% endcapture %}
 {% include hero.html

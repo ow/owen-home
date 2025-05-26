@@ -4,22 +4,33 @@ layout: default
 {% capture ascii_settings %}
 {
   "density": 30,
-  "speed": 10,
+  "speed": 30,
   "opacity": 1,
-  "colorPalette": "{{ page.color_scheme }}",
+  "colorPalette": "{{ page.color_scheme | default: 'ocean' }}",
   "noiseScale": 0.02,
-  "noiseSpeed": 0.3,
+  "noiseSpeed": 0.5,
   "characterSet": "code",
   "gradientSize": 1.5,
-  "animationStyle": "continuous",
+  "animationStyle": "wave",
   "transitionSmoothness": 1.1,
-  "showControls": false,
+  "showControls": true,
   "fullscreen": false,
   "flowAwareness": 0.5,
   "flowSmoothing": 0.4,
-  "entranceAnimation": true,
-  "entranceDirection": "right",
-  "entranceDuration": 2
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
 }
 {% endcapture %}
 {% capture hero_breadcrumbs %}
@@ -37,7 +48,7 @@ layout: default
     height="min-h-[50vh]"
 %}
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 pb-16 z-10 relative">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 lg:-mt-36 pb-16 z-10 relative">
   <div class="lg:grid lg:grid-cols-12 lg:gap-0">
     <div class="lg:col-span-8">
       <article class="post-content prose dark:prose-invert [&>p]:mb-3">

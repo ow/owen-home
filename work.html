@@ -5,29 +5,40 @@ header: Select Work
 permalink: /work/
 description: For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.
 image: "/images/card.png"
-color_scheme: ocean
+color_scheme: green
 seo:
   type: Person
 ---
 {% capture ascii_settings %}
 {
   "density": 30,
-  "speed": 10,
+  "speed": 30,
   "opacity": 1,
   "colorPalette": "{{ page.color_scheme }}",
   "noiseScale": 0.02,
-  "noiseSpeed": 0.3,
+  "noiseSpeed": 0.5,
   "characterSet": "code",
   "gradientSize": 1.5,
-  "animationStyle": "continuous",
+  "animationStyle": "wave",
   "transitionSmoothness": 1.1,
-  "showControls": false,
+  "showControls": true,
   "fullscreen": false,
   "flowAwareness": 0.5,
   "flowSmoothing": 0.4,
-  "entranceAnimation": true,
-  "entranceDirection": "right",
-  "entranceDuration": 2
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
 }
 {% endcapture %}
 {% include hero.html
@@ -37,7 +48,40 @@ seo:
     ascii_settings=ascii_settings
 %}
 
-
+<script>
+    window.asciiConfig = {
+      density: 30,
+      speed: 30,
+      opacity: 1,
+      colorPalette: "{{ page.color_scheme }}",
+      noiseScale: 0.02,
+      noiseSpeed: 0.5,
+      characterSet: "code",
+      gradientSize: 1.5,
+      animationStyle: "wave",
+      transitionSmoothness: 1.1,
+      showControls: true,
+      fullscreen: false,
+      flowAwareness: 0.5,
+      flowSmoothing: 0.4,
+      entranceAnimation: false,
+      entranceDirection: "bottom",
+      entranceDuration: 1.5,
+      interactiveMode: true,
+      interactiveEffect: "ripple",
+      interactiveIntensity: 1,
+      interactiveDuration: 1.5,
+      interactiveRadius: 10,
+      respectReducedMotion: true,
+      reducedMotionStyle: "static",
+      reducedMotionFadeIn: true,
+      reducedMotionFadeDuration: 1,
+      waveFlowDirection: 45,
+      waveIntensity: 1,
+      waveLayers: 3,
+      waveOrganicFactor: 0.1
+    };
+</script>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-24">
     {% assign items = site.work | sort: 'date' %}
