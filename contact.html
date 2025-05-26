@@ -1,73 +1,142 @@
 ---
 layout: default
-title: Say Hi
+title: Contact
 header: Let's chat
 description: Get in touch with Owen about a project, idea, or just to say hi.
 permalink: /contact/
 image: "/images/card.png"
+color_scheme: sunset
 ---
-<div class="jumbotron mb-0">
-    <div class="intro py-5">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-lg-6">
-                        <h1>{{ page.header }}</h1>
-                        <p>Let's open the conversation and see what we could do together.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-6">
-                    <hr class="my-4">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-md-6">
-                <form class="mt-4" name="contact" method="POST" data-netlify="true" onsubmit="return validateForm()">
-                    <div class="form-group">
-                        <label for="emailinputcontrol">Your name</label>
-                        <input type="text" class="form-control" id="textinputcontrol" name="name" placeholder="Jerry Seinfeld" required>
+{% capture ascii_settings %}
+{
+  "density": 30,
+  "speed": 30,
+  "opacity": 1,
+  "colorPalette": "{{ page.color_scheme }}",
+  "noiseScale": 0.02,
+  "noiseSpeed": 0.5,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "wave",
+  "transitionSmoothness": 1.1,
+  "showControls": true,
+  "fullscreen": false,
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
+}
+{% endcapture %}
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings=ascii_settings
+%}
+
+<div class="min-h-screen py-12 sm:px-6 lg:px-8 -mt-32 relative z-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+            <div class="glass rounded-2xl p-8">
+                <form class="space-y-6" 
+                      name="contact" 
+                      method="POST" 
+                      data-netlify="true"
+                      netlify-honeypot="bot-field"
+                      data-netlify-recaptcha="true"
+                      onsubmit="return validateForm()">
+                    
+                    <div>
+                        <label for="name" class="block meta">Your name</label>
+                        <input type="text" id="name" name="name" required
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="Jerry Seinfeld">
                     </div>
-                    <div class="form-group" style="display:none !important;">
-                        <label>Leave this empty</label>
-                        <input type="text" name="bot-field" id="bot-field" />
+
+                    <!-- Netlify honeypot field -->
+                    <p class="hidden">
+                        <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                    </p>
+
+                    <div>
+                        <label for="email" class="block meta">Email address</label>
+                        <input type="email" id="email" name="email" required
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="jerry@email.com">
                     </div>
-                    <div class="form-group">
-                        <label for="emailinputcontrol">Email address</label>
-                        <input type="email" class="form-control" id="emailinputcontrol" name="email" placeholder="jerry@seinfeld.net" required>
+
+                    <div>
+                        <label for="message" class="block meta">How can I help?</label>
+                        <textarea id="message" name="message" rows="5" required minlength="10"
+                            class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            placeholder="I really need help with my fish tacos. What would you do?"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">How can I help?</label>
-                        <textarea required class="form-control" id="exampleFormControlTextarea1" name="message" rows="5" placeholder="I really need help with my fish tacos. What would you do?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Send message</button>
+
+                    <!-- Netlify reCAPTCHA -->
+                    <div data-netlify-recaptcha="true"></div>
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">
+                            Send message
+                        </button>
                     </div>
                 </form>
-                
-                <script>
-                function validateForm() {
-                    if (document.getElementById('bot-field').value !== '') {
-                        return false;
-                    }
-                    
-                    if (!window.formLoadTime) {
-                        window.formLoadTime = new Date().getTime();
-                    }
-                    
-                    var timeDiff = new Date().getTime() - window.formLoadTime;
-                    if (timeDiff < 3000) {
-                        return false;
-                    }
-                    
-                    return true;
-                }
-                
-                window.formLoadTime = new Date().getTime();
-                </script>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+let formLoadTime = new Date().getTime();
+
+// Simplified form validation
+function validateForm() {
+    // Check timing (minimum 3 seconds to prevent rapid submissions)
+    const timeDiff = new Date().getTime() - formLoadTime;
+    if (timeDiff < 3000) {
+        console.log('Form submitted too quickly');
+        return false;
+    }
+    
+    // Check message length and quality
+    const message = document.getElementById('message').value.trim();
+    if (message.length < 10) {
+        alert('Please write a more detailed message (at least 10 characters).');
+        return false;
+    }
+    
+    // Check for obvious spam patterns
+    const spamPatterns = [
+        /\b(seo|backlink|rank|traffic|casino|loan|debt|credit|viagra|cialis|pharmacy)\b/i,
+        /https?:\/\/[^\s]+/g, // URLs in message
+        /\b\d{10,}\b/g, // Long numbers (phone numbers)
+        /\b(buy now|click here|limited time|act now|free money|make money fast)\b/i
+    ];
+    
+    for (let pattern of spamPatterns) {
+        if (pattern.test(message)) {
+            alert('Your message appears to contain spam content. Please revise and try again.');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// Initialize form load time
+document.addEventListener('DOMContentLoaded', function() {
+    formLoadTime = new Date().getTime();
+});
+</script>

@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Try to only use Tailwind on this project where possible
+
+Custom CSS is allowed, but only after explicitly trying to find a good way to make it work with Tailwind.

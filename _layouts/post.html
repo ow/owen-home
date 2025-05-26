@@ -1,18 +1,59 @@
 ---
 layout: default
 ---
-<div class="post container my-5">
-	<div class="row">
-		<div class="col-lg-7">
-			<div class="crumbs"><a href="/blog">Blog</a> \ {{ page.date | date: "%Y"}} \ {{ page.title }}</div>
-			<header class="post-header">
-				<h1 class="post-title">{{ page.title }}</h1>
-				<p class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
-			</header>
-		
-			<article class="post-content">
-				{{ content }}
-			</article>
-		</div>
-	</div>
+{% capture ascii_settings %}
+{
+  "density": 30,
+  "speed": 30,
+  "opacity": 0.6,
+  "colorPalette": "{{ page.color_scheme | default: 'ocean' }}",
+  "noiseScale": 0.02,
+  "noiseSpeed": 0.5,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "wave",
+  "transitionSmoothness": 1.1,
+  "showControls": false,
+  "fullscreen": false,
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
+}
+{% endcapture %}
+{% capture hero_breadcrumbs %}
+  <div class="flex flex-col gap-2 mb-6">
+    <div class="crumbs tag text-slate-200 text-sm"><a href="/blog" class="link-muted">Blog</a> \ {{ page.date | date: "%Y"}} \ {{ page.title }}</div>
+    <div class="post-meta meta text-slate-400 text-xs">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</div>
+  </div>
+{% endcapture %}
+{% include hero.html
+    header=page.title
+    title=page.title
+    description=page.description
+    ascii_settings=ascii_settings
+    extra=hero_breadcrumbs
+    height="min-h-[32vh]"
+%}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 lg:-mt-16 pb-16 z-10 relative">
+  <div class="lg:grid lg:grid-cols-12 lg:gap-0">
+    <div class="lg:col-span-8">
+      <article class="post-content prose dark:prose-invert [&>p]:mb-3">
+        {{ content }}
+      </article>
+    </div>
+  </div>
 </div>

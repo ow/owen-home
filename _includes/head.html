@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width" initial-scale="1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ "/images/favicons/apple-touch-icon.png" | relative_url }}">
@@ -8,16 +8,26 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ "/images/favicons/favicon-16x16.png" | relative_url }}">
     <link rel="mask-icon" href="{{ "/images/favicons/safari-pinned-tab.svg" | relative_url }}" color="#5bbad5">
 
-    <link rel="stylesheet" href="{{ "/css/main.css" | relative_url }}">
+    <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
     <link rel="manifest" href="{{ "/manifest.json" | relative_url }}">
-		<meta name="theme-color" content="#424242">
-		<meta name="google-site-verification" content="clli-zuXIqHkTVmGd6nv4NoVS8PLdrvaAtojJd-NUkc" />
-    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="google-site-verification" content="clli-zuXIqHkTVmGd6nv4NoVS8PLdrvaAtojJd-NUkc" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>{{ page.title }} | {{site.title}}</title>
 
     {% seo %}
     
+    <script>
+      // Force dark mode by default
+      document.documentElement.classList.add('dark');
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49196912-1"></script>
     <script>
@@ -27,5 +37,9 @@
 
       gtag('config', 'UA-49196912-1');
     </script>
+
+    <!-- ASCII Background Scripts -->
+    <link rel="stylesheet" href="{{ '/assets/css/control-panel.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/ascii-background.css' | relative_url }}">
 
 </head>

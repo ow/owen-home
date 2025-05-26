@@ -1,0 +1,73 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://owenwillia.ms/#person",
+  "name": "Owen Williams",
+  "givenName": "Owen",
+  "familyName": "Williams",
+  "jobTitle": "Product Design Manager",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Stripe",
+    "url": "https://stripe.com"
+  },
+  "description": "Product Design Manager at Stripe, focusing on developer experience, AI tools, and building exceptional design teams.",
+  "image": "{{ site.url }}/images/itme.jpg",
+  "url": "https://owenwillia.ms",
+  "sameAs": [
+    "https://twitter.com/{{ site.twitter_username }}",
+    "https://github.com/{{ site.github_username }}",
+    "https://linkedin.com/in/owdoeswork"
+  ],
+  "knowsAbout": [
+    "Product Design Management",
+    "User Experience Design",
+    "Developer Experience",
+    "AI/ML Design",
+    "Design Leadership",
+    "Team Building"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://owenwillia.ms/#website",
+  "url": "https://owenwillia.ms",
+  "name": "{{ site.title }}",
+  "description": "{{ site.description }}",
+  "publisher": {
+    "@id": "https://owenwillia.ms/#person"
+  }
+}
+</script>
+
+{% if page.layout == 'post' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ site.url }}{{ page.url }}"
+  },
+  "headline": "{{ page.title }}",
+  "description": "{{ page.description | default: page.excerpt | strip_html | strip_newlines | truncate: 160 }}",
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "author": {
+    "@id": "https://owenwillia.ms/#person"
+  },
+  "publisher": {
+    "@id": "https://owenwillia.ms/#person"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}{{ page.image | default: '/images/card.png' }}"
+  }
+}
+</script>
+{% endif %} 

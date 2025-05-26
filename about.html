@@ -1,79 +1,66 @@
 ---
 layout: default
 title: About 
-header: Hi, I'm Owen 👋
-description: Owen Williams is a UX Writer, developer and marketing strategist in Victoria, British Columbia, Canada.
+header: Career
+description: Owen Williams is a design manager, developer and maker in Victoria, British Columbia, Canada.
 permalink: /about/
 image: "/images/card.png"
+color_scheme: purple
 seo:
   type: Person
 ---
-<div class="jumbotron mb-0">
-		<div class="intro py-5">
-			<div class="container">
-				<div class="row d-flex align-items-center">
-					<div class="col-lg-6 col-12 col-md-7">
-							<h1>{{ page.header }}</h1>
-							<p class="lead">I'm a design leader with experience wearing different hats, as a content designer, developer, and people leader. 
-							<div class="row">
-								<div class="col-lg-6 col-6">
-										<hr class="fancy-line mt-2 mb-4">
-								</div>
-							</div>
-							<p>I've been in the trenches as a developer, content designer and design leader—my speciality is making the technically complex, simple.</p>
-							<p>Today, I'm a Product Design Manager at Stripe in Victoria, British Columbia. I lead a team of designers building tools developers love, the world's best developer documentation, and developer AI.</p>
-						</div>
-				<div class="col-6 col-sm-3 col-md-4 offset-md-1 col-lg-3 offset-lg-3 mb-3 mb-sm-0 text-right order-first order-sm-last">
-						<div class="avatar">
-							<img src="/images/itme.jpg">
-						</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="container mt-5">
-	<div class="row">
-		<div class="col-lg-6 mb-4">
-			<h3>TL;DR</h3>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4 col-lg-4">
-			<h5>What</h5>
-			<p>Before Stripe and Shopify, I ran a freelance UX strategy and consulting business.</p>
-			<p>It started with <a href="https://char.gd">Charged</a> in 2013, a weekly newsletter delivered to 15,000 people, and grew into helping others with UX strategy for more than three years.</p>
-		</div>
-		<div class="col-md-4 col-lg-4">
-		<h5>Where</h5>
-			<p>I live in <strong class="font-weight-bold">Victoria, British Columbia</strong>, with <a href="https://femke.co.nz">my partner</a> and our beautiful Duck Tolling Retriever, <a href="https://www.instagram.com/p/CGvcxQZMRIl/">Kaya</a>.</p>
-			<p>Before we moved to Canada in 2019, we lived in Amsterdam, The Netherlands for 5 years, but I grew up in Wellington, New Zealand (we invented the flat white).</p>
-		</div>
-		<div class="col-md-4 col-lg-4">
-			<h5>Weird</h5>
-			<p>When I'm not working, I love to read, bake, and hike. I'm a little obsessed with finding new music, too.</p>
-			<p>I'm an <a href="https://twitter.com/ow" target="_blank">avid Twitter user</a>, and joined the service in 2008. I didn't get my short username until much later, but that's a story for in person.</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-lg-12 my-5">
-			<hr>
-		</div>
-	</div>
-</div>
-<div class="container mb-5"> 
-	<div class="row">
-		<div class="col-lg-8">
-			{% include career.html %}
-		</div>
-	</div>
-</div>
-<div class="bg-light py-5 py-lg-3 mt-5">
-		<div class="container py-5">
-			{% include projects.html %}
-		</div>
+{% capture ascii_settings %}
+{
+  "density": 30,
+  "speed": 30,
+  "opacity": 1,
+  "colorPalette": "{{ page.color_scheme }}",
+  "noiseScale": 0.02,
+  "noiseSpeed": 0.5,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "wave",
+  "transitionSmoothness": 1.1,
+  "showControls": false,
+  "fullscreen": false,
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
+}
+{% endcapture %}
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings=ascii_settings
+%}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 lg:-mt-16 relative z-20">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-0">
+        <div class="lg:col-span-10">
+            <div class="glass rounded-2xl p-8">
+                {% include career.html %}
+            </div>
+        </div>
+    </div>
 </div>
 
-{% include convert.html %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
+    <h2 class="heading-section text-white">My Work</h2>
+    <p class="text-slate-200 mt-2">Here's a selection of projects from across my career as design manager, developer, and beyond.</p>
+</div>
 
-
+{% include card-carousel.html cards=site.data.work_cards %}

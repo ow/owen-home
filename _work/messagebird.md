@@ -6,6 +6,7 @@ when: "July 2018"
 date: 1-08-2018
 link: https://www.messagebird.com/en/flow-builder
 image: /images/mb.png
+tag: Consulting
 ---
 MessageBird's latest product makes it simple for anyone to build complex voice or SMS-based flows, just by dragging and dropping. 
 

@@ -6,6 +6,7 @@ when: November 2016
 date: 01-11-2016
 link: https://medium.com/conversational-interfaces/how-design-is-being-transformed-by-things-we-cant-see-b4bf278a45f6#.nfc9moi9e
 image: /images/sandy.png
+tag: Consulting
 ---
 How can we design interfaces when there's nothing to actually see? 
 

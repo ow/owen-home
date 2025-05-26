@@ -5,12 +5,33 @@ _site/
 scripts/
 Gemfile.lock
 .publish/
-css/
+
+# Jekyll build output
+_site/
+.sass-cache/
+.jekyll-metadata
+scripts/
+Gemfile.lock
+.publish/
+
+# Node modules
+node_modules
+
+# Built assets
+assets/css/*.css
+assets/css/*.css.map
+
+# Environment files
+.env
+.env.*
+
+# System files
+.DS_Store
+*.log
 
 ### Always-ignore files and folders ###
 *.diff
 *.err
-*.log
 *.orig
 *.rej
 *.swn
@@ -28,10 +49,6 @@ css/
 *.rar
 *.tar
 *.zip
-
-### Packages ###
-node_modules/
-bower_components
 
 ### Sass ###
 .sass-cache/

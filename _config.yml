@@ -16,7 +16,7 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen Williams is a product design manager leading a team building tools developers love at Stripe in Victoria, British Columbia, Canada. He's also a developer, writer, and maker.
+  Owen Williams is a product design manager leading a team building tools developers love at Stripe in Victoria, British Columbia. He's also a developer, writer, and maker.
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 client_availability: false
@@ -59,14 +59,14 @@ services:
 career:
   - title: Product Design Manager
     company: Stripe
-    description: I lead product design for Stripe’s developer experience, docs, and AI. We push the boundaries of developer tools to help our users focus more on growing their business, rather than building. 
-    icon: "images/career/stripe.jpg"
+    description: I lead product design for Stripe's developer experience, docs, and AI. We push the boundaries of developer tools to help our users focus more on growing their business, rather than building. 
+    icon: "/images/career/stripe.jpg"
     color: stripe
     dates: 2022 - Present
   - title: UX Manager
     company: Shopify
     description: I led a large UX team working on developer tools at Shopify, from API design to the CLI, and deep in the weeds of extensibility. Mostly recently, I lead the custom storefronts group working on Hydrogen and Oxygen.
-    icon: "images/career/shopify.png"
+    icon: "/images/career/shopify.png"
     color: shopify
     dates: 2019 - 2022
   - title: Founder / Freelancer
@@ -87,7 +87,7 @@ career:
     icon: "/images/career/tnw.png"
     color: tnw
     dates: 2013 - 2016
-  - title: Infrastructure/Devops Engineer
+  - title: Infrastructure Engineer
     company: Xero
     description: Engineer on critical infrastructure team responsible for scaling the platform to millions of users. Supported product team to debug issues on the platform, optimized performance and built out a deployment pipeline for high availability.
     icon: "/images/career/xero.png"
@@ -147,7 +147,7 @@ plugins:
 
 # Build settings
 markdown: kramdown
-permalink: pretty
+permalink: /:year/:month/:day/:title/
 exclude: [
   "node_modules",
   "LICENSE",

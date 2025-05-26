@@ -6,6 +6,7 @@ when: "April 2017"
 date: 1-05-2017
 link: https://www.intercom.com/books/starting-up
 image: /images/intercom.JPG
+tag: Writing
 ---
 I worked closely with the Intercom editorial teams on it's first print book 'Intercom on Starting Up.' 
 

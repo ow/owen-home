@@ -1,0 +1,2 @@
+# This file ensures the js directory is created
+# The actual JS file will be generated when you run npm run build-ascii

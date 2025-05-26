@@ -1,65 +1,118 @@
 ---
 layout: default
-title: My Work
-header: My work
+title: Work
+header: Select Work
 permalink: /work/
-description: Learn more about Owen Williams' UX writing and marketing strategy work.
+description: For the last 6+ years, I've been building design teams in highly technical spaces. Here's some of the work my teams have done, as well as a variety of other work from previous phases of my career.
 image: "/images/card.png"
+color_scheme: green
 seo:
   type: Person
 ---
-<div class="jumbotron mb-0">
-		<div class="intro py-5">
-			<div class="container py-5">
-				<div class="row">
-					<div class="col-lg-6">
-							<h1>{{ page.header }}</h1>
-							<p>Over the last few years, I've worked with some of the best global brands and startups to help them craft beautiful content, strategy or just something new. Here's a few examples.</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-3 col-6">
-						<hr class="my-4">
-					</div>
-				</div>
-			</div>
-		</div>
+{% capture ascii_settings %}
+{
+  "density": 30,
+  "speed": 30,
+  "opacity": 1,
+  "colorPalette": "{{ page.color_scheme }}",
+  "noiseScale": 0.02,
+  "noiseSpeed": 0.5,
+  "characterSet": "code",
+  "gradientSize": 1.5,
+  "animationStyle": "wave",
+  "transitionSmoothness": 1.1,
+  "showControls": true,
+  "fullscreen": false,
+  "flowAwareness": 0.5,
+  "flowSmoothing": 0.4,
+  "entranceAnimation": false,
+  "interactiveMode": true,
+  "interactiveEffect": "ripple",
+  "interactiveIntensity": 1,
+  "interactiveDuration": 1.5,
+  "interactiveRadius": 10,
+  "respectReducedMotion": true,
+  "reducedMotionStyle": "static",
+  "reducedMotionFadeIn": true,
+  "reducedMotionFadeDuration": 1,
+  "waveFlowDirection": 45,
+  "waveIntensity": 1,
+  "waveLayers": 3,
+  "waveOrganicFactor": 0.1
+}
+{% endcapture %}
+{% include hero.html
+    header=page.header
+    title=page.title
+    description=page.description
+    ascii_settings=ascii_settings
+%}
+
+<script>
+    window.asciiConfig = {
+      density: 30,
+      speed: 30,
+      opacity: 1,
+      colorPalette: "{{ page.color_scheme }}",
+      noiseScale: 0.02,
+      noiseSpeed: 0.5,
+      characterSet: "code",
+      gradientSize: 1.5,
+      animationStyle: "wave",
+      transitionSmoothness: 1.1,
+      showControls: true,
+      fullscreen: false,
+      flowAwareness: 0.5,
+      flowSmoothing: 0.4,
+      entranceAnimation: false,
+      entranceDirection: "bottom",
+      entranceDuration: 1.5,
+      interactiveMode: true,
+      interactiveEffect: "ripple",
+      interactiveIntensity: 1,
+      interactiveDuration: 1.5,
+      interactiveRadius: 10,
+      respectReducedMotion: true,
+      reducedMotionStyle: "static",
+      reducedMotionFadeIn: true,
+      reducedMotionFadeDuration: 1,
+      waveFlowDirection: 45,
+      waveIntensity: 1,
+      waveLayers: 3,
+      waveOrganicFactor: 0.1
+    };
+</script>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-24">
+    {% assign items = site.work | sort: 'date' %}
+    <div class="space-y-16 relative z-20">
+        {% for item in items reversed %}
+        <div class="glass rounded-2xl p-8" id="{{ item.slug }}">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+                <div>
+                    <div class="mb-6">
+                        {% if item.tag %}
+                        <span class="inline-block px-3 py-1 mb-2 text-xs font-semibold rounded-full bg-sky-600/10 text-sky-400 border border-sky-600/20 uppercase tracking-wide">{{ item.tag }}</span>
+                        {% endif %}
+                        <h3 class="text-2xl font-bold mb-2">{{ item.headline }}</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ item.site }} – {{ item.when }}</p>
+                    </div>
+                    <div class="prose dark:prose-invert [&>p]:mb-4">
+                        {{ item.content }}
+                    </div>
+                    {% if item.link %}
+                    <a href="{{item.link}}" target="_blank" class="link inline-flex items-center mt-4">
+                        Visit Site <span class="ml-1">→</span>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="mt-8 lg:mt-0">
+                    <div class="aspect-[1.8] w-full overflow-hidden rounded-xl">
+                        <img class="w-full h-full object-cover" src="{{ item.image }}" alt="{{ item.headline }}" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-
-<div class="bg-light mb-5">
-{% include brands.html %}
-</div>
-	
-<div class="container mb-5 mb-3">
-	<div class="row">
-		<div class="col-lg-6">
-			<h3>Showcase</h3>
-			<p>A non-exhaustive set of projects I've worked on. I update this as often as I can, but it's likely a little dusty.</p>
-		</div> 
-	</div> 
-	{% assign items = site.work | sort: 'date' %}
-	{% for item in items reversed %}
-	<div class="row my-5 d-flex align-items-center">
-				<div class="col-lg-6">
-					<div class="pb-3">
-						<h5 class="font-weight-bold mb-0">{{ item.headline }}</h5> 
-						<span class="post-meta">{{ item.site }} – {{ item.when }}</span>
-					</div>
-					<p>{{ item.content }}</p>
-					{% if item.link %}<a href="{{item.link}}" target="_blank">Read more ></a>{% endif %}
-				</div>
-
-				<div class="col-lg-6 pl-4">
-						<img class="featured" src="{{ item.image }}" alt="Card image cap">
-				</div>
-
-				{% if forloop.last != true %}
-					<div class="col-lg-12">
-						<hr class="mt-5 mb-0">
-					</div>
-				{% endif %}
-
-	</div>	
-	{% endfor %}
-</div>
-{% include convert.html %}

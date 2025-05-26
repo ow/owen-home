@@ -4,11 +4,9 @@ permalink: /404.html
 sitemap: false
 ---
 
-<div class="container">
-	<div class="row">
-		<div class="col-6 offset-md-3">
-				<h1>Welp, you went the wrong way!</h1>
-				<p>There's no page here. Maybe there once was, or maybe you just typed something random. Please check the URL for mistakes and try again.</p>				
-		</div>
-	</div>
-</div>
+{% include hero.html
+    header="404: Not Found"
+    title="404: Not Found"
+    description="There's no page here. Maybe there once was, or maybe you just typed something random. Please check the URL for mistakes and try again."
+    ascii_settings='{"density": 30, "speed": 30, "opacity": 1, "colorPalette": "sunset", "noiseScale": 0.02, "noiseSpeed": 0.5, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "wave", "transitionSmoothness": 1.1, "showControls": false, "fullscreen": false, "flowAwareness": 0.5, "flowSmoothing": 0.4, "entranceAnimation": false, "interactiveMode": true, "interactiveEffect": "ripple", "interactiveIntensity": 1, "interactiveDuration": 1.5, "interactiveRadius": 10, "respectReducedMotion": true, "reducedMotionStyle": "static", "reducedMotionFadeIn": true, "reducedMotionFadeDuration": 1, "waveFlowDirection": 45, "waveIntensity": 1, "waveLayers": 3, "waveOrganicFactor": 0.1}'
+%}

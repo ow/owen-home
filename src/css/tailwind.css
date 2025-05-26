@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-white transition-colors duration-200 font-sans;
+    font-family: 'Inter', sans-serif; /* Default font */
+  }
+
+  /* Base link style excluding nav, buttons, and header */
+  a:not([class*="nav"]):not([class*="btn"]):not(.inline-flex):not(header a) {
+    @apply text-sky-300 hover:text-sky-400 transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-glass dark:bg-glass-dark border border-glass-border dark:border-glass-border-dark backdrop-blur-sm;
+  }
+  
+  .glass-hover {
+    @apply hover:bg-glass/20 dark:hover:bg-glass-dark/20 transition-all duration-200;
+  }
+
+  /* Navigation link hover style */
+  .nav-link {
+    @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200;
+  }
+
+  /* Font hierarchy utility classes */
+  .heading-hero { @apply text-5xl font-bold; }
+  .heading-section { @apply text-3xl font-bold; }
+  .heading-subsection { @apply text-xl font-semibold; }
+  .heading-widget { @apply text-lg font-semibold; }
+  .lead { @apply text-xl; }
+  .meta { @apply text-sm font-medium; }
+  .tag { @apply text-xs font-semibold uppercase; }
+
+  /* Link styles */
+  .link {
+    @apply text-sky-400 hover:text-sky-300 transition delay-150 duration-300 ease-in-out;
+  }
+  .link-muted {
+    @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition delay-150 duration-300 ease-in-out;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center px-6 py-3 rounded-lg font-semibold shadow-sm transition-all duration-200;
+  }
+  .btn-primary {
+    @apply bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 text-white hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 transition delay-150 duration-300 ease-in-out;
+  }
+  .btn-secondary {
+    @apply bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-300px * 5)); /* Width of one set of 5 cards */
+  }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-scroll-left {
+  animation: scroll 120s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 80s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .animate-scroll-left {
+    animation: scroll 120s linear infinite;
+  }
+  .animate-scroll-right {
+    animation: scroll-right 30s linear infinite;
+  }
+}
+
+.animate-scroll-left:hover,
+.animate-scroll-right:hover {
+  animation-play-state: paused;
+} 

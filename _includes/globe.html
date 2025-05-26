@@ -1,0 +1,883 @@
+<style>
+    /* Keep globe-specific styles, but remove the body style */
+    /* body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; // REMOVE THIS
+      background-color: black;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    } */
+    
+    #globe-container {
+      /* Adjust container styles if needed, maybe make it position relative/absolute within its parent in index.html */
+      position: absolute; /* Ensure it fills its parent container */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Keep overflow hidden *on the container* */
+    }
+    
+    #hint {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      transition: opacity 1s;
+      opacity: 0.8;
+      z-index: 10;
+    }
+    
+    #hint:hover {
+      opacity: 1;
+    }
+    
+    /* Controls panel styling */
+    #controls-panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 16px;
+      border-radius: 8px;
+      z-index: 100;
+      width: 280px;
+      max-height: 80vh;
+      overflow-y: auto;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    
+    #controls-panel.hidden {
+      opacity: 0;
+      transform: translateX(300px);
+      pointer-events: none;
+    }
+    
+    #controls-panel h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 8px;
+    }
+    
+    .control-group {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .control-group:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .control-group h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .control-row {
+      margin-bottom: 12px;
+    }
+    
+    .control-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .control-row label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    .control-row .slider-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .control-row input[type="range"] {
+      flex: 1;
+    }
+    
+    .control-row .value {
+      width: 40px;
+      text-align: right;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    
+    .control-row input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .control-row input[type="color"] {
+      width: 24px;
+      height: 24px;
+      border: none;
+      padding: 0;
+      background: none;
+    }
+    
+    .control-row button {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color 0.2s;
+    }
+    
+    .control-row button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Toggle button for showing/hiding controls */
+    #toggle-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 101;
+      transition: opacity 0.3s;
+    }
+    
+    #toggle-controls.hidden {
+      opacity: 0;
+    }
+    
+    * {
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+</head>
+<body>
+  <!-- Example of how to override configuration before loading the script -->
+  <script>
+    // You can define this variable before loading the globe script to override settings
+    // This is completely optional - if not defined, default settings will be used
+    window.GLOBE_CONFIG = {
+      // Override any settings you want to customize
+      // globeHeight: -1.2,
+      // globeScale: 2.0,
+      // enableInteractivity: false,
+      // showControls: true,
+      // etc...
+    };
+  </script>
+  
+  <div id="globe-container"></div>
+  <div id="hint">Drag to explore</div>
+  
+  <!-- Toggle button for controls -->
+  <button id="toggle-controls">Show Controls</button>
+  
+  <!-- Advanced controls panel -->
+  <div id="controls-panel" class="hidden">
+    <h3>Globe Controls</h3>
+    
+    <div class="control-group">
+      <h4>Position & Size</h4>
+      <div class="control-row">
+        <label for="globe-height">Globe Height: <span id="height-value">-0.8</span></label>
+        <div class="slider-container">
+          <input type="range" id="globe-height" min="-2" max="0" step="0.1" value="-0.8">
+          <span class="value" id="height-display">-0.8</span>
+        </div>
+      </div>
+      <div class="control-row">
+        <label for="globe-scale">Globe Scale: <span id="scale-value">1.5</span></label>
+        <div class="slider-container">
+          <input type="range" id="globe-scale" min="0.5" max="3" step="0.1" value="1.5">
+          <span class="value" id="scale-display">1.5</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <h4>Interactivity</h4>
+      <div class="control-row">
+        <label>
+          <input type="checkbox" id="enable-interactivity" checked>
+          Enable Dragging/Orbit Controls
+        </label>
+      </div>
+      <div class="control-row">
+        <label for="min-polar">Min Polar Angle: <span id="min-polar-value">0.3</span></label>
+        <div class="slider-container">
+          <input type="range" id="min-polar" min="0" max="0.5" step="0.01" value="0.3">
+          <span class="value" id="min-polar-display">0.3</span>
+        </div>
+      </div>
+      <div class="control-row">
+        <label for="max-polar">Max Polar Angle: <span id="max-polar-value">0.7</span></label>
+        <div class="slider-container">
+          <input type="range" id="max-polar" min="0.5" max="1" step="0.01" value="0.7">
+          <span class="value" id="max-polar-display">0.7</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <h4>Animation</h4>
+      <div class="control-row">
+        <label for="rotation-speed">Rotation Speed: <span id="rotation-value">0.001</span></label>
+        <div class="slider-container">
+          <input type="range" id="rotation-speed" min="0" max="0.005" step="0.0001" value="0.001">
+          <span class="value" id="rotation-display">0.001</span>
+        </div>
+      </div>
+      <div class="control-row">
+        <label for="float-amplitude">Float Amplitude: <span id="float-value">0.2</span></label>
+        <div class="slider-container">
+          <input type="range" id="float-amplitude" min="0" max="1" step="0.05" value="0.2">
+          <span class="value" id="float-display">0.2</span>
+        </div>
+      </div>
+      <div class="control-row">
+        <label for="color-speed">Color Transition Speed: <span id="color-speed-value">0.005</span></label>
+        <div class="slider-container">
+          <input type="range" id="color-speed" min="0.001" max="0.02" step="0.001" value="0.005">
+          <span class="value" id="color-speed-display">0.005</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <h4>Camera</h4>
+      <div class="control-row">
+        <label for="camera-distance">Camera Distance: <span id="camera-distance-value">2</span></label>
+        <div class="slider-container">
+          <input type="range" id="camera-distance" min="1" max="5" step="0.1" value="2">
+          <span class="value" id="camera-distance-display">2</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <h4>Actions</h4>
+      <div class="control-row">
+        <button id="save-settings">Save Current Settings</button>
+      </div>
+      <div class="control-row">
+        <button id="reset-settings">Reset to Defaults</button>
+      </div>
+      <div class="control-row">
+        <button id="copy-config">Copy Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
+    import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js';
+
+    // Default configuration
+    const DEFAULT_CONFIG = {
+      // Set to false to hide controls in production
+      showControls: true,
+      
+      // Enable/disable interactivity (dragging/orbit controls)
+      enableInteractivity: true,
+      
+      // Globe appearance
+      globeHeight: -0.8,
+      globeScale: 1.5,
+      
+      // Animation
+      rotationSpeed: 0.001,
+      floatAmplitude: 0.2,
+      colorTransitionSpeed: 0.005,
+      
+      // Camera & Controls
+      cameraDistance: 2,
+      minPolarAngle: 0.3,
+      maxPolarAngle: 0.7,
+      
+      // Colors
+      colors: [
+        0x3a86ff, // Blue
+        0x8338ec, // Purple
+        0xff006e, // Pink
+        0xfb5607, // Orange
+        0xffbe0b, // Yellow
+      ],
+      
+      // Textures
+      textures: {
+        earthTexture: '/earth-texture-compressed.jpg',
+        bumpMap: '/earth-bump-compressed.jpg',
+        specularMap: '/earth-specular-compressed.jpg'
+      }
+    };
+    
+    // Merge external configuration (if provided) with defaults
+    const CONFIG = { ...DEFAULT_CONFIG };
+    
+    // Check if external configuration exists and merge it
+    if (window.GLOBE_CONFIG && typeof window.GLOBE_CONFIG === 'object') {
+      Object.assign(CONFIG, window.GLOBE_CONFIG);
+      console.log('Using external configuration:', window.GLOBE_CONFIG);
+    }
+    
+    // Try to load saved config from localStorage (only if no external config provided)
+    if (!window.GLOBE_CONFIG) {
+      try {
+        const savedConfig = localStorage.getItem('globeConfig');
+        if (savedConfig) {
+          Object.assign(CONFIG, JSON.parse(savedConfig));
+          console.log('Loaded saved configuration from localStorage');
+        }
+      } catch (e) {
+        console.error('Error loading saved config:', e);
+      }
+    }
+    
+    // Initialize the scene
+    const container = document.getElementById('globe-container');
+    const hint = document.getElementById('hint');
+    const controlsPanel = document.getElementById('controls-panel');
+    const toggleControlsBtn = document.getElementById('toggle-controls');
+    
+    // Set up controls visibility based on config
+    if (!CONFIG.showControls) {
+      controlsPanel.classList.add('hidden');
+      toggleControlsBtn.classList.add('hidden');
+    }
+    
+    // Update hint based on interactivity setting
+    if (!CONFIG.enableInteractivity) {
+      hint.style.display = 'none';
+    }
+    
+    // Toggle controls visibility
+    toggleControlsBtn.addEventListener('click', () => {
+      controlsPanel.classList.toggle('hidden');
+      toggleControlsBtn.textContent = controlsPanel.classList.contains('hidden') ? 'Show Controls' : 'Hide Controls';
+    });
+    
+    // Create scene, camera, and renderer
+    const scene = new THREE.Scene();
+    
+    // Use perspective camera with adjusted position to create "sunset" effect
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Create a starfield
+    const starsGeometry = new THREE.BufferGeometry();
+    const starsCount = 10000;
+    const positions = new Float32Array(starsCount * 3);
+    for (let i = 0; i < starsCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 2000;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 2000;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 2000;
+    }
+    starsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    const starsMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.7,
+      sizeAttenuation: true,
+    });
+    const stars = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(stars);
+
+    // Create an atmospheric glow using a custom shader
+    const atmosphereVertexShader = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    const atmosphereFragmentShader = `
+      uniform vec3 glowColor;
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+        gl_FragColor = vec4(glowColor, 1.0) * intensity;
+      }
+    `;
+    
+    // Create a group to hold all globe elements - this will help with positioning
+    const globeGroup = new THREE.Group();
+    scene.add(globeGroup);
+    
+    // Calculate globe radius based on scale
+    let globeRadius = 5 * CONFIG.globeScale;
+    
+    // Create the globe meshes
+    let atmosphereGeometry, atmosphereMaterial, atmosphereMesh;
+    let wireframeGeometry, wireframeMaterial, wireframeGlobe;
+    let solidGeometry, solidMaterial, solidGlobe;
+    let controls;
+    
+    // Function to create or recreate the globe with current settings
+    function createGlobe() {
+      // Remove existing meshes if they exist
+      if (atmosphereMesh) globeGroup.remove(atmosphereMesh);
+      if (wireframeGlobe) globeGroup.remove(wireframeGlobe);
+      if (solidGlobe) globeGroup.remove(solidGlobe);
+      
+      // Update globe radius based on current scale
+      globeRadius = 5 * CONFIG.globeScale;
+      
+      // Create atmosphere
+      atmosphereGeometry = new THREE.SphereGeometry(globeRadius * 1.04, 32, 32);
+      atmosphereMaterial = new THREE.ShaderMaterial({
+        vertexShader: atmosphereVertexShader,
+        fragmentShader: atmosphereFragmentShader,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        transparent: true,
+        uniforms: {
+          glowColor: { value: new THREE.Color(CONFIG.colors[0]) },
+        },
+      });
+      atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+      globeGroup.add(atmosphereMesh);
+      
+      // Create wireframe globe
+      wireframeGeometry = new THREE.SphereGeometry(globeRadius, 32, 32);
+      wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: CONFIG.colors[0],
+        wireframe: true,
+        transparent: true,
+        opacity: 0.5,
+      });
+      wireframeGlobe = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+      globeGroup.add(wireframeGlobe);
+      
+      // Create solid globe (initially invisible)
+      solidGeometry = new THREE.SphereGeometry(globeRadius * 0.98, 64, 64);
+      solidMaterial = new THREE.MeshPhongMaterial({
+        color: CONFIG.colors[0],
+        transparent: true,
+        opacity: 0,
+      });
+      solidGlobe = new THREE.Mesh(solidGeometry, solidMaterial);
+      globeGroup.add(solidGlobe);
+      
+      // Update globe position
+      globeGroup.position.y = CONFIG.globeHeight * globeRadius;
+      
+      // Update camera position
+      updateCameraPosition();
+      
+      // Update orbit controls
+      updateOrbitControls();
+    }
+    
+    // Function to update camera position based on settings
+    function updateCameraPosition() {
+      camera.position.set(0, -globeRadius * 0.5, globeRadius * CONFIG.cameraDistance);
+      camera.lookAt(0, 0, 0);
+    }
+    
+    // Function to create or update orbit controls
+    function updateOrbitControls() {
+      // Dispose of existing controls if they exist
+      if (controls) {
+        controls.dispose();
+      }
+      
+      // Create new controls if interactivity is enabled
+      if (CONFIG.enableInteractivity) {
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 0.5;
+        controls.enableZoom = false;
+        
+        // Set orbit constraints
+        controls.minPolarAngle = Math.PI * CONFIG.minPolarAngle;
+        controls.maxPolarAngle = Math.PI * CONFIG.maxPolarAngle;
+        
+        // Show the hint
+        hint.style.display = '';
+        setTimeout(() => {
+          hint.style.opacity = '0.8';
+        }, 100);
+      } else {
+        // Hide the hint if interactivity is disabled
+        hint.style.display = 'none';
+        controls = null;
+      }
+    }
+    
+    // Create initial globe
+    createGlobe();
+
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // Add point light
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    // Convert hex colors to THREE.Color objects
+    const threeColors = CONFIG.colors.map(hex => new THREE.Color(hex));
+    let colorIndex = 0;
+    let nextColorIndex = 1;
+    let colorT = 0;
+
+    const lerpColor = (a, b, t) => {
+      const color = new THREE.Color();
+      color.r = a.r + (b.r - a.r) * t;
+      color.g = a.g + (b.g - a.g) * t;
+      color.b = a.b + (b.b - a.b) * t;
+      return color;
+    };
+
+    let animationId;
+    let isHighResLoaded = false;
+
+    const animate = () => {
+      animationId = requestAnimationFrame(animate);
+
+      // Color transition logic
+      colorT += CONFIG.colorTransitionSpeed;
+      if (colorT >= 1) {
+        colorT = 0;
+        colorIndex = nextColorIndex;
+        nextColorIndex = (nextColorIndex + 1) % threeColors.length;
+      }
+
+      const currentColor = lerpColor(threeColors[colorIndex], threeColors[nextColorIndex], colorT);
+
+      // Update materials with new color
+      if (wireframeMaterial) {
+        wireframeMaterial.color = currentColor;
+      }
+      if (solidMaterial && !isHighResLoaded) {
+        solidMaterial.color = currentColor;
+      }
+      if (atmosphereMaterial) {
+        atmosphereMaterial.uniforms.glowColor.value = currentColor;
+      }
+
+      // Rotate the globes, atmosphere, and starfield for dynamic effect
+      if (wireframeGlobe) wireframeGlobe.rotation.y += CONFIG.rotationSpeed;
+      if (solidGlobe) solidGlobe.rotation.y += CONFIG.rotationSpeed;
+      if (atmosphereMesh) atmosphereMesh.rotation.y += CONFIG.rotationSpeed * 0.5;
+      stars.rotation.y += CONFIG.rotationSpeed * 0.1;
+      
+      // Add a subtle floating motion to enhance the sunset effect
+      const time = Date.now() * 0.0005;
+      globeGroup.position.y = CONFIG.globeHeight * globeRadius + Math.sin(time) * CONFIG.floatAmplitude;
+      
+      // Update controls if they exist
+      if (controls) {
+        controls.update();
+      }
+      
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Load high-resolution textures
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Function to load a texture and return a promise
+    const loadTexture = (url) => {
+      return new Promise((resolve) => {
+        textureLoader.load(url, (texture) => resolve(texture));
+      });
+    };
+
+    // Load all textures
+    Promise.all([
+      loadTexture(CONFIG.textures.earthTexture),
+      loadTexture(CONFIG.textures.bumpMap),
+      loadTexture(CONFIG.textures.specularMap)
+    ]).then(([texture, bumpMap, specularMap]) => {
+      const highResMaterial = new THREE.MeshPhongMaterial({
+        map: texture,
+        bumpMap: bumpMap,
+        bumpScale: 0.05,
+        specularMap: specularMap,
+        specular: new THREE.Color("grey"),
+      });
+
+      // Transition to the high-res textured globe
+      const transitionDuration = 1; // seconds
+      const startTime = Date.now();
+
+      const transitionToHighRes = () => {
+        const elapsedTime = (Date.now() - startTime) / 1000;
+        const progress = Math.min(elapsedTime / transitionDuration, 1);
+
+        solidGlobe.material = highResMaterial;
+        solidGlobe.material.opacity = progress;
+        wireframeMaterial.opacity = 0.5 * (1 - progress);
+
+        if (progress < 1) {
+          requestAnimationFrame(transitionToHighRes);
+        } else {
+          isHighResLoaded = true;
+          globeGroup.remove(wireframeGlobe);
+        }
+        renderer.render(scene, camera);
+      };
+
+      transitionToHighRes();
+    }).catch(error => {
+      console.error('Error loading textures:', error);
+    });
+
+    // Handle window resize
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Hide hint after 3 seconds if interactivity is enabled
+    if (CONFIG.enableInteractivity) {
+      setTimeout(() => {
+        hint.style.opacity = '0';
+        setTimeout(() => {
+          hint.style.display = 'none';
+        }, 1000);
+      }, 3000);
+    }
+
+    // Set up control event listeners
+    function setupControlListeners() {
+      // Globe height control
+      const heightSlider = document.getElementById('globe-height');
+      const heightDisplay = document.getElementById('height-display');
+      heightSlider.value = CONFIG.globeHeight;
+      heightDisplay.textContent = CONFIG.globeHeight;
+      
+      heightSlider.addEventListener('input', function() {
+        CONFIG.globeHeight = parseFloat(this.value);
+        heightDisplay.textContent = CONFIG.globeHeight;
+      });
+      
+      // Globe scale control
+      const scaleSlider = document.getElementById('globe-scale');
+      const scaleDisplay = document.getElementById('scale-display');
+      scaleSlider.value = CONFIG.globeScale;
+      scaleDisplay.textContent = CONFIG.globeScale;
+      
+      scaleSlider.addEventListener('input', function() {
+        CONFIG.globeScale = parseFloat(this.value);
+        scaleDisplay.textContent = CONFIG.globeScale;
+        createGlobe(); // Recreate the globe with new scale
+      });
+      
+      // Interactivity toggle
+      const interactivityToggle = document.getElementById('enable-interactivity');
+      interactivityToggle.checked = CONFIG.enableInteractivity;
+      
+      interactivityToggle.addEventListener('change', function() {
+        CONFIG.enableInteractivity = this.checked;
+        updateOrbitControls();
+      });
+      
+      // Rotation speed control
+      const rotationSlider = document.getElementById('rotation-speed');
+      const rotationDisplay = document.getElementById('rotation-display');
+      rotationSlider.value = CONFIG.rotationSpeed;
+      rotationDisplay.textContent = CONFIG.rotationSpeed;
+      
+      rotationSlider.addEventListener('input', function() {
+        CONFIG.rotationSpeed = parseFloat(this.value);
+        rotationDisplay.textContent = CONFIG.rotationSpeed;
+      });
+      
+      // Float amplitude control
+      const floatSlider = document.getElementById('float-amplitude');
+      const floatDisplay = document.getElementById('float-display');
+      floatSlider.value = CONFIG.floatAmplitude;
+      floatDisplay.textContent = CONFIG.floatAmplitude;
+      
+      floatSlider.addEventListener('input', function() {
+        CONFIG.floatAmplitude = parseFloat(this.value);
+        floatDisplay.textContent = CONFIG.floatAmplitude;
+      });
+      
+      // Color transition speed control
+      const colorSpeedSlider = document.getElementById('color-speed');
+      const colorSpeedDisplay = document.getElementById('color-speed-display');
+      colorSpeedSlider.value = CONFIG.colorTransitionSpeed;
+      colorSpeedDisplay.textContent = CONFIG.colorTransitionSpeed;
+      
+      colorSpeedSlider.addEventListener('input', function() {
+        CONFIG.colorTransitionSpeed = parseFloat(this.value);
+        colorSpeedDisplay.textContent = CONFIG.colorTransitionSpeed;
+      });
+      
+      // Camera distance control
+      const cameraDistanceSlider = document.getElementById('camera-distance');
+      const cameraDistanceDisplay = document.getElementById('camera-distance-display');
+      cameraDistanceSlider.value = CONFIG.cameraDistance;
+      cameraDistanceDisplay.textContent = CONFIG.cameraDistance;
+      
+      cameraDistanceSlider.addEventListener('input', function() {
+        CONFIG.cameraDistance = parseFloat(this.value);
+        cameraDistanceDisplay.textContent = CONFIG.cameraDistance;
+        updateCameraPosition();
+      });
+      
+      // Min polar angle control
+      const minPolarSlider = document.getElementById('min-polar');
+      const minPolarDisplay = document.getElementById('min-polar-display');
+      minPolarSlider.value = CONFIG.minPolarAngle;
+      minPolarDisplay.textContent = CONFIG.minPolarAngle;
+      
+      minPolarSlider.addEventListener('input', function() {
+        CONFIG.minPolarAngle = parseFloat(this.value);
+        minPolarDisplay.textContent = CONFIG.minPolarAngle;
+        if (controls) {
+          controls.minPolarAngle = Math.PI * CONFIG.minPolarAngle;
+        }
+      });
+      
+      // Max polar angle control
+      const maxPolarSlider = document.getElementById('max-polar');
+      const maxPolarDisplay = document.getElementById('max-polar-display');
+      maxPolarSlider.value = CONFIG.maxPolarAngle;
+      maxPolarDisplay.textContent = CONFIG.maxPolarAngle;
+      
+      maxPolarSlider.addEventListener('input', function() {
+        CONFIG.maxPolarAngle = parseFloat(this.value);
+        maxPolarDisplay.textContent = CONFIG.maxPolarAngle;
+        if (controls) {
+          controls.maxPolarAngle = Math.PI * CONFIG.maxPolarAngle;
+        }
+      });
+      
+      // Save settings button
+      document.getElementById('save-settings').addEventListener('click', function() {
+        localStorage.setItem('globeConfig', JSON.stringify(CONFIG));
+        alert('Settings saved to local storage');
+      });
+      
+      // Reset settings button
+      document.getElementById('reset-settings').addEventListener('click', function() {
+        // Reset to defaults
+        Object.assign(CONFIG, DEFAULT_CONFIG);
+        
+        // Update all sliders and controls
+        heightSlider.value = CONFIG.globeHeight;
+        heightDisplay.textContent = CONFIG.globeHeight;
+        
+        scaleSlider.value = CONFIG.globeScale;
+        scaleDisplay.textContent = CONFIG.globeScale;
+        
+        interactivityToggle.checked = CONFIG.enableInteractivity;
+        
+        rotationSlider.value = CONFIG.rotationSpeed;
+        rotationDisplay.textContent = CONFIG.rotationSpeed;
+        
+        floatSlider.value = CONFIG.floatAmplitude;
+        floatDisplay.textContent = CONFIG.floatAmplitude;
+        
+        colorSpeedSlider.value = CONFIG.colorTransitionSpeed;
+        colorSpeedDisplay.textContent = CONFIG.colorTransitionSpeed;
+        
+        cameraDistanceSlider.value = CONFIG.cameraDistance;
+        cameraDistanceDisplay.textContent = CONFIG.cameraDistance;
+        
+        minPolarSlider.value = CONFIG.minPolarAngle;
+        minPolarDisplay.textContent = CONFIG.minPolarAngle;
+        
+        maxPolarSlider.value = CONFIG.maxPolarAngle;
+        maxPolarDisplay.textContent = CONFIG.maxPolarAngle;
+        
+        // Update scene
+        createGlobe();
+        updateOrbitControls();
+      });
+      
+      // Copy configuration button
+      document.getElementById('copy-config').addEventListener('click', function() {
+        // Create a copy of the config without the showControls property
+        const configForProduction = { ...CONFIG, showControls: false };
+        
+        // Format the config as JavaScript code
+        const configString = 'window.GLOBE_CONFIG = ' + JSON.stringify(configForProduction, null, 2) + ';';
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(configString).then(() => {
+          alert('Configuration copied to clipboard! Paste this into your page before loading the globe script.');
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          alert('Failed to copy configuration. See console for details.');
+        });
+      });
+    }
+    
+    // Set up control listeners if controls are enabled
+    if (CONFIG.showControls) {
+      setupControlListeners();
+      
+      // Show controls panel
+      setTimeout(() => {
+        controlsPanel.classList.remove('hidden');
+        toggleControlsBtn.textContent = 'Hide Controls';
+      }, 500);
+    }
+
+    // Cleanup function
+    function cleanup() {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationId);
+      if (controls) controls.dispose();
+      renderer.dispose();
+      // Remove the container content if necessary when navigating away or cleaning up
+      // while (container.firstChild) {
+      //   container.removeChild(container.firstChild);
+      // }
+    }
+
+    // Ensure cleanup runs if the element is removed from the DOM or page navigates
+    // This might need adjustment based on your specific SPA/navigation setup
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for(const mutation of mutationsList) {
+            if (mutation.removedNodes) {
+                mutation.removedNodes.forEach(node => {
+                    if (node === container) {
+                        cleanup();
+                        observer.disconnect(); // Stop observing once cleaned up
+                        return;
+                    }
+                });
+            }
+        }
+    });
+
+    // Observe the parent of the container for removal
+    if (container.parentNode) {
+        observer.observe(container.parentNode, { childList: true });
+    }
+
+  </script>
+</body>
+</html>

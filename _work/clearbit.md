@@ -6,6 +6,7 @@ when: "May 2018"
 date: 1-06-2018
 link: https://clearbit.com/books/data-driven-sales
 image: /images/clearbit.png
+tag: Writing
 ---
 Working closely with Clearbit's internal marketing team, I helped transform their existing web-based content into a e-book, and eventually a physical book.
 
