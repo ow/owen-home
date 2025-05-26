@@ -4,7 +4,6 @@ import { useState } from "react"
 import ReactDOM from "react-dom/client"
 import { AsciiBackground } from "./ascii-background"
 import { ControlPanel } from "./control-panel"
-import "./control-panel.css"
 import { defaultSettings } from "./shared/ascii-core"
 
 function AsciiBackgroundApp({ initialConfig = {} }) {
