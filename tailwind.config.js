@@ -8,6 +8,9 @@ module.exports = {
     './pages/**/*.{html,js,md}',
     './posts/**/*.{html,js,md}'
   ],
+  safelist: [
+    'image-caption'
+  ],
   theme: {
     extend: {
       colors: {

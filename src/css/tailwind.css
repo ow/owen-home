@@ -28,6 +28,11 @@
     @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200;
   }
 
+  /* Image caption styling for blog posts */
+  .image-caption {
+    @apply block text-center text-sm text-slate-500 dark:text-slate-400 mt-2 mb-4 italic;
+  }
+
   /* Font hierarchy utility classes */
   .heading-hero { @apply text-5xl font-bold; }
   .heading-section { @apply text-3xl font-bold; }
