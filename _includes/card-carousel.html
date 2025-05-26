@@ -38,8 +38,10 @@
   
   let isDown = false;
   let startX;
+  let startY;
   let scrollLeft;
   let animationPaused = false;
+  let isDraggingHorizontally = false;
   
   // Hide scrollbar with inline styles
   carousel.style.scrollbarWidth = 'none';
@@ -49,17 +51,14 @@
   carousel.addEventListener('touchstart', (e) => {
     isDown = true;
     startX = e.touches[0].pageX - carousel.offsetLeft;
+    startY = e.touches[0].pageY;
     scrollLeft = carousel.scrollLeft;
-    
-    // Pause animation on touch
-    if (!animationPaused) {
-      carouselContent.style.animationPlayState = 'paused';
-      animationPaused = true;
-    }
+    isDraggingHorizontally = false;
   });
   
   carousel.addEventListener('touchend', () => {
     isDown = false;
+    isDraggingHorizontally = false;
     
     // Resume animation after a delay
     setTimeout(() => {
@@ -72,11 +71,31 @@
   
   carousel.addEventListener('touchmove', (e) => {
     if (!isDown) return;
-    e.preventDefault();
     
     const x = e.touches[0].pageX - carousel.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll speed multiplier
-    carousel.scrollLeft = scrollLeft - walk;
+    const y = e.touches[0].pageY;
+    const deltaX = Math.abs(x - startX);
+    const deltaY = Math.abs(y - startY);
+    
+    // Determine if this is a horizontal or vertical gesture
+    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
+      // This is a horizontal drag
+      isDraggingHorizontally = true;
+      
+      // Pause animation on horizontal drag
+      if (!animationPaused) {
+        carouselContent.style.animationPlayState = 'paused';
+        animationPaused = true;
+      }
+    }
+    
+    // Only prevent default and handle horizontal scrolling if we're dragging horizontally
+    if (isDraggingHorizontally) {
+      e.preventDefault();
+      const walk = (x - startX) * 2; // Scroll speed multiplier
+      carousel.scrollLeft = scrollLeft - walk;
+    }
+    // If it's vertical scrolling, let the browser handle it naturally
   });
   
   // Mouse events for desktop (optional - for testing)
@@ -84,21 +103,20 @@
     isDown = true;
     carousel.style.cursor = 'grabbing';
     startX = e.pageX - carousel.offsetLeft;
+    startY = e.pageY;
     scrollLeft = carousel.scrollLeft;
-    
-    if (!animationPaused) {
-      carouselContent.style.animationPlayState = 'paused';
-      animationPaused = true;
-    }
+    isDraggingHorizontally = false;
   });
   
   carousel.addEventListener('mouseleave', () => {
     isDown = false;
+    isDraggingHorizontally = false;
     carousel.style.cursor = 'grab';
   });
   
   carousel.addEventListener('mouseup', () => {
     isDown = false;
+    isDraggingHorizontally = false;
     carousel.style.cursor = 'grab';
     
     setTimeout(() => {
@@ -111,11 +129,27 @@
   
   carousel.addEventListener('mousemove', (e) => {
     if (!isDown) return;
-    e.preventDefault();
     
     const x = e.pageX - carousel.offsetLeft;
-    const walk = (x - startX) * 2;
-    carousel.scrollLeft = scrollLeft - walk;
+    const y = e.pageY;
+    const deltaX = Math.abs(x - startX);
+    const deltaY = Math.abs(y - startY);
+    
+    // Determine if this is a horizontal drag
+    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
+      isDraggingHorizontally = true;
+      
+      if (!animationPaused) {
+        carouselContent.style.animationPlayState = 'paused';
+        animationPaused = true;
+      }
+    }
+    
+    if (isDraggingHorizontally) {
+      e.preventDefault();
+      const walk = (x - startX) * 2;
+      carousel.scrollLeft = scrollLeft - walk;
+    }
   });
 })();
 </script>
