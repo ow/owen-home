@@ -9,6 +9,7 @@ export function ControlPanel({ settings, onSettingsChange }) {
   const [activeTab, setActiveTab] = useState("appearance")
   const [copySuccess, setCopySuccess] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [panelPosition, setPanelPosition] = useState({ bottom: "1rem", right: "1rem" })
   const portalRef = useRef(null)
   const [mounted, setMounted] = useState(false)
 
@@ -23,16 +24,28 @@ export function ControlPanel({ settings, onSettingsChange }) {
     }
   }, [])
 
-  // Create portal container on mount
+  // Create portal container on mount and calculate position
   useEffect(() => {
+    // Track existing control panels to avoid overlap
+    const existingPanels = document.querySelectorAll("#ascii-control-portal")
+    const panelIndex = existingPanels.length
+
+    // Calculate position based on panel index
+    const baseBottom = 1 // rem
+    const panelHeight = 3 // approximate height in rem including spacing
+    const calculatedBottom = baseBottom + (panelIndex * panelHeight)
+
     const portalContainer = document.createElement("div")
     portalContainer.id = "ascii-control-portal"
     portalContainer.style.position = "fixed"
-    portalContainer.style.bottom = "1rem"
+    portalContainer.style.bottom = `${calculatedBottom}rem`
     portalContainer.style.right = "1rem"
     portalContainer.style.zIndex = "999999"
     document.body.appendChild(portalContainer)
     portalRef.current = portalContainer
+    
+    // Update our position state for reference
+    setPanelPosition({ bottom: `${calculatedBottom}rem`, right: "1rem" })
     setMounted(true)
 
     return () => {
@@ -99,7 +112,12 @@ export function ControlPanel({ settings, onSettingsChange }) {
           position: "absolute",
           bottom: 0,
           right: 0,
+          // Add a subtle indicator for multiple panels
+          boxShadow: panelPosition.bottom !== "1rem" 
+            ? "0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(99, 102, 241, 0.3)" 
+            : "0 2px 10px rgba(0, 0, 0, 0.3)",
         }}
+        title={panelPosition.bottom !== "1rem" ? "ASCII Background Controls (Secondary)" : "ASCII Background Controls"}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -122,11 +140,10 @@ export function ControlPanel({ settings, onSettingsChange }) {
           className="ascii-control-content"
           style={{
             position: "absolute",
-            bottom: "100%",
+            bottom: "calc(100% + 3rem)",
             right: 0,
-            marginBottom: "0.5rem",
-            zIndex: 999999, // Ensure high z-index
-            pointerEvents: "auto", // Ensure clicks are captured
+            zIndex: 999999,
+            pointerEvents: "auto",
           }}
         >
           <div className="ascii-tabs">

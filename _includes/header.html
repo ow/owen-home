@@ -45,7 +45,7 @@
 			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
 				{% for page in site.pages %}
 					{% if page.title %}
-						{% if page.index != true %}
+						{% if page.index != true and page.nav_exclude != true %}
 							<a href="{{ page.url | relative_url }}" 
 							   class="block px-3 py-2 text-white hover:text-sky-300 transition-colors duration-200">
 								{{ page.title }}
@@ -89,6 +89,21 @@
 	// Handle mobile menu toggle
 	function toggleMobileMenu() {
 		const mobileMenu = document.getElementById('mobile-menu');
+		const header = document.getElementById('main-header');
+		
 		mobileMenu.classList.toggle('hidden');
+		
+		// Add/remove solid background when menu is open
+		if (!mobileMenu.classList.contains('hidden')) {
+			// Menu is open - add solid background
+			header.classList.add('backdrop-blur-md', 'bg-slate-900/95');
+			header.classList.remove('bg-transparent');
+		} else {
+			// Menu is closed - restore original background based on scroll position
+			if (window.pageYOffset <= 50) {
+				header.classList.remove('backdrop-blur-md', 'bg-slate-900/95', 'bg-white/70', 'dark:bg-slate-900/70');
+				header.classList.add('bg-transparent');
+			}
+		}
 	}
 </script>

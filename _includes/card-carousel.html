@@ -1,5 +1,5 @@
-<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20">
-  <div class="flex animate-scroll-left gap-4 py-2 items-stretch">
+<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; cursor: grab;">
+  <div class="flex animate-scroll-left gap-4 py-2 items-stretch carousel-content">
     {% for card in include.cards %}
       {% if card.url %}
         <a href="{{ card.url }}" class="group" {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
@@ -29,4 +29,120 @@
     {% endfor %}
   </div>
 </div>
+
+<script>
+(function() {
+  const carouselId = 'card-carousel-{{ include.id | default: "default" }}';
+  const carousel = document.getElementById(carouselId);
+  const carouselContent = carousel.querySelector('.carousel-content');
+  
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+  let animationPaused = false;
+  
+  // Hide scrollbar with inline styles
+  carousel.style.scrollbarWidth = 'none';
+  carousel.style.msOverflowStyle = 'none';
+  
+  // Touch events for mobile
+  carousel.addEventListener('touchstart', (e) => {
+    isDown = true;
+    startX = e.touches[0].pageX - carousel.offsetLeft;
+    scrollLeft = carousel.scrollLeft;
+    
+    // Pause animation on touch
+    if (!animationPaused) {
+      carouselContent.style.animationPlayState = 'paused';
+      animationPaused = true;
+    }
+  });
+  
+  carousel.addEventListener('touchend', () => {
+    isDown = false;
+    
+    // Resume animation after a delay
+    setTimeout(() => {
+      if (animationPaused) {
+        carouselContent.style.animationPlayState = 'running';
+        animationPaused = false;
+      }
+    }, 2000);
+  });
+  
+  carousel.addEventListener('touchmove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    
+    const x = e.touches[0].pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll speed multiplier
+    carousel.scrollLeft = scrollLeft - walk;
+  });
+  
+  // Mouse events for desktop (optional - for testing)
+  carousel.addEventListener('mousedown', (e) => {
+    isDown = true;
+    carousel.style.cursor = 'grabbing';
+    startX = e.pageX - carousel.offsetLeft;
+    scrollLeft = carousel.scrollLeft;
+    
+    if (!animationPaused) {
+      carouselContent.style.animationPlayState = 'paused';
+      animationPaused = true;
+    }
+  });
+  
+  carousel.addEventListener('mouseleave', () => {
+    isDown = false;
+    carousel.style.cursor = 'grab';
+  });
+  
+  carousel.addEventListener('mouseup', () => {
+    isDown = false;
+    carousel.style.cursor = 'grab';
+    
+    setTimeout(() => {
+      if (animationPaused) {
+        carouselContent.style.animationPlayState = 'running';
+        animationPaused = false;
+      }
+    }, 2000);
+  });
+  
+  carousel.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    
+    const x = e.pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 2;
+    carousel.scrollLeft = scrollLeft - walk;
+  });
+})();
+</script>
+
+<style>
+  #card-carousel-{{ include.id | default: 'default' }} {
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  #card-carousel-{{ include.id | default: 'default' }}::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+  /* Smooth scrolling for touch devices */
+  #card-carousel-{{ include.id | default: 'default' }} {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent text selection during drag */
+  #card-carousel-{{ include.id | default: 'default' }}.dragging {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+</style>
  

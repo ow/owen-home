@@ -2,30 +2,39 @@
 <div class="relative">
     {% capture footer_ascii_settings %}
     {
-        "density": 15,
-        "speed": 3,
-        "opacity": 0.7,
+        "density": 30,
+        "speed": 50,
+        "opacity": 0.9,
         "colorPalette": "{{ include.color_scheme | default: 'sunset' }}",
         "noiseScale": 0.01,
-        "noiseSpeed": 0.2,
+        "noiseSpeed": 1,
         "characterSet": "code",
-        "gradientSize": 1.2,
+        "gradientSize": 1.5,
         "animationStyle": "wave",
-        "transitionSmoothness": 0.8,
-        "showControls": false,
+        "transitionSmoothness": 1.2,
+        "showControls": true,
         "fullscreen": false,
         "flowAwareness": 0.3,
         "flowSmoothing": 0.3,
-        "entranceAnimation": true,
+        "entranceAnimation": false,
         "entranceDirection": "bottom",
-        "entranceDuration": 0.5
+        "entranceDuration": 1.5,
+        "respectReducedMotion": true,
+        "reducedMotionStyle": "static",
+        "reducedMotionFadeIn": true,
+        "reducedMotionFadeDuration": 1,
+        "waveFlowDirection": 270,
+        "waveIntensity": 1,
+        "waveLayers": 3,
+        "waveOrganicFactor": 0.2
     }
     {% endcapture %}
     <!-- ASCII Background -->
     <div 
         data-ascii-background='{{ footer_ascii_settings | strip }}'
         class="absolute -top-32 bottom-0 left-0 right-0"
-        style="z-index: 5;">
+        style="z-index: 5;"
+        id="footer-ascii-background">
     </div>
 
     <!-- Gradient overlay to fade the ASCII art -->

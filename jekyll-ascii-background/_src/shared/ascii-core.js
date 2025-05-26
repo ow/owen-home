@@ -79,12 +79,6 @@ export const defaultSettings = {
   entranceAnimation: true,
   entranceDirection: "bottom", // "top", "bottom", "left", "right", "center"
   entranceDuration: 1.5, // seconds
-  // Add interactive mode parameters
-  interactiveMode: true,
-  interactiveEffect: "ripple", // "ripple", "explosion", "color", "density"
-  interactiveIntensity: 1.0, // 0.1 to 2.0
-  interactiveDuration: 1.5, // seconds
-  interactiveRadius: 10, // cells
   // Add accessibility parameters
   respectReducedMotion: true, // Respect user's prefers-reduced-motion setting
   reducedMotionStyle: "static", // "static", "minimal", "slow"
@@ -998,11 +992,6 @@ window.asciiConfig = {
   entranceAnimation: ${settings.entranceAnimation !== undefined ? settings.entranceAnimation : true},
   entranceDirection: "${settings.entranceDirection || "bottom"}",
   entranceDuration: ${settings.entranceDuration || 1.5},
-  interactiveMode: ${settings.interactiveMode !== undefined ? settings.interactiveMode : true},
-  interactiveEffect: "${settings.interactiveEffect || "ripple"}",
-  interactiveIntensity: ${settings.interactiveIntensity || 1.0},
-  interactiveDuration: ${settings.interactiveDuration || 1.5},
-  interactiveRadius: ${settings.interactiveRadius || 10},
   respectReducedMotion: ${settings.respectReducedMotion !== undefined ? settings.respectReducedMotion : true},
   reducedMotionStyle: "${settings.reducedMotionStyle || "static"}",
   reducedMotionFadeIn: ${settings.reducedMotionFadeIn !== undefined ? settings.reducedMotionFadeIn : true},

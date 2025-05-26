@@ -30,6 +30,8 @@ While I probably could have eventually come up with the ASCII-wave in Cursor eve
 
 For a personal project like this, iterating with Cursor and V0 was *addictive.* Coming up with an idea, and being able to play with it immediately is incredibly empowering. It's _also_ hard to know when to stop when your AI companion will happily oblige every possible weird idea you can come up with. I probably could have re-launched this site a while ago, but kept finding new ways to tweak it and play. I decided that what you see now is good enough, and I can always iterate on it in public later.
 
-I won't brag that I have the most creative or innovative portfolio ever, but for a design manager that doesn't get to spend as much time as I want in the code anymore, co-designing this site with AI was incredibly liberating. It also helped cement my belief that AI prototyping of ideas is going to unlock a new wave of creativity in the tech industry, especially in my role. We just need to completely reset how we think about the design process, and move towards _showing_ rather than telling through the use of prototypes.
+I won't brag that I have the most creative or innovative portfolio ever, but for a design manager that doesn't get to spend as much time as I want in the code anymore, co-designing this site with AI was incredibly liberating—I could do things I would have never pulled off on my own. Instead of toiling for weeks on a direction, I could pull weird ideas straight out of my head and onto the page to see if they worked.
+
+It also helped cement my belief that AI prototyping of ideas is going to unlock a new wave of creativity in the tech industry, especially in my role. We just need to completely reset how we think about the design process, and move towards _showing_ rather than telling through the use of prototypes.
 
 If you're interested in playing with the ASCII art gradient tool that powers the site, head to [the gradient playground.](/gradient) 

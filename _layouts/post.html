@@ -5,7 +5,7 @@ layout: default
 {
   "density": 30,
   "speed": 30,
-  "opacity": 1,
+  "opacity": 0.6,
   "colorPalette": "{{ page.color_scheme | default: 'ocean' }}",
   "noiseScale": 0.02,
   "noiseSpeed": 0.5,
@@ -45,10 +45,10 @@ layout: default
     description=page.description
     ascii_settings=ascii_settings
     extra=hero_breadcrumbs
-    height="min-h-[50vh]"
+    height="min-h-[32vh]"
 %}
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 lg:-mt-36 pb-16 z-10 relative">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 lg:-mt-16 pb-16 z-10 relative">
   <div class="lg:grid lg:grid-cols-12 lg:gap-0">
     <div class="lg:col-span-8">
       <article class="post-content prose dark:prose-invert [&>p]:mb-3">

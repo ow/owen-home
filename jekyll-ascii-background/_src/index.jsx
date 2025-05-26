@@ -26,7 +26,10 @@ function AsciiBackgroundApp({ initialConfig = {} }) {
   )
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Keep track of initialized elements to prevent double initialization
+const initializedElements = new Set()
+
+function initializeAsciiBackgrounds() {
   // Look for elements with data-ascii-background attribute
   const asciiElements = document.querySelectorAll("[data-ascii-background]")
 
@@ -36,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // If we have data-ascii-background elements, use those
   if (asciiElements.length > 0) {
     asciiElements.forEach((element) => {
+      // Skip if already initialized
+      if (initializedElements.has(element)) return
+      
       // Skip if this is the legacy mount point (prevent double mounting)
       if (element.id === "ascii-background-root") return
 
@@ -64,11 +70,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const root = ReactDOM.createRoot(element)
       root.render(<AsciiBackgroundApp initialConfig={config} />)
+      
+      // Mark as initialized
+      initializedElements.add(element)
     })
   }
   // If no data-ascii-background elements found, fall back to legacy mount point
-  else if (legacyMountPoint && !legacyMountPoint.hasAttribute("data-ascii-background")) {
+  else if (legacyMountPoint && !legacyMountPoint.hasAttribute("data-ascii-background") && !initializedElements.has(legacyMountPoint)) {
     const root = ReactDOM.createRoot(legacyMountPoint)
     root.render(<AsciiBackgroundApp initialConfig={window.asciiConfig || {}} />)
+    initializedElements.add(legacyMountPoint)
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Initial initialization
+  initializeAsciiBackgrounds()
+  
+  // Check again after a short delay to catch any elements added after DOMContentLoaded
+  // This is particularly useful for elements like footers that might be included after the script loads
+  setTimeout(() => {
+    initializeAsciiBackgrounds()
+  }, 100)
 })

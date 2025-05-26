@@ -1,7 +1,7 @@
 <div>
 	{% for job in site.career %}
-		<div class="flex items-start space-x-8 mb-12">
-			<div class="flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-4">
+		<div class="flex flex-col sm:flex-row sm:items-start sm:space-x-8 mb-12">
+			<div class="flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 p-4 mb-4 sm:mb-0">
 				<img src="{{ job.icon }}" alt="{{ job.company }} logo" class="w-full h-full object-contain">
 			</div>
 			<div class="flex-1">
