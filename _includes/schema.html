@@ -13,7 +13,12 @@
     "url": "https://stripe.com"
   },
   "description": "Product Design Manager at Stripe, focusing on developer experience, AI tools, and building exceptional design teams.",
-  "image": "{{ site.url }}/images/itme.jpg",
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}/images/itme.jpg",
+    "width": 400,
+    "height": 400
+  },
   "url": "https://owenwillia.ms",
   "sameAs": [
     "https://twitter.com/{{ site.twitter_username }}",
@@ -27,7 +32,13 @@
     "AI/ML Design",
     "Design Leadership",
     "Team Building"
-  ]
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Victoria",
+    "addressRegion": "British Columbia",
+    "addressCountry": "Canada"
+  }
 }
 </script>
 
@@ -41,6 +52,14 @@
   "description": "{{ site.description }}",
   "publisher": {
     "@id": "https://owenwillia.ms/#person"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://owenwillia.ms/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
   }
 }
 </script>
@@ -59,15 +78,53 @@
   "datePublished": "{{ page.date | date_to_xmlschema }}",
   "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
   "author": {
-    "@id": "https://owenwillia.ms/#person"
+    "@type": "Person",
+    "@id": "https://owenwillia.ms/#person",
+    "name": "Owen Williams",
+    "url": "https://owenwillia.ms"
   },
   "publisher": {
-    "@id": "https://owenwillia.ms/#person"
+    "@type": "Person",
+    "@id": "https://owenwillia.ms/#person",
+    "name": "Owen Williams",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.url }}/images/itme.jpg",
+      "width": 400,
+      "height": 400
+    }
   },
   "image": {
     "@type": "ImageObject",
-    "url": "{{ site.url }}{{ page.image | default: '/images/card.png' }}"
+    "url": "{{ site.url }}{{ page.image | default: '/images/card.png' }}",
+    "width": 1200,
+    "height": 630
+  },
+  "articleSection": "{{ page.categories | first | default: 'Blog' }}",
+  "wordCount": "{{ content | strip_html | number_of_words }}",
+  "articleBody": "{{ content | strip_html | strip_newlines | truncate: 500 }}"
+}
+</script>
+{% endif %}
+
+{% unless page.layout == 'post' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "{{ site.url }}{{ page.url }}",
+  "url": "{{ site.url }}{{ page.url }}",
+  "name": "{{ page.title | default: site.title }}",
+  "description": "{{ page.description | default: site.description }}",
+  "isPartOf": {
+    "@id": "https://owenwillia.ms/#website"
+  },
+  "about": {
+    "@id": "https://owenwillia.ms/#person"
+  },
+  "author": {
+    "@id": "https://owenwillia.ms/#person"
   }
 }
 </script>
-{% endif %} 
+{% endunless %} 
