@@ -101,7 +101,7 @@ color_scheme: sunset
 <script>
 let formLoadTime = new Date().getTime();
 
-// Simplified form validation
+// Simplified form validation, uses recaptcha via netlify
 function validateForm() {
     // Check timing (minimum 3 seconds to prevent rapid submissions)
     const timeDiff = new Date().getTime() - formLoadTime;
