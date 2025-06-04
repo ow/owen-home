@@ -24,6 +24,53 @@
 
     {% seo %}
     
+    <!-- ProfilePage mainEntity extension for Jekyll SEO tag -->
+    {% if page.seo.type == "ProfilePage" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "{{ page.author.name | default: site.author.name | default: page.seo.name }}",
+        {% if page.author.twitter %}
+        "alternateName": "{{ page.author.twitter }}",
+        {% endif %}
+        "description": "{{ page.author.bio | default: site.description | strip_html | strip_newlines | truncate: 160 }}",
+        {% if page.image %}
+        "image": "{{ page.image | absolute_url }}",
+        {% elsif site.logo %}
+        "image": "{{ site.logo | absolute_url }}",
+        {% endif %}
+        {% if page.author.job_title %}
+        "jobTitle": "{{ page.author.job_title }}",
+        {% endif %}
+        {% if page.author.company %}
+        "worksFor": {
+          "@type": "Organization",
+          "name": "{{ page.author.company }}"
+        },
+        {% endif %}
+        {% if page.author.location %}
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "{{ page.author.location }}"
+        },
+        {% endif %}
+        {% if page.seo.links %}
+        "sameAs": [
+          {% for link in page.seo.links %}
+          "{{ link }}"{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ],
+        {% endif %}
+        "url": "{{ page.author.url | default: page.url | absolute_url }}"
+      },
+      "url": "{{ page.url | absolute_url }}"
+    }
+    </script>
+    {% endif %}
+    
     <script>
       // Force dark mode by default; did this to potentially support light mode in the future
       document.documentElement.classList.add('dark');
