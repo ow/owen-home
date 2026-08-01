@@ -41,6 +41,12 @@
     @apply hover:bg-glass/20 dark:hover:bg-glass-dark/20 transition-all duration-200;
   }
 
+  .strength-card,
+  .strength-card:hover {
+    transform: none;
+    transition: none;
+  }
+
   /* Navigation link hover style */
   .nav-link {
     @apply text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200;
