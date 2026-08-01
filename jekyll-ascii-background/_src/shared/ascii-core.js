@@ -1138,10 +1138,21 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           clarity * waveSettings.clarityQuieting +
           orderedDither * 0.055 * (0.35 + complexity * 0.65),
       )
-      const charIndex = Math.min(
+      let charIndex = Math.min(
         Math.floor(characterValue * characters.length),
         characters.length - 1,
       )
+
+      // Keep the broad field quiet, but replace the second blank step with a
+      // dot inside the ribbon so its softer passages remain visually connected.
+      if (structuredWave && characterSet === "gradient" && charIndex === 1) {
+        const ribbonTime = reducedMotion ? 0.42 : timeOffset
+        const ribbonDistance = Math.abs(
+          normalizedY - getRibbonGeometry(normalizedX, ribbonTime, waveSettings).waveCenter,
+        )
+        if (ribbonDistance < 0.27) charIndex = 2
+      }
+
       const char = characters[charIndex] || "#"
 
       // Select color based on noise
