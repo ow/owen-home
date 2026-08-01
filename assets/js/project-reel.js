@@ -3,9 +3,6 @@
     var track = reel.querySelector('.project-reel-track');
     var cards = Array.prototype.slice.call(reel.querySelectorAll('[data-reel-card]:not([data-reel-clone])'));
     var firstClone = reel.querySelector('[data-reel-clone]');
-    var previous = reel.querySelector('[data-reel-previous]');
-    var next = reel.querySelector('[data-reel-next]');
-    var counters = reel.querySelectorAll('.project-reel-count');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     var speed = 12;
     var running = !reduceMotion.matches;
@@ -14,17 +11,11 @@
     var lastTime;
     var autoPosition = 0;
     var animationFrame;
-    var frame;
 
     if (!track || !cards.length) return;
 
     function loopWidth() {
       return firstClone ? firstClone.offsetLeft - cards[0].offsetLeft : 0;
-    }
-
-    function normalizedLeft() {
-      var width = loopWidth();
-      return width ? track.scrollLeft % width : track.scrollLeft;
     }
 
     function normalizePosition() {
@@ -33,43 +24,6 @@
         autoPosition -= width;
         track.scrollLeft = autoPosition;
       }
-    }
-
-    function activeIndex() {
-      var left = normalizedLeft();
-      var firstOffset = cards[0].offsetLeft;
-      var nearest = 0;
-      var distance = Infinity;
-
-      cards.forEach(function (card, index) {
-        var current = Math.abs((card.offsetLeft - firstOffset) - left);
-        if (current < distance) {
-          distance = current;
-          nearest = index;
-        }
-      });
-
-      return nearest;
-    }
-
-    function update() {
-      var index = activeIndex();
-      var label = String(index + 1).padStart(2, '0') + ' / ' + String(cards.length).padStart(2, '0');
-
-      counters.forEach(function (counter) { counter.textContent = label; });
-      frame = null;
-    }
-
-    function show(delta) {
-      var cardWidth = cards[0].getBoundingClientRect().width;
-      var styles = window.getComputedStyle(track);
-      var gap = parseFloat(styles.columnGap || styles.gap) || 0;
-
-      pauseFor(3000);
-      track.scrollBy({
-        left: delta * (cardWidth + gap),
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      });
     }
 
     function pause() {
@@ -120,8 +74,6 @@
       lastTime = null;
     }
 
-    if (previous) previous.addEventListener('click', function () { show(-1); });
-    if (next) next.addEventListener('click', function () { show(1); });
     track.addEventListener('pointerenter', pause);
     track.addEventListener('pointerleave', resume);
     track.addEventListener('pointerdown', pause);
@@ -136,7 +88,6 @@
     });
     track.addEventListener('scroll', function () {
       if (!running) autoPosition = track.scrollLeft;
-      if (!frame) frame = window.requestAnimationFrame(update);
     }, { passive: true });
 
     if ('IntersectionObserver' in window) {
@@ -160,7 +111,6 @@
       });
     }
 
-    update();
     startAnimation();
   }
 

@@ -197,13 +197,6 @@
     -webkit-line-clamp: 2;
   }
 
-  .project-reel-control {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-slate-200 transition-colors hover:border-sky-300/60 hover:text-sky-200 disabled:cursor-default disabled:opacity-30;
-  }
-
-  .project-reel-control svg {
-    @apply h-5 w-5;
-  }
 }
 
 @media (min-width: 640px) {
