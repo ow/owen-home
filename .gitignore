@@ -78,3 +78,6 @@ validate/log.json
 
 ### NPM ###
 package-lock.json
+
+# Local Netlify folder
+.netlify
