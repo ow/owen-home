@@ -59,16 +59,18 @@
             {% if reel_pass == 2 %}tabindex="-1"{% endif %}
             {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
             {% if card.image_name %}
-              {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 640px) 208px, min(68vw, 208px)" loading=card_loading fetchpriority=card_priority %}
+              {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 640px) 420px, 82vw" loading=card_loading fetchpriority=card_priority %}
             {% else %}
               <img src="{{ card.image }}" alt="{{ card.image_alt | default: card.title }}" width="720" height="440" class="project-reel-image" loading="{{ card_loading }}" decoding="async">
             {% endif %}
             <span class="project-reel-shade" aria-hidden="true"></span>
             <span class="project-reel-copy">
-              <span class="flex items-center mb-1.5">
+              <span class="flex items-center gap-2 mb-2">
                 <span class="tag text-sky-300">{{ card.label | default: 'Selected project' }}</span>
+                <span class="h-px w-6 bg-sky-300/50" aria-hidden="true"></span>
+                <span class="meta text-slate-300 tabular-nums">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
               </span>
-              <span class="block text-lg font-bold leading-tight text-white group-hover:text-sky-200 group-focus-visible:text-sky-200 transition-colors">{{ card.title }}</span>
+              <span class="block text-xl sm:text-2xl font-bold leading-tight text-white group-hover:text-sky-200 group-focus-visible:text-sky-200 transition-colors">{{ card.title }}</span>
               <span class="project-reel-description text-xs sm:text-sm text-slate-200 mt-1.5">{{ card.description }}</span>
             </span>
           </a>
