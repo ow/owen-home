@@ -94,7 +94,7 @@ function toSrgb(channel) {
   return Math.round(clamp(value) * 255)
 }
 
-function hexToOklab(color) {
+export function hexToOklab(color) {
   const safeColor = typeof color === "string" && /^#[0-9a-f]{6}$/i.test(color)
     ? color.toLowerCase()
     : "#6366f1"
@@ -246,11 +246,6 @@ function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reduce
   const spread = Math.max(waveSettings.meshSpread || 0.36, 0.08)
   const pointer = waveSettings.pointer
   const pointerActive = !reducedMotion && pointer?.activity > 0.001
-  const pointerEngagement = clamp(
-    (pointer?.engagement || 0) + (pointer?.momentum || 0) * 0.55,
-    0,
-    1.5,
-  )
   const vertices = []
   const triangleIndices = []
 
@@ -279,12 +274,8 @@ function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reduce
       if (pointerActive) {
         const dx = x - pointer.x
         const dy = y - pointer.y
-        const responseRadius = Math.max(waveSettings.interactiveRadius || 0.18, 0.01) *
-          (1 + pointerEngagement * 0.7)
-        const influence = Math.exp(-(dx * dx + dy * dy) / (responseRadius * responseRadius)) *
-          pointer.activity
-        const push = influence * (waveSettings.interactiveIntensity || 0.75) *
-          (0.045 + pointerEngagement * 0.11)
+        const influence = Math.exp(-(dx * dx + dy * dy) / 0.05) * pointer.activity
+        const push = influence * (waveSettings.interactiveIntensity || 0.75) * 0.045
         x += dx * push * columnWeight
         y += dy * push
       }
@@ -431,12 +422,6 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       : 0
 
     let refraction = 0
-    let interactionLens = 0
-    const pointerEngagement = clamp(
-      (pointer?.engagement || 0) + (pointer?.momentum || 0) * 0.55,
-      0,
-      1.5,
-    )
     if (
       !reducedMotion &&
       interactiveMode &&
@@ -447,12 +432,9 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       const pointerX = normalizedX - pointer.x
       const pointerY = normalizedY - pointer.y
       const pointerDistance = Math.sqrt(pointerX * pointerX + pointerY * pointerY)
-      const responseRadius = Math.max(interactiveRadius, 0.01) * (1 + pointerEngagement * 0.7)
-      const lens = Math.exp(-Math.pow(pointerDistance / responseRadius, 2) * 1.8)
+      const lens = Math.exp(-Math.pow(pointerDistance / Math.max(interactiveRadius, 0.01), 2) * 1.8)
       const crossFlow = pointerX * flowY - pointerY * flowX
-      interactionLens = lens * pointer.activity
-      refraction = crossFlow * interactionLens * interactiveIntensity *
-        (8 + pointerEngagement * 3.6)
+      refraction = crossFlow * lens * interactiveIntensity * pointer.activity * 8
     }
 
     const ribbon = getRibbonGeometry(normalizedX, waveTime, waveSettings)
@@ -463,8 +445,7 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
     // crest and a softer trailing gradient.
     const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + refraction
     const waveCenter = ribbon.waveCenter + phaseTurbulence * 0.035
-    const distanceFromCrest = normalizedY - waveCenter +
-      refraction * (0.035 + pointerEngagement * 0.025)
+    const distanceFromCrest = normalizedY - waveCenter + refraction * 0.035
     const crestWidth = 0.24 + Math.sin(ribbonPhase * 0.5 + 0.4) * 0.018
     const crest = Math.exp(-Math.pow(distanceFromCrest / crestWidth, 2) * 1.42)
     const wake = Math.exp(-Math.pow((distanceFromCrest - 0.2) / 0.38, 2) * 1.2)
@@ -475,7 +456,6 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
           crest * 1.25 +
           wake * 0.28 -
           0.72 +
-          interactionLens * pointerEngagement * 0.14 +
           Math.sin(ribbonPhase * 1.32 + transverseFlow * Math.PI) * 0.045 * complexity
         ) * waveIntensity
       : Math.sin(primaryFlow) * 0.56 * waveIntensity
@@ -1006,6 +986,20 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
   const useMesh = structuredWave && colorField === "mesh"
   const paletteOklab = useMesh ? colors.map(hexToOklab) : null
   const mesh = useMesh ? createRibbonMesh(timeOffset, time, paletteOklab, waveSettings, reducedMotion) : null
+  const pointerEmission = useMesh && !reducedMotion && pointer?.emission > 0.001
+    ? {
+        x: pointer.emissionX,
+        y: pointer.emissionY,
+        strength: pointer.emission * (0.58 + (pointer.momentum || 0) * 0.18),
+        radiusX: Math.max(interactiveRadius * 1.8, 0.01),
+        radiusY: Math.max(interactiveRadius * 1.35, 0.01),
+        color: {
+          lightness: pointer.emissionLightness,
+          a: pointer.emissionA,
+          b: pointer.emissionB,
+        },
+      }
+    : null
   if (!ctx._quantizedColorCache) ctx._quantizedColorCache = new Map()
 
   // Calculate entrance animation progress
@@ -1265,7 +1259,22 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const baseColor = samplePaletteOklab(paletteOklab, colorPosition / Math.max(colorCount - 1, 1))
         const meshColor = sampleRibbonMesh(normalizedX, normalizedY, mesh)
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
-        const quantized = quantizeOklab(mixOklab(baseColor, meshColor, meshPresence), ctx._quantizedColorCache)
+        let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
+        if (pointerEmission) {
+          const emissionX = (normalizedX - pointerEmission.x) / pointerEmission.radiusX
+          const emissionY = (normalizedY - pointerEmission.y) / pointerEmission.radiusY
+          const emissionLens = Math.exp(-(emissionX * emissionX + emissionY * emissionY) * 1.45)
+          const emissionAmount = clamp(
+            pointerEmission.strength *
+              emissionLens *
+              (0.52 + meshPresence * 0.34) *
+              smoothstep(0.03, 0.72, currentNoiseValue),
+            0,
+            0.72,
+          )
+          resolvedColor = mixOklab(resolvedColor, pointerEmission.color, emissionAmount)
+        }
+        const quantized = quantizeOklab(resolvedColor, ctx._quantizedColorCache)
         color = quantized.color
         colorKey = quantized.colorKey
       } else if (mesh) {

@@ -1,8 +1,10 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { renderAsciiBackground, resetAnimationState } from "./shared/ascii-core"
+import { hexToOklab, renderAsciiBackground, resetAnimationState } from "./shared/ascii-core"
 import { resolveAsciiSettings } from "./shared/ascii-config"
+
+const defaultEmissionColor = hexToOklab("#ff4fa3")
 
 export function AsciiBackground(props) {
   // Merge provided props with default settings
@@ -19,8 +21,20 @@ export function AsciiBackground(props) {
   const animationRef = useRef(null)
   const renderFrameRef = useRef(null)
   const timeRef = useRef(0)
-  const pointerRef = useRef({ x: 0.72, y: 0.34, activity: 0, engagement: 0, momentum: 0 })
-  const pointerTargetRef = useRef({ x: 0.72, y: 0.34, activity: 0, engagement: 0, momentum: 0 })
+  const pointerRef = useRef({
+    x: 0.72,
+    y: 0.34,
+    activity: 0,
+    engagement: 0,
+    momentum: 0,
+    emission: 0,
+    emissionX: 0.72,
+    emissionY: 0.46,
+    emissionLightness: defaultEmissionColor.lightness,
+    emissionA: defaultEmissionColor.a,
+    emissionB: defaultEmissionColor.b,
+  })
+  const pointerTargetRef = useRef({ ...pointerRef.current })
   const pointerOnReactiveSurfaceRef = useRef(false)
 
   // Performance monitoring (local development only)
@@ -146,23 +160,52 @@ export function AsciiBackground(props) {
     const scrollPositions = new WeakMap()
     let scrollIdleTimer = null
 
+    const getEmitterColor = (emitter) => {
+      const color = emitter?.getAttribute("data-ascii-emission")
+      return color ? hexToOklab(color) : null
+    }
+
     const handlePointerMove = (event) => {
       if (event.pointerType === "touch") return
       const rect = host.getBoundingClientRect()
-      const overReactiveSurface = Boolean(event.target?.closest?.("[data-ascii-reactive]"))
+      const emitter = event.target?.closest?.("[data-ascii-emission]")
+      const reactiveSurface = event.target?.closest?.("[data-ascii-reactive]")
+      const emitterColor = getEmitterColor(emitter)
+      const currentTarget = pointerTargetRef.current
+      const keepDraggedEmission = Boolean(
+        reactiveSurface?.classList.contains("dragging") && currentTarget.emission > 0.001,
+      )
+      const overReactiveSurface = Boolean(reactiveSurface)
+      const emitterRect = emitter?.getBoundingClientRect()
+      const pointerX = Math.min(Math.max((event.clientX - rect.left) / Math.max(rect.width, 1), 0), 1)
+      const pointerY = Math.min(Math.max((event.clientY - rect.top) / Math.max(rect.height, 1), 0), 1)
       pointerOnReactiveSurfaceRef.current = overReactiveSurface
       pointerTargetRef.current = {
-        x: Math.min(Math.max((event.clientX - rect.left) / Math.max(rect.width, 1), 0), 1),
-        y: Math.min(Math.max((event.clientY - rect.top) / Math.max(rect.height, 1), 0), 1),
+        ...currentTarget,
+        x: pointerX,
+        y: pointerY,
         activity: 1,
         engagement: overReactiveSurface ? 1 : 0,
-        momentum: pointerTargetRef.current.momentum || 0,
+        emission: emitterColor || keepDraggedEmission ? 1 : 0,
+        emissionX: emitterColor ? pointerX : currentTarget.emissionX,
+        emissionY: emitterRect
+          ? Math.min(Math.max((emitterRect.top - rect.top) / Math.max(rect.height, 1) + 0.025, 0), 1)
+          : currentTarget.emissionY,
+        emissionLightness: emitterColor?.lightness ?? currentTarget.emissionLightness,
+        emissionA: emitterColor?.a ?? currentTarget.emissionA,
+        emissionB: emitterColor?.b ?? currentTarget.emissionB,
       }
     }
 
     const handlePointerLeave = () => {
       pointerOnReactiveSurfaceRef.current = false
-      pointerTargetRef.current = { ...pointerTargetRef.current, activity: 0, engagement: 0, momentum: 0 }
+      pointerTargetRef.current = {
+        ...pointerTargetRef.current,
+        activity: 0,
+        engagement: 0,
+        momentum: 0,
+        emission: 0,
+      }
     }
 
     const handleReactiveScroll = (event) => {
@@ -176,7 +219,15 @@ export function AsciiBackground(props) {
       const surfaceRect = reactiveSurface.getBoundingClientRect()
       const currentTarget = pointerTargetRef.current
       const hasPointerAnchor = pointerOnReactiveSurfaceRef.current
+      const centeredElement = document.elementFromPoint(
+        surfaceRect.left + surfaceRect.width * 0.5,
+        surfaceRect.top + Math.min(surfaceRect.height * 0.22, 56),
+      )
+      const centeredEmitter = centeredElement?.closest?.("[data-ascii-emission]")
+      const centeredEmitterColor = getEmitterColor(centeredEmitter)
+      const centeredEmitterRect = centeredEmitter?.getBoundingClientRect()
       pointerTargetRef.current = {
+        ...currentTarget,
         x: hasPointerAnchor
           ? currentTarget.x
           : Math.min(Math.max((surfaceRect.left + surfaceRect.width * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
@@ -186,6 +237,16 @@ export function AsciiBackground(props) {
         activity: 1,
         engagement: 1,
         momentum: Math.min(0.3 + Math.abs(scrollDelta) / 18, 1),
+        emission: currentTarget.emission > 0.001 || centeredEmitterColor ? 1 : 0,
+        emissionX: hasPointerAnchor
+          ? currentTarget.emissionX
+          : Math.min(Math.max(((centeredEmitterRect?.left || surfaceRect.left) + (centeredEmitterRect?.width || surfaceRect.width) * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
+        emissionY: hasPointerAnchor
+          ? currentTarget.emissionY
+          : Math.min(Math.max(((centeredEmitterRect?.top || surfaceRect.top) - hostRect.top) / Math.max(hostRect.height, 1) + 0.025, 0), 1),
+        emissionLightness: centeredEmitterColor?.lightness ?? currentTarget.emissionLightness,
+        emissionA: centeredEmitterColor?.a ?? currentTarget.emissionA,
+        emissionB: centeredEmitterColor?.b ?? currentTarget.emissionB,
       }
 
       window.clearTimeout(scrollIdleTimer)
@@ -195,6 +256,7 @@ export function AsciiBackground(props) {
           activity: pointerOnReactiveSurfaceRef.current ? 1 : 0,
           engagement: pointerOnReactiveSurfaceRef.current ? 1 : 0,
           momentum: 0,
+          emission: pointerOnReactiveSurfaceRef.current ? pointerTargetRef.current.emission : 0,
         }
       }, 120)
     }
@@ -241,6 +303,12 @@ export function AsciiBackground(props) {
       pointer.activity += (target.activity - pointer.activity) * 0.065
       pointer.engagement += (target.engagement - pointer.engagement) * 0.11
       pointer.momentum += (target.momentum - pointer.momentum) * 0.18
+      pointer.emission += (target.emission - pointer.emission) * 0.1
+      pointer.emissionX += (target.emissionX - pointer.emissionX) * 0.09
+      pointer.emissionY += (target.emissionY - pointer.emissionY) * 0.09
+      pointer.emissionLightness += (target.emissionLightness - pointer.emissionLightness) * 0.075
+      pointer.emissionA += (target.emissionA - pointer.emissionA) * 0.075
+      pointer.emissionB += (target.emissionB - pointer.emissionB) * 0.075
 
       const speedFactor = useReducedMotion
         ? currentSettings.reducedMotionStyle === "minimal"
