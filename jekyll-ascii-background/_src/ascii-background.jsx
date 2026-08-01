@@ -29,6 +29,7 @@ export function AsciiBackground(props) {
     momentum: 0,
     emission: 0,
     emissionPhase: 0,
+    emissionColor: null,
     emissionX: 0.72,
     emissionY: 0.46,
     emissionLightness: defaultEmissionColor.lightness,
@@ -171,6 +172,7 @@ export function AsciiBackground(props) {
       const rect = host.getBoundingClientRect()
       const emitter = event.target?.closest?.("[data-ascii-emission]")
       const reactiveSurface = event.target?.closest?.("[data-ascii-reactive]")
+      const emitterHex = emitter?.getAttribute("data-ascii-emission") || null
       const emitterColor = getEmitterColor(emitter)
       const currentTarget = pointerTargetRef.current
       const keepDraggedEmission = Boolean(
@@ -180,6 +182,9 @@ export function AsciiBackground(props) {
       const emitterRect = emitter?.getBoundingClientRect()
       const pointerX = Math.min(Math.max((event.clientX - rect.left) / Math.max(rect.width, 1), 0), 1)
       const pointerY = Math.min(Math.max((event.clientY - rect.top) / Math.max(rect.height, 1), 0), 1)
+      if (emitterHex && emitterHex !== currentTarget.emissionColor) {
+        pointerRef.current.emissionPhase = 0
+      }
       pointerOnReactiveSurfaceRef.current = overReactiveSurface
       pointerTargetRef.current = {
         ...currentTarget,
@@ -188,7 +193,10 @@ export function AsciiBackground(props) {
         activity: 1,
         engagement: overReactiveSurface ? 1 : 0,
         emission: emitterColor || keepDraggedEmission ? 1 : 0,
-        emissionX: emitterColor ? pointerX : currentTarget.emissionX,
+        emissionColor: emitterHex || currentTarget.emissionColor,
+        emissionX: emitterRect
+          ? Math.min(Math.max((emitterRect.left + emitterRect.width * 0.5 - rect.left) / Math.max(rect.width, 1), 0), 1)
+          : currentTarget.emissionX,
         emissionY: emitterRect
           ? Math.min(Math.max((emitterRect.top - rect.top) / Math.max(rect.height, 1) - 0.075, 0), 1)
           : currentTarget.emissionY,
@@ -224,9 +232,20 @@ export function AsciiBackground(props) {
         surfaceRect.left + surfaceRect.width * 0.5,
         surfaceRect.top + Math.min(surfaceRect.height * 0.22, 56),
       )
-      const centeredEmitter = centeredElement?.closest?.("[data-ascii-emission]")
-      const centeredEmitterColor = getEmitterColor(centeredEmitter)
-      const centeredEmitterRect = centeredEmitter?.getBoundingClientRect()
+      const pointerElement = hasPointerAnchor
+        ? document.elementFromPoint(
+            hostRect.left + currentTarget.x * hostRect.width,
+            hostRect.top + currentTarget.y * hostRect.height,
+          )
+        : null
+      const activeEmitter = pointerElement?.closest?.("[data-ascii-emission]") ||
+        centeredElement?.closest?.("[data-ascii-emission]")
+      const activeEmitterHex = activeEmitter?.getAttribute("data-ascii-emission") || null
+      const activeEmitterColor = getEmitterColor(activeEmitter)
+      const activeEmitterRect = activeEmitter?.getBoundingClientRect()
+      if (activeEmitterHex && activeEmitterHex !== currentTarget.emissionColor) {
+        pointerRef.current.emissionPhase = 0
+      }
       pointerTargetRef.current = {
         ...currentTarget,
         x: hasPointerAnchor
@@ -238,16 +257,13 @@ export function AsciiBackground(props) {
         activity: 1,
         engagement: 1,
         momentum: Math.min(0.3 + Math.abs(scrollDelta) / 18, 1),
-        emission: currentTarget.emission > 0.001 || centeredEmitterColor ? 1 : 0,
-        emissionX: hasPointerAnchor
-          ? currentTarget.emissionX
-          : Math.min(Math.max(((centeredEmitterRect?.left || surfaceRect.left) + (centeredEmitterRect?.width || surfaceRect.width) * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
-        emissionY: hasPointerAnchor
-          ? currentTarget.emissionY
-          : Math.min(Math.max(((centeredEmitterRect?.top || surfaceRect.top) - hostRect.top) / Math.max(hostRect.height, 1) - 0.075, 0), 1),
-        emissionLightness: centeredEmitterColor?.lightness ?? currentTarget.emissionLightness,
-        emissionA: centeredEmitterColor?.a ?? currentTarget.emissionA,
-        emissionB: centeredEmitterColor?.b ?? currentTarget.emissionB,
+        emission: currentTarget.emission > 0.001 || activeEmitterColor ? 1 : 0,
+        emissionColor: activeEmitterHex || currentTarget.emissionColor,
+        emissionX: Math.min(Math.max(((activeEmitterRect?.left || surfaceRect.left) + (activeEmitterRect?.width || surfaceRect.width) * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
+        emissionY: Math.min(Math.max(((activeEmitterRect?.top || surfaceRect.top) - hostRect.top) / Math.max(hostRect.height, 1) - 0.075, 0), 1),
+        emissionLightness: activeEmitterColor?.lightness ?? currentTarget.emissionLightness,
+        emissionA: activeEmitterColor?.a ?? currentTarget.emissionA,
+        emissionB: activeEmitterColor?.b ?? currentTarget.emissionB,
       }
 
       window.clearTimeout(scrollIdleTimer)
@@ -322,7 +338,7 @@ export function AsciiBackground(props) {
       lastTimestamp = timestamp
       if (!useReducedMotion && pointer.emission > 0.001) {
         pointer.emissionPhase = (
-          pointer.emissionPhase + frameScale * (0.028 + pointer.momentum * 0.014)
+          pointer.emissionPhase + frameScale * (0.05 + pointer.momentum * 0.018)
         ) % (Math.PI * 2)
       }
       if (!staticComposition) {
