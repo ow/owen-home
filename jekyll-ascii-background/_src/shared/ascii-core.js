@@ -8,6 +8,8 @@ export const characterSets = {
   minimal: " .".split(""),
   dots: " .·•●".split(""),
   blocks: " ░▒▓█".split(""),
+  // Ordered by visual weight so broad color fields read like a true ASCII gradient.
+  gradient: [" ", " ", ".", ":", ";", "+", "=", "*", "#", "%", "@"],
   // Improved code set with more visually distinct characters and better gradation
   code: ["(", ")", ".", ";", "+", "=", "*", "#", "@", "$", "%", "&", "<", ">", "{", "}", "/", "~"],
   matrix: [
@@ -71,6 +73,7 @@ export const defaultSettings = {
   animationStyle: "continuous",
   transitionSmoothness: 1.2,
   showControls: true,
+  showFps: false,
   fullscreen: true,
   // Add optical flow parameters
   flowAwareness: 0.7,
@@ -89,6 +92,20 @@ export const defaultSettings = {
   waveIntensity: 1.0, // 0.1 to 2.0 - controls wave amplitude
   waveLayers: 3, // 1 to 5 - number of wave layers
   waveOrganicFactor: 0.1, // 0 to 0.5 - amount of organic noise
+  // Complexity field settings. Disabled by default so existing uses remain unchanged.
+  complexityField: false,
+  clarityAnchorX: 0.3,
+  clarityAnchorY: 0.28,
+  clarityRadiusX: 0.42,
+  clarityRadiusY: 0.34,
+  clarityStrength: 0.88,
+  clarityQuieting: 0.18,
+  edgeTurbulence: 0.72,
+  interactiveMode: false,
+  interactiveEffect: "refraction",
+  interactiveRadius: 0.18,
+  interactiveIntensity: 0.75,
+  pointer: null,
 }
 
 // Helper functions
@@ -147,10 +164,56 @@ export function generateStaticPattern(x, y, gradientSize, noiseScale) {
   return (pattern + 1) / 2
 }
 
+function clamp(value, min = 0, max = 1) {
+  return Math.min(Math.max(value, min), max)
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / (edge1 - edge0))
+  return t * t * (3 - 2 * t)
+}
+
+const bayer4x4 = [
+  [0, 8, 2, 10],
+  [12, 4, 14, 6],
+  [3, 11, 1, 9],
+  [15, 7, 13, 5],
+]
+
+function getComplexityFieldAmount(x, y, waveSettings) {
+  if (!waveSettings.complexityField) {
+    return { clarity: 0, complexity: 1, normalizedX: 0, normalizedY: 0 }
+  }
+
+  const fieldWidth = Math.max(waveSettings.fieldWidth || 1, 1)
+  const fieldHeight = Math.max(waveSettings.fieldHeight || 1, 1)
+  const normalizedX = x / Math.max(fieldWidth - 1, 1)
+  const normalizedY = y / Math.max(fieldHeight - 1, 1)
+  const isPortrait = fieldWidth / fieldHeight < 0.85
+  const anchorX = isPortrait ? 0.5 : waveSettings.clarityAnchorX
+  const radiusX = isPortrait
+    ? Math.max(waveSettings.clarityRadiusX, 0.62)
+    : waveSettings.clarityRadiusX
+  const radiusY = isPortrait
+    ? Math.max(waveSettings.clarityRadiusY, 0.38)
+    : waveSettings.clarityRadiusY
+  const offsetX = (normalizedX - anchorX) / Math.max(radiusX, 0.01)
+  const offsetY = (normalizedY - waveSettings.clarityAnchorY) / Math.max(radiusY, 0.01)
+  const ellipticalDistance = Math.sqrt(offsetX * offsetX + offsetY * offsetY)
+  const clarity = (1 - smoothstep(0.12, 1, ellipticalDistance)) * waveSettings.clarityStrength
+
+  return {
+    clarity,
+    complexity: 1 - clarity,
+    normalizedX,
+    normalizedY,
+  }
+}
+
 // Update the generateNoise function to make ripples more visible
 export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle, ripples = [], reducedMotion = false, waveSettings = {}) {
-  // If reduced motion is enabled, use a static pattern instead
-  if (reducedMotion) {
+  // Non-wave styles keep their existing static reduced-motion composition.
+  if (reducedMotion && animationStyle !== "wave") {
     return generateStaticPattern(x, y, gradientSize, noiseScale)
   }
 
@@ -167,49 +230,86 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       waveFlowDirection = 45,
       waveIntensity = 1.0,
       waveLayers = 3,
-      waveOrganicFactor = 0.1
+      waveOrganicFactor = 0.1,
+      edgeTurbulence = 0.72,
+      interactiveMode = false,
+      interactiveEffect = "refraction",
+      interactiveRadius = 0.18,
+      interactiveIntensity = 0.75,
+      pointer = null,
     } = waveSettings
+
+    const waveTime = reducedMotion ? 0.42 : z
+    const { complexity, normalizedX, normalizedY } = getComplexityFieldAmount(x, y, waveSettings)
 
     // Convert flow direction to radians
     const flowAngle = (waveFlowDirection * Math.PI) / 180
     const flowX = Math.cos(flowAngle)
     const flowY = Math.sin(flowAngle)
 
-    // Primary wave direction based on user setting
-    const primaryFlow = scaledX * flowX + scaledY * flowY + z * 1.5
+    // The outer field carries more phase interference while the hero region resolves
+    // into one broad, legible gradient wave.
+    const phaseTurbulence = waveSettings.complexityField
+      ? (
+          Math.sin(scaledX * 4.8 + scaledY * 1.6 - waveTime * 0.35) * 0.58 +
+          Math.cos(scaledY * 5.2 - scaledX * 1.1 + waveTime * 0.24) * 0.42
+        ) * edgeTurbulence * complexity
+      : 0
+
+    let refraction = 0
+    if (
+      !reducedMotion &&
+      interactiveMode &&
+      interactiveEffect === "refraction" &&
+      pointer &&
+      pointer.activity > 0.001
+    ) {
+      const pointerX = normalizedX - pointer.x
+      const pointerY = normalizedY - pointer.y
+      const pointerDistance = Math.sqrt(pointerX * pointerX + pointerY * pointerY)
+      const lens = Math.exp(-Math.pow(pointerDistance / Math.max(interactiveRadius, 0.01), 2) * 1.8)
+      const crossFlow = pointerX * flowY - pointerY * flowX
+      refraction = crossFlow * lens * interactiveIntensity * pointer.activity * 8
+    }
+
+    // Primary wave direction based on user setting.
+    const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + phaseTurbulence + refraction
     
     // Main wave with adjustable intensity
-    let waveSum = Math.sin(primaryFlow) * 0.5 * waveIntensity
+    let waveSum = Math.sin(primaryFlow) * 0.56 * waveIntensity
     
     // Add additional wave layers if requested
     if (waveLayers >= 2) {
       // Secondary wave (perpendicular to main flow)
       const perpX = -flowY
       const perpY = flowX
-      const secondaryWave = Math.sin(scaledX * perpX * 1.5 + scaledY * perpY * 1.5 + z * 0.8) * 0.25 * waveIntensity
+      const secondaryAmplitude = waveSettings.complexityField ? 0.07 + complexity * 0.18 : 0.25
+      const secondaryWave = Math.sin(scaledX * perpX * 1.5 + scaledY * perpY * 1.5 + waveTime * 0.8) * secondaryAmplitude * waveIntensity
       waveSum += secondaryWave
     }
     
     if (waveLayers >= 3) {
       // Tertiary wave for subtle texture
-      const tertiaryWave = Math.sin(scaledX * 1.2 + scaledY * 0.8 + z * 1.2) * 0.15 * waveIntensity
+      const tertiaryAmplitude = waveSettings.complexityField ? 0.03 + complexity * 0.12 : 0.15
+      const tertiaryWave = Math.sin(scaledX * 1.2 + scaledY * 0.8 + waveTime * 1.2) * tertiaryAmplitude * waveIntensity
       waveSum += tertiaryWave
     }
     
     if (waveLayers >= 4) {
       // Quaternary wave for more complexity
-      const quaternaryWave = Math.sin(scaledX * 0.7 + scaledY * 1.3 + z * 0.9) * 0.1 * waveIntensity
+      const quaternaryWave = Math.sin(scaledX * 0.7 + scaledY * 1.3 + waveTime * 0.9) * 0.1 * complexity * waveIntensity
       waveSum += quaternaryWave
     }
     
     if (waveLayers >= 5) {
       // Fifth wave for maximum detail
-      const fifthWave = Math.sin(scaledX * 1.8 + scaledY * 0.4 + z * 1.6) * 0.08 * waveIntensity
+      const fifthWave = Math.sin(scaledX * 1.8 + scaledY * 0.4 + waveTime * 1.6) * 0.08 * complexity * waveIntensity
       waveSum += fifthWave
     }
     
     // Add organic noise based on user setting
-    const organicNoise = Math.sin(scaledX * 2.3 + z * 0.6) * Math.cos(scaledY * 1.8 + z * 0.9) * waveOrganicFactor * waveIntensity
+    const organicAmount = waveSettings.complexityField ? 0.18 + complexity * 0.82 : 1
+    const organicNoise = Math.sin(scaledX * 2.3 + waveTime * 0.6) * Math.cos(scaledY * 1.8 + waveTime * 0.9) * waveOrganicFactor * organicAmount * waveIntensity
     
     baseNoise = waveSum + organicNoise
   } else if (animationStyle === "flow") {
@@ -453,6 +553,19 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     waveIntensity = 1.0,
     waveLayers = 3,
     waveOrganicFactor = 0.1,
+    complexityField = false,
+    clarityAnchorX = 0.3,
+    clarityAnchorY = 0.28,
+    clarityRadiusX = 0.42,
+    clarityRadiusY = 0.34,
+    clarityStrength = 0.88,
+    clarityQuieting = 0.18,
+    edgeTurbulence = 0.72,
+    interactiveMode = false,
+    interactiveEffect = "refraction",
+    interactiveRadius = 0.18,
+    interactiveIntensity = 0.75,
+    pointer = null,
   } = settings
 
   if (!ctx || dimensions.width === 0 || dimensions.height === 0) return
@@ -463,6 +576,21 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     waveIntensity,
     waveLayers,
     waveOrganicFactor,
+    complexityField,
+    clarityAnchorX,
+    clarityAnchorY,
+    clarityRadiusX,
+    clarityRadiusY,
+    clarityStrength,
+    clarityQuieting,
+    edgeTurbulence,
+    interactiveMode,
+    interactiveEffect,
+    interactiveRadius,
+    interactiveIntensity,
+    pointer,
+    fieldWidth: dimensions.width,
+    fieldHeight: dimensions.height,
   }
 
   // Calculate canvas dimensions
@@ -544,7 +672,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       for (let y = 0; y < dimensions.height; y++) {
         for (let x = 0; x < dimensions.width; x++) {
           // Generate initial noise value for this position
-          const initialNoiseValue = (generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2
+          const initialNoiseValue = clamp((generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2)
           const enhancedValue = Math.pow(initialNoiseValue, transitionSmoothness)
           
           // Set initial character and color indices
@@ -615,7 +743,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           ctx.previousState[y][x] = { ...oldState[y][x] }
         } else {
           // For new positions, generate appropriate initial values
-          const initialNoiseValue = (generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2
+          const initialNoiseValue = clamp((generateNoise(x, y, preTimeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2)
           const enhancedValue = Math.pow(initialNoiseValue, transitionSmoothness)
           
           const charIndex = Math.floor(enhancedValue * characters.length)
@@ -772,8 +900,9 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       }
 
       // Get noise value for this position and time
-      const noiseValue =
-        (generateNoise(x, y, timeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2 // Normalize to 0-1
+      const noiseValue = clamp(
+        (generateNoise(x, y, timeOffset, noiseScale, gradientSize, animationStyle, ripples, reducedMotion, waveSettings) + 1) / 2,
+      )
 
       // Apply a more gradual mapping for smoother transitions
       const enhancedValue = Math.pow(noiseValue, transitionSmoothness)
@@ -834,11 +963,21 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       }
 
       // Select character based on noise
-      const charIndex = Math.min(Math.floor(currentNoiseValue * characters.length * 0.8), characters.length - 1)
+      const { clarity, complexity } = getComplexityFieldAmount(x, y, waveSettings)
+      const orderedDither = bayer4x4[y % 4][x % 4] / 15 - 0.5
+      const characterValue = clamp(
+        currentNoiseValue -
+          clarity * waveSettings.clarityQuieting +
+          orderedDither * 0.055 * (0.35 + complexity * 0.65),
+      )
+      const charIndex = Math.min(
+        Math.floor(characterValue * characters.length),
+        characters.length - 1,
+      )
       const char = characters[charIndex] || "#"
 
       // Select color based on noise
-      let colorPosition = currentNoiseValue * (colorCount - 1)
+      let colorPosition = clamp(currentNoiseValue) * (colorCount - 1)
 
       // Apply color boost if any
       if (colorBoost > 0) {
@@ -986,6 +1125,7 @@ window.asciiConfig = {
   animationStyle: "${settings.animationStyle}",
   transitionSmoothness: ${settings.transitionSmoothness || 1.2},
   showControls: ${settings.showControls},
+  showFps: ${settings.showFps === true},
   fullscreen: ${settings.fullscreen},
   flowAwareness: ${settings.flowAwareness || 0.7},
   flowSmoothing: ${settings.flowSmoothing || 0.5},
@@ -999,7 +1139,19 @@ window.asciiConfig = {
   waveFlowDirection: ${settings.waveFlowDirection || 45},
   waveIntensity: ${settings.waveIntensity || 1.0},
   waveLayers: ${settings.waveLayers || 3},
-  waveOrganicFactor: ${settings.waveOrganicFactor || 0.1}
+  waveOrganicFactor: ${settings.waveOrganicFactor || 0.1},
+  complexityField: ${settings.complexityField === true},
+  clarityAnchorX: ${settings.clarityAnchorX || 0.3},
+  clarityAnchorY: ${settings.clarityAnchorY || 0.28},
+  clarityRadiusX: ${settings.clarityRadiusX || 0.42},
+  clarityRadiusY: ${settings.clarityRadiusY || 0.34},
+  clarityStrength: ${settings.clarityStrength || 0.88},
+  clarityQuieting: ${settings.clarityQuieting || 0.18},
+  edgeTurbulence: ${settings.edgeTurbulence || 0.72},
+  interactiveMode: ${settings.interactiveMode === true},
+  interactiveEffect: "${settings.interactiveEffect || "refraction"}",
+  interactiveRadius: ${settings.interactiveRadius || 0.18},
+  interactiveIntensity: ${settings.interactiveIntensity || 0.75}
 };
 </script>`
 }
