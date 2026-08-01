@@ -41,10 +41,47 @@
     @apply hover:bg-glass/20 dark:hover:bg-glass-dark/20 transition-all duration-200;
   }
 
-  .strength-card,
-  .strength-card:hover {
+  .strength-card {
+    --strength-accent: oklch(76% 0.14 232);
+    background-image: linear-gradient(
+      145deg,
+      color-mix(in oklch, var(--strength-accent) 9%, transparent),
+      transparent 48%
+    );
+    border-color: color-mix(in oklch, var(--strength-accent) 24%, transparent);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
     transform: none;
     transition: none;
+  }
+
+  .strength-card:hover {
+    transform: none;
+  }
+
+  .strength-card--ai {
+    --strength-accent: oklch(72% 0.14 287);
+  }
+
+  .strength-card--developer {
+    --strength-accent: oklch(78% 0.14 78);
+  }
+
+  .strength-card--communication {
+    --strength-accent: oklch(72% 0.15 355);
+  }
+
+  .strength-card-icon {
+    @apply flex h-12 w-12 items-center justify-center rounded-xl;
+    color: var(--strength-accent);
+    background: color-mix(in oklch, var(--strength-accent) 13%, transparent);
+  }
+
+  .strength-card-icon svg {
+    @apply h-6 w-6;
+  }
+
+  .strength-card-label {
+    color: color-mix(in oklch, var(--strength-accent) 82%, white);
   }
 
   /* Navigation link hover style */

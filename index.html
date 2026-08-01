@@ -50,30 +50,41 @@ author:
   {% include card-carousel.html cards=site.data.work_cards id="selected-work" %}
 
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" aria-labelledby="strengths">
-    <div class="max-w-3xl mb-10">
-      <p class="tag text-sky-300 mb-3">Where I stand out</p>
-      <h2 id="strengths" class="heading-section text-white">Leadership grounded in craft and technical fluency</h2>
+    <div class="max-w-3xl mb-12">
+      <h2 id="strengths" class="heading-section text-white">Where I stand out</h2>
       <p class="text-lg text-slate-300 mt-4">I help technology companies build design teams that make complexity feel simple.</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="strength-card glass rounded-2xl p-7 md:col-span-2">
-        <p class="tag text-sky-300 mb-4">Design leadership</p>
+      <div class="strength-card strength-card--leadership glass rounded-2xl p-8 md:col-span-2">
+        <div class="strength-card-icon mb-6" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z" clip-rule="evenodd"/></svg>
+        </div>
+        <p class="tag strength-card-label mb-3">Design leadership</p>
         <h3 class="heading-subsection text-white">Build teams that raise the quality bar</h3>
         <p class="text-slate-300 mt-3 max-w-2xl">I've led and built teams of more than 15 designers and design managers, especially in remote-first organizations. I focus on clear standards, strong critique, and creating the conditions for people to do ambitious work.</p>
       </div>
-      <div class="strength-card glass rounded-2xl p-7">
-        <p class="tag text-sky-300 mb-4">AI design</p>
+      <div class="strength-card strength-card--ai glass rounded-2xl p-8">
+        <div class="strength-card-icon mb-6" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 7.5h-9v9h9v-9Z"/><path fill-rule="evenodd" d="M8.25 2.25A.75.75 0 0 1 9 3v.75h2.25V3a.75.75 0 0 1 1.5 0v.75H15V3a.75.75 0 0 1 1.5 0v.75h.75a3 3 0 0 1 3 3v.75H21A.75.75 0 0 1 21 9h-.75v2.25H21a.75.75 0 0 1 0 1.5h-.75V15H21a.75.75 0 0 1 0 1.5h-.75v.75a3 3 0 0 1-3 3h-.75V21a.75.75 0 0 1-1.5 0v-.75h-2.25V21a.75.75 0 0 1-1.5 0v-.75H9V21a.75.75 0 0 1-1.5 0v-.75h-.75a3 3 0 0 1-3-3v-.75H3A.75.75 0 0 1 3 15h.75v-2.25H3a.75.75 0 0 1 0-1.5h.75V9H3a.75.75 0 0 1 0-1.5h.75v-.75a3 3 0 0 1 3-3h.75V3a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
+        </div>
+        <p class="tag strength-card-label mb-3">AI design</p>
         <h3 class="heading-subsection text-white">Turn experimentation into leverage</h3>
         <p class="text-slate-300 mt-3">I build opinionated tools and workflows that make AI useful to the whole product organization without lowering the craft bar.</p>
       </div>
-      <div class="strength-card glass rounded-2xl p-7">
-        <p class="tag text-sky-300 mb-4">Developer experience</p>
+      <div class="strength-card strength-card--developer glass rounded-2xl p-8">
+        <div class="strength-card-icon mb-6" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M14.447 3.027a.75.75 0 0 1 .527.92l-4.5 16.5a.75.75 0 0 1-1.448-.394l4.5-16.5a.75.75 0 0 1 .921-.526ZM16.72 6.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 0 1 0-1.06Zm-9.44 0a.75.75 0 0 1 0 1.06L2.56 12l4.72 4.72a.75.75 0 1 1-1.06 1.06L.97 12.53a.75.75 0 0 1 0-1.06l5.25-5.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/></svg>
+        </div>
+        <p class="tag strength-card-label mb-3">Developer experience</p>
         <h3 class="heading-subsection text-white">Go deep on technical systems</h3>
         <p class="text-slate-300 mt-3">As a former infrastructure engineer and a developer today, I can work across product, design, content, and code.</p>
       </div>
-      <div class="strength-card glass rounded-2xl p-7 md:col-span-2">
-        <p class="tag text-sky-300 mb-4">Communication</p>
+      <div class="strength-card strength-card--communication glass rounded-2xl p-8 md:col-span-2">
+        <div class="strength-card-icon mb-6" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5A2.25 2.25 0 0 1 19.5 19.5h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-.659 1.591l-7.5 7.5a2.25 2.25 0 0 1-3.182 0l-7.5-7.5a2.25 2.25 0 0 1-.659-1.591V6.75"/></svg>
+        </div>
+        <p class="tag strength-card-label mb-3">Communication</p>
         <h3 class="heading-subsection text-white">Make the complicated understandable</h3>
         <p class="text-slate-300 mt-3 max-w-2xl">My background in content design and journalism helps me clarify product strategy, explain tradeoffs, and give technical products a coherent story.</p>
       </div>
