@@ -97,7 +97,7 @@ export const asciiPresets = {
       density: 30,
       speed: 60,
       opacity: 0.7,
-      colorPalette: "tide",
+      colorPalette: "sunset",
       colorField: "mesh",
       noiseScale: 0.02,
       noiseSpeed: 0.22,
