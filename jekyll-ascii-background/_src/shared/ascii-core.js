@@ -80,6 +80,32 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t)
 }
 
+function samplePointerEmission(normalizedX, normalizedY, emission) {
+  const rawRise = emission.y - normalizedY
+  const rise = Math.max(rawRise, 0)
+  const normalizedRise = rise / emission.radiusY
+  const sourceGate = smoothstep(-0.025, 0.045, rawRise)
+  const plumeCenter = emission.x +
+    Math.sin(normalizedRise * 4.8 - emission.phase * 1.35) * emission.radiusX * 0.12 +
+    Math.sin(normalizedRise * 9.4 + emission.phase * 0.75) * emission.radiusX * 0.035 +
+    normalizedRise * emission.radiusX * 0.045
+  const plumeWidth = Math.max(emission.radiusX * (0.1 + normalizedRise * 0.11), 0.012)
+  const lateralDistance = (normalizedX - plumeCenter) / plumeWidth
+  const verticalFade = Math.exp(-normalizedRise * normalizedRise * 0.92)
+  const movingWisp = 0.72 +
+    Math.sin(normalizedRise * 16 - emission.phase * 4.2 + normalizedX * 19) * 0.18 +
+    Math.sin(normalizedRise * 27 - emission.phase * 6.1) * 0.1
+  const plume = clamp(
+    sourceGate * Math.exp(-lateralDistance * lateralDistance * 1.2) * verticalFade * movingWisp,
+  )
+
+  const sourceX = (normalizedX - emission.x) / emission.radiusX
+  const sourceY = (normalizedY - emission.y) / (emission.radiusY * 0.62)
+  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 1.25)
+
+  return { halo, plume }
+}
+
 const oklabCache = new Map()
 
 function toLinear(channel) {
@@ -993,6 +1019,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         strength: pointer.emission * (0.92 + (pointer.momentum || 0) * 0.16),
         radiusX: Math.max(interactiveRadius * 1.55, 0.01),
         radiusY: Math.max(interactiveRadius * 1.8, 0.01),
+        phase: pointer.emissionPhase || 0,
         color: {
           lightness: clamp(pointer.emissionLightness + 0.12, 0, 0.94),
           a: pointer.emissionA * 1.08,
@@ -1179,6 +1206,13 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
       // Select character based on noise
       const { clarity, complexity, normalizedX, normalizedY } = getComplexityFieldAmount(x, y, waveSettings)
+      const emissionField = pointerEmission
+        ? samplePointerEmission(normalizedX, normalizedY, pointerEmission)
+        : null
+      if (emissionField) {
+        const emittedDensity = pointerEmission.strength * emissionField.plume
+        currentNoiseValue = Math.max(currentNoiseValue, 0.14 + emittedDensity * 0.62)
+      }
       const baseCharacterValue = clamp(
         currentNoiseValue - clarity * waveSettings.clarityQuieting,
       )
@@ -1260,13 +1294,11 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const meshColor = sampleRibbonMesh(normalizedX, normalizedY, mesh)
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
-        if (pointerEmission) {
-          const emissionX = (normalizedX - pointerEmission.x) / pointerEmission.radiusX
-          const emissionY = (normalizedY - pointerEmission.y) / pointerEmission.radiusY
-          const emissionLens = Math.exp(-(emissionX * emissionX + emissionY * emissionY) * 1.25)
+        if (emissionField) {
+          const emissionPresence = emissionField.halo * 0.48 + emissionField.plume * 0.72
           const emissionAmount = clamp(
             pointerEmission.strength *
-              emissionLens *
+              emissionPresence *
               (0.72 + meshPresence * 0.28) *
               (0.68 + smoothstep(0.03, 0.72, currentNoiseValue) * 0.32),
             0,
