@@ -162,6 +162,35 @@ const bayer4x4 = [
   [15, 7, 13, 5],
 ]
 
+// A stable, progressively distributed 16x16 threshold mask. Unlike the small
+// Bayer grid, its low-frequency structure does not resolve into visible rows
+// and diamonds along the wave edge.
+const blueNoise16 = new Uint8Array([
+  38, 162, 12, 201, 142, 167, 5, 133, 180, 207, 37, 211, 19, 212, 42, 214,
+  215, 153, 217, 219, 23, 126, 222, 223, 125, 53, 230, 57, 231, 233, 156, 169,
+  213, 39, 75, 74, 176, 238, 96, 16, 103, 106, 2, 145, 239, 45, 242, 11,
+  81, 244, 226, 246, 247, 15, 84, 123, 46, 137, 190, 83, 196, 209, 143, 203,
+  227, 99, 0, 243, 82, 124, 71, 248, 198, 32, 90, 208, 17, 249, 40, 85,
+  26, 218, 224, 104, 236, 35, 237, 27, 221, 245, 234, 59, 110, 77, 94, 102,
+  112, 119, 105, 20, 88, 161, 183, 200, 206, 89, 10, 146, 41, 173, 7, 114,
+  191, 63, 194, 225, 52, 182, 6, 132, 51, 157, 232, 65, 121, 58, 240, 241,
+  250, 251, 9, 181, 116, 61, 197, 70, 253, 117, 49, 150, 28, 140, 92, 34,
+  60, 187, 216, 66, 111, 98, 50, 192, 22, 78, 100, 152, 220, 228, 67, 229,
+  235, 252, 80, 254, 29, 87, 193, 55, 95, 210, 255, 1, 170, 36, 120, 14,
+  134, 25, 158, 139, 177, 189, 13, 199, 202, 33, 97, 128, 73, 205, 62, 144,
+  168, 135, 155, 3, 204, 72, 108, 141, 69, 107, 118, 48, 101, 18, 129, 47,
+  54, 147, 79, 113, 68, 149, 154, 44, 151, 8, 163, 174, 64, 122, 179, 166,
+  130, 31, 184, 43, 172, 21, 175, 185, 186, 164, 109, 30, 86, 91, 4, 136,
+  127, 138, 160, 171, 56, 115, 148, 165, 24, 188, 131, 195, 159, 76, 178, 93,
+])
+
+function getDitherThreshold(x, y, style, strength) {
+  const pattern = style === "blueNoise"
+    ? blueNoise16[(y & 15) * 16 + (x & 15)] / 255
+    : bayer4x4[y & 3][x & 3] / 15
+  return 0.5 + (pattern - 0.5) * clamp(strength)
+}
+
 function getComplexityFieldAmount(x, y, waveSettings) {
   if (!waveSettings.complexityField) {
     return { clarity: 0, complexity: 1, normalizedX: 0, normalizedY: 0 }
@@ -687,6 +716,10 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     gradientSize,
     animationStyle,
     transitionSmoothness,
+    glyphInterpolation = false,
+    ditherStyle = "ordered",
+    ditherStrength = 0.65,
+    glyphHysteresis = 0,
     flowAwareness = 0.7,
     flowSmoothing = 0.5,
     entranceAnimation = true,
@@ -1132,16 +1165,49 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
       // Select character based on noise
       const { clarity, complexity, normalizedX, normalizedY } = getComplexityFieldAmount(x, y, waveSettings)
-      const orderedDither = bayer4x4[y % 4][x % 4] / 15 - 0.5
-      const characterValue = clamp(
-        currentNoiseValue -
-          clarity * waveSettings.clarityQuieting +
-          orderedDither * 0.055 * (0.35 + complexity * 0.65),
+      const baseCharacterValue = clamp(
+        currentNoiseValue - clarity * waveSettings.clarityQuieting,
       )
-      let charIndex = Math.min(
-        Math.floor(characterValue * characters.length),
-        characters.length - 1,
-      )
+      let charIndex
+
+      if (glyphInterpolation) {
+        const glyphPosition = baseCharacterValue * characters.length
+        const lowerIndex = Math.min(Math.floor(glyphPosition), characters.length - 1)
+        const upperIndex = Math.min(lowerIndex + 1, characters.length - 1)
+        const glyphMix = upperIndex === lowerIndex ? 0 : glyphPosition - lowerIndex
+        const effectiveDitherStrength = ditherStrength * (0.4 + complexity * 0.6)
+        const ditherThreshold = getDitherThreshold(x, y, ditherStyle, effectiveDitherStrength)
+        charIndex = glyphMix > ditherThreshold ? upperIndex : lowerIndex
+
+        // A small Schmitt-trigger band keeps neighboring glyphs from rapidly
+        // trading places as the animated density hovers around a threshold.
+        if (!reducedMotion && prevState && lowerIndex !== upperIndex && glyphHysteresis > 0) {
+          const hold = clamp(glyphHysteresis, 0, 0.49)
+          if (
+            prevState.charIndex === lowerIndex &&
+            charIndex === upperIndex &&
+            glyphMix < ditherThreshold + hold
+          ) {
+            charIndex = lowerIndex
+          } else if (
+            prevState.charIndex === upperIndex &&
+            charIndex === lowerIndex &&
+            glyphMix > ditherThreshold - hold
+          ) {
+            charIndex = upperIndex
+          }
+        }
+      } else {
+        // Preserve the original ordered-dither renderer for legacy presets.
+        const orderedDither = bayer4x4[y & 3][x & 3] / 15 - 0.5
+        const characterValue = clamp(
+          baseCharacterValue + orderedDither * 0.055 * (0.35 + complexity * 0.65),
+        )
+        charIndex = Math.min(
+          Math.floor(characterValue * characters.length),
+          characters.length - 1,
+        )
+      }
 
       // Keep the broad field quiet, but replace the second blank step with a
       // dot inside the ribbon so its softer passages remain visually connected.
