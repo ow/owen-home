@@ -81,29 +81,19 @@ function smoothstep(edge0, edge1, value) {
 }
 
 function samplePointerEmission(normalizedX, normalizedY, emission) {
-  const rawRise = emission.y - normalizedY
-  const rise = Math.max(rawRise, 0)
-  const normalizedRise = rise / emission.radiusY
-  const sourceGate = smoothstep(-0.025, 0.045, rawRise)
-  const plumeCenter = emission.x +
-    Math.sin(normalizedRise * 4.8 - emission.phase * 1.35) * emission.radiusX * 0.12 +
-    Math.sin(normalizedRise * 9.4 + emission.phase * 0.75) * emission.radiusX * 0.035 +
-    normalizedRise * emission.radiusX * 0.045
-  const plumeWidth = Math.max(emission.radiusX * (0.1 + normalizedRise * 0.11), 0.012)
-  const lateralDistance = (normalizedX - plumeCenter) / plumeWidth
-  const verticalFade = Math.exp(-normalizedRise * normalizedRise * 0.92)
-  const movingWisp = 0.72 +
-    Math.sin(normalizedRise * 16 - emission.phase * 4.2 + normalizedX * 19) * 0.18 +
-    Math.sin(normalizedRise * 27 - emission.phase * 6.1) * 0.1
-  const plume = clamp(
-    sourceGate * Math.exp(-lateralDistance * lateralDistance * 1.2) * verticalFade * movingWisp,
-  )
-
   const sourceX = (normalizedX - emission.x) / emission.radiusX
-  const sourceY = (normalizedY - emission.y) / (emission.radiusY * 0.62)
-  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 1.25)
+  const sourceY = (normalizedY - emission.y) / emission.radiusY
+  const distance = Math.sqrt(sourceX * sourceX + sourceY * sourceY)
+  const progress = emission.phase / (Math.PI * 2)
+  const waveRadius = progress * 1.65
+  const waveWidth = 0.075 + waveRadius * 0.035
+  const waveDistance = (distance - waveRadius) / waveWidth
+  const upwardGate = smoothstep(-0.06, 0.045, emission.y - normalizedY)
+  const distanceFade = Math.exp(-distance * 0.52)
+  const ripple = Math.exp(-waveDistance * waveDistance * 1.35) * upwardGate * distanceFade
+  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 1.8)
 
-  return { halo, plume }
+  return { halo, ripple }
 }
 
 const oklabCache = new Map()
@@ -1210,7 +1200,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         ? samplePointerEmission(normalizedX, normalizedY, pointerEmission)
         : null
       if (emissionField) {
-        const emittedDensity = pointerEmission.strength * emissionField.plume
+        const emittedDensity = pointerEmission.strength * emissionField.ripple
         currentNoiseValue = Math.max(currentNoiseValue, 0.14 + emittedDensity * 0.62)
       }
       const baseCharacterValue = clamp(
@@ -1295,7 +1285,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
         if (emissionField) {
-          const emissionPresence = emissionField.halo * 0.48 + emissionField.plume * 0.72
+          const emissionPresence = emissionField.halo * 0.3 + emissionField.ripple * 0.86
           const emissionAmount = clamp(
             pointerEmission.strength *
               emissionPresence *
