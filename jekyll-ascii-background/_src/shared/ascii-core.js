@@ -246,6 +246,11 @@ function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reduce
   const spread = Math.max(waveSettings.meshSpread || 0.36, 0.08)
   const pointer = waveSettings.pointer
   const pointerActive = !reducedMotion && pointer?.activity > 0.001
+  const pointerEngagement = clamp(
+    (pointer?.engagement || 0) + (pointer?.momentum || 0) * 0.55,
+    0,
+    1.5,
+  )
   const vertices = []
   const triangleIndices = []
 
@@ -274,8 +279,12 @@ function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reduce
       if (pointerActive) {
         const dx = x - pointer.x
         const dy = y - pointer.y
-        const influence = Math.exp(-(dx * dx + dy * dy) / 0.05) * pointer.activity
-        const push = influence * (waveSettings.interactiveIntensity || 0.75) * 0.045
+        const responseRadius = Math.max(waveSettings.interactiveRadius || 0.18, 0.01) *
+          (1 + pointerEngagement * 0.7)
+        const influence = Math.exp(-(dx * dx + dy * dy) / (responseRadius * responseRadius)) *
+          pointer.activity
+        const push = influence * (waveSettings.interactiveIntensity || 0.75) *
+          (0.045 + pointerEngagement * 0.11)
         x += dx * push * columnWeight
         y += dy * push
       }
@@ -422,6 +431,12 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       : 0
 
     let refraction = 0
+    let interactionLens = 0
+    const pointerEngagement = clamp(
+      (pointer?.engagement || 0) + (pointer?.momentum || 0) * 0.55,
+      0,
+      1.5,
+    )
     if (
       !reducedMotion &&
       interactiveMode &&
@@ -432,9 +447,12 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       const pointerX = normalizedX - pointer.x
       const pointerY = normalizedY - pointer.y
       const pointerDistance = Math.sqrt(pointerX * pointerX + pointerY * pointerY)
-      const lens = Math.exp(-Math.pow(pointerDistance / Math.max(interactiveRadius, 0.01), 2) * 1.8)
+      const responseRadius = Math.max(interactiveRadius, 0.01) * (1 + pointerEngagement * 0.7)
+      const lens = Math.exp(-Math.pow(pointerDistance / responseRadius, 2) * 1.8)
       const crossFlow = pointerX * flowY - pointerY * flowX
-      refraction = crossFlow * lens * interactiveIntensity * pointer.activity * 8
+      interactionLens = lens * pointer.activity
+      refraction = crossFlow * interactionLens * interactiveIntensity *
+        (8 + pointerEngagement * 3.6)
     }
 
     const ribbon = getRibbonGeometry(normalizedX, waveTime, waveSettings)
@@ -445,7 +463,8 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
     // crest and a softer trailing gradient.
     const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + refraction
     const waveCenter = ribbon.waveCenter + phaseTurbulence * 0.035
-    const distanceFromCrest = normalizedY - waveCenter + refraction * 0.035
+    const distanceFromCrest = normalizedY - waveCenter +
+      refraction * (0.035 + pointerEngagement * 0.025)
     const crestWidth = 0.24 + Math.sin(ribbonPhase * 0.5 + 0.4) * 0.018
     const crest = Math.exp(-Math.pow(distanceFromCrest / crestWidth, 2) * 1.42)
     const wake = Math.exp(-Math.pow((distanceFromCrest - 0.2) / 0.38, 2) * 1.2)
@@ -456,6 +475,7 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
           crest * 1.25 +
           wake * 0.28 -
           0.72 +
+          interactionLens * pointerEngagement * 0.14 +
           Math.sin(ribbonPhase * 1.32 + transverseFlow * Math.PI) * 0.045 * complexity
         ) * waveIntensity
       : Math.sin(primaryFlow) * 0.56 * waveIntensity

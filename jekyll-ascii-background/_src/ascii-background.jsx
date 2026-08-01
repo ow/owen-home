@@ -19,8 +19,9 @@ export function AsciiBackground(props) {
   const animationRef = useRef(null)
   const renderFrameRef = useRef(null)
   const timeRef = useRef(0)
-  const pointerRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
-  const pointerTargetRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
+  const pointerRef = useRef({ x: 0.72, y: 0.34, activity: 0, engagement: 0, momentum: 0 })
+  const pointerTargetRef = useRef({ x: 0.72, y: 0.34, activity: 0, engagement: 0, momentum: 0 })
+  const pointerOnReactiveSurfaceRef = useRef(false)
 
   // Performance monitoring (local development only)
   const [fps, setFps] = useState(0)
@@ -141,27 +142,75 @@ export function AsciiBackground(props) {
     const host = containerRef.current?.parentElement
     const interactionSurface = host?.parentElement || host
     if (!host || !interactionSurface) return
+    const reactiveSurfaces = interactionSurface.querySelectorAll("[data-ascii-reactive]")
+    const scrollPositions = new WeakMap()
+    let scrollIdleTimer = null
 
     const handlePointerMove = (event) => {
       if (event.pointerType === "touch") return
       const rect = host.getBoundingClientRect()
+      const overReactiveSurface = Boolean(event.target?.closest?.("[data-ascii-reactive]"))
+      pointerOnReactiveSurfaceRef.current = overReactiveSurface
       pointerTargetRef.current = {
         x: Math.min(Math.max((event.clientX - rect.left) / Math.max(rect.width, 1), 0), 1),
         y: Math.min(Math.max((event.clientY - rect.top) / Math.max(rect.height, 1), 0), 1),
         activity: 1,
+        engagement: overReactiveSurface ? 1 : 0,
+        momentum: pointerTargetRef.current.momentum || 0,
       }
     }
 
     const handlePointerLeave = () => {
-      pointerTargetRef.current = { ...pointerTargetRef.current, activity: 0 }
+      pointerOnReactiveSurfaceRef.current = false
+      pointerTargetRef.current = { ...pointerTargetRef.current, activity: 0, engagement: 0, momentum: 0 }
+    }
+
+    const handleReactiveScroll = (event) => {
+      const reactiveSurface = event.currentTarget
+      const previousScrollLeft = scrollPositions.get(reactiveSurface) ?? reactiveSurface.scrollLeft
+      const scrollDelta = reactiveSurface.scrollLeft - previousScrollLeft
+      scrollPositions.set(reactiveSurface, reactiveSurface.scrollLeft)
+      if (Math.abs(scrollDelta) < 0.25) return
+
+      const hostRect = host.getBoundingClientRect()
+      const surfaceRect = reactiveSurface.getBoundingClientRect()
+      const currentTarget = pointerTargetRef.current
+      const hasPointerAnchor = pointerOnReactiveSurfaceRef.current
+      pointerTargetRef.current = {
+        x: hasPointerAnchor
+          ? currentTarget.x
+          : Math.min(Math.max((surfaceRect.left + surfaceRect.width * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
+        y: hasPointerAnchor
+          ? currentTarget.y
+          : Math.min(Math.max((surfaceRect.top + surfaceRect.height * 0.22 - hostRect.top) / Math.max(hostRect.height, 1), 0), 1),
+        activity: 1,
+        engagement: 1,
+        momentum: Math.min(0.3 + Math.abs(scrollDelta) / 18, 1),
+      }
+
+      window.clearTimeout(scrollIdleTimer)
+      scrollIdleTimer = window.setTimeout(() => {
+        pointerTargetRef.current = {
+          ...pointerTargetRef.current,
+          activity: pointerOnReactiveSurfaceRef.current ? 1 : 0,
+          engagement: pointerOnReactiveSurfaceRef.current ? 1 : 0,
+          momentum: 0,
+        }
+      }, 120)
     }
 
     interactionSurface.addEventListener("pointermove", handlePointerMove, { passive: true })
     interactionSurface.addEventListener("pointerleave", handlePointerLeave, { passive: true })
+    reactiveSurfaces.forEach((surface) => {
+      scrollPositions.set(surface, surface.scrollLeft)
+      surface.addEventListener("scroll", handleReactiveScroll, { passive: true })
+    })
 
     return () => {
+      window.clearTimeout(scrollIdleTimer)
       interactionSurface.removeEventListener("pointermove", handlePointerMove)
       interactionSurface.removeEventListener("pointerleave", handlePointerLeave)
+      reactiveSurfaces.forEach((surface) => surface.removeEventListener("scroll", handleReactiveScroll))
     }
   }, [settings.interactiveMode, settings.interactiveEffect])
 
@@ -190,6 +239,8 @@ export function AsciiBackground(props) {
       pointer.x += (target.x - pointer.x) * 0.075
       pointer.y += (target.y - pointer.y) * 0.075
       pointer.activity += (target.activity - pointer.activity) * 0.065
+      pointer.engagement += (target.engagement - pointer.engagement) * 0.11
+      pointer.momentum += (target.momentum - pointer.momentum) * 0.18
 
       const speedFactor = useReducedMotion
         ? currentSettings.reducedMotionStyle === "minimal"
