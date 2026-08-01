@@ -36,7 +36,13 @@ printf '%s\n' "$DEPLOYS" \
 
 Poll until `state` is `ready`. Filtering for `context == "branch-deploy"` matters after a pull request is opened because the newest deploy for the branch may instead be a `deploy-preview`.
 
-Before returning a URL, open the immutable `permalink` in a real browser and verify that the expected portfolio page title and content render. Do not treat an HTTP `200`, a `ready` API state, or HTML fetched by `curl` alone as proof: Netlify can render its own `Site not found` page. Return only a URL that passed the browser check. `netlify deploy` creates a new draft deploy, so do not use it merely to look up an existing Git branch deploy.
+`ready` means the deploy was published, but the deploy hostname can still take a short time to propagate consistently across Netlify's edge network. Do not return the URL immediately after the first `ready` response. Verify the rendered page at least twice, with a short pause between checks, so a newly published alias has time to reach multiple edge paths.
+
+Before returning a URL, open both the immutable `permalink` and the reusable `deploy_ssl_url` in a clean browser session and verify that the expected portfolio page title, hero, and project imagery render. Do not treat an HTTP `200`, a `ready` API state, or HTML fetched by `curl` alone as proof: Netlify can render its own `Site not found` page with a successful HTTP status. Return only a URL that passed the rendered-content checks.
+
+If either URL renders Netlify's `Site not found` page, capture the Netlify Internal ID shown on the page. The same valid hostname can temporarily resolve differently through different edge paths, so wait and retry the exact URL instead of generating another deploy or guessing a new URL. If the failure persists, give Netlify Support the Internal ID so they can trace the specific edge response.
+
+`netlify deploy` creates a new draft deploy, so do not use it merely to look up an existing Git branch deploy.
 
 ### Public API fallback
 
