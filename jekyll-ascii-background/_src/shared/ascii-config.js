@@ -10,7 +10,7 @@ export const characterSets = {
   minimal: " .".split(""),
   dots: " .·•●".split(""),
   blocks: " ░▒▓█".split(""),
-  gradient: [" ", " ", ".", ":", ";", "+", "=", "*", "#", "%", "@"],
+  gradient: [" ", " ", ".", ":", "-", "=", "+", "*", "#", "%", "@"],
   code: ["(", ")", ".", ";", "+", "=", "*", "#", "@", "$", "%", "&", "<", ">", "{", "}", "/", "~"],
   matrix: [
     " ", ".", "ｦ", "ｱ", "ﾊ", "ﾐ", "ﾋ", "ｰ", "ｳ", "ｼ", "ﾅ", "ﾓ", "ﾆ", "ｻ", "ﾜ", "ﾂ",
@@ -42,6 +42,10 @@ export const defaultSettings = {
   gradientSize: 1.5,
   animationStyle: "continuous",
   transitionSmoothness: 1.2,
+  glyphInterpolation: false,
+  ditherStyle: "ordered",
+  ditherStrength: 0.65,
+  glyphHysteresis: 0,
   showControls: true,
   showFps: false,
   fullscreen: true,
@@ -101,6 +105,10 @@ export const asciiPresets = {
       gradientSize: 1.5,
       animationStyle: "wave",
       transitionSmoothness: 1.02,
+      glyphInterpolation: true,
+      ditherStyle: "blueNoise",
+      ditherStrength: 0.82,
+      glyphHysteresis: 0.08,
       showControls: false,
       showFps: false,
       fullscreen: false,
@@ -171,6 +179,7 @@ const waveVisible = [{ key: "animationStyle", equals: "wave" }]
 const complexityVisible = [...waveVisible, { key: "complexityField", equals: true }]
 const interactionVisible = [...complexityVisible, { key: "interactiveMode", equals: true }]
 const meshVisible = [...complexityVisible, { key: "colorField", equals: "mesh" }]
+const glyphTransitionsVisible = [...complexityVisible, { key: "glyphInterpolation", equals: true }]
 
 export const settingControls = [
   { key: "colorPalette", tab: "appearance", label: "Color palette", type: "select", optionsFrom: "colorPalettes" },
@@ -204,6 +213,12 @@ export const settingControls = [
   { key: "waveFrequency", tab: "animation", section: "Ribbon", label: "Crest frequency", type: "range", min: 0.35, max: 1.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "waveBend", tab: "animation", section: "Ribbon", label: "Crest bend", type: "range", min: 0, max: 0.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "edgeTurbulence", tab: "animation", section: "Ribbon", label: "Edge turbulence", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
+  { key: "glyphInterpolation", tab: "animation", section: "Glyphs", label: "Smooth glyph transitions", type: "boolean", visibleWhen: complexityVisible },
+  { key: "ditherStyle", tab: "animation", section: "Glyphs", label: "Dither pattern", type: "select", visibleWhen: glyphTransitionsVisible, options: [
+    { value: "blueNoise", label: "Blue noise" }, { value: "ordered", label: "Ordered grid" },
+  ] },
+  { key: "ditherStrength", tab: "animation", section: "Glyphs", label: "Dither strength", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: glyphTransitionsVisible },
+  { key: "glyphHysteresis", tab: "animation", section: "Glyphs", label: "Transition hold", type: "range", min: 0, max: 0.25, step: 0.01, visibleWhen: glyphTransitionsVisible },
   { key: "meshNodeCount", tab: "animation", section: "Mesh", label: "Mesh columns", type: "range", min: 3, max: 6, step: 1, integer: true, visibleWhen: meshVisible },
   { key: "meshIntensity", tab: "animation", section: "Mesh", label: "Mesh intensity", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: meshVisible },
   { key: "meshSpread", tab: "animation", section: "Mesh", label: "Ribbon depth", type: "range", min: 0.12, max: 0.7, step: 0.01, visibleWhen: meshVisible },
