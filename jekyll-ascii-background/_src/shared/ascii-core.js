@@ -990,13 +990,13 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     ? {
         x: pointer.emissionX,
         y: pointer.emissionY,
-        strength: pointer.emission * (0.58 + (pointer.momentum || 0) * 0.18),
-        radiusX: Math.max(interactiveRadius * 1.8, 0.01),
-        radiusY: Math.max(interactiveRadius * 1.35, 0.01),
+        strength: pointer.emission * (0.92 + (pointer.momentum || 0) * 0.16),
+        radiusX: Math.max(interactiveRadius * 1.55, 0.01),
+        radiusY: Math.max(interactiveRadius * 1.8, 0.01),
         color: {
-          lightness: pointer.emissionLightness,
-          a: pointer.emissionA,
-          b: pointer.emissionB,
+          lightness: clamp(pointer.emissionLightness + 0.12, 0, 0.94),
+          a: pointer.emissionA * 1.08,
+          b: pointer.emissionB * 1.08,
         },
       }
     : null
@@ -1263,14 +1263,14 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         if (pointerEmission) {
           const emissionX = (normalizedX - pointerEmission.x) / pointerEmission.radiusX
           const emissionY = (normalizedY - pointerEmission.y) / pointerEmission.radiusY
-          const emissionLens = Math.exp(-(emissionX * emissionX + emissionY * emissionY) * 1.45)
+          const emissionLens = Math.exp(-(emissionX * emissionX + emissionY * emissionY) * 1.25)
           const emissionAmount = clamp(
             pointerEmission.strength *
               emissionLens *
-              (0.52 + meshPresence * 0.34) *
-              smoothstep(0.03, 0.72, currentNoiseValue),
+              (0.72 + meshPresence * 0.28) *
+              (0.68 + smoothstep(0.03, 0.72, currentNoiseValue) * 0.32),
             0,
-            0.72,
+            0.9,
           )
           resolvedColor = mixOklab(resolvedColor, pointerEmission.color, emissionAmount)
         }
