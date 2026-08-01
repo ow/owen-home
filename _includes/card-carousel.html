@@ -1,4 +1,4 @@
-<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; cursor: grab;">
+<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; cursor: grab;">
   <div class="flex animate-scroll-left gap-4 py-2 items-stretch carousel-content">
     {% for card in include.cards %}
       {% if card.url %}
@@ -34,123 +34,84 @@
 (function() {
   const carouselId = 'card-carousel-{{ include.id | default: "default" }}';
   const carousel = document.getElementById(carouselId);
-  const carouselContent = carousel.querySelector('.carousel-content');
-  
-  let isDown = false;
-  let startX;
-  let startY;
-  let scrollLeft;
-  let animationPaused = false;
-  let isDraggingHorizontally = false;
-  
-  // Hide scrollbar with inline styles
+  let activePointerId = null;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let isDragging = false;
+  let suppressClick = false;
+  let resumeTimer = null;
+
   carousel.style.scrollbarWidth = 'none';
   carousel.style.msOverflowStyle = 'none';
-  
-  // Touch events for mobile
-  carousel.addEventListener('touchstart', (e) => {
-    isDown = true;
-    startX = e.touches[0].pageX - carousel.offsetLeft;
-    startY = e.touches[0].pageY;
-    scrollLeft = carousel.scrollLeft;
-    isDraggingHorizontally = false;
+
+  const pauseAutoplay = () => {
+    window.clearTimeout(resumeTimer);
+    carousel.classList.add('is-interacting');
+  };
+
+  const resumeAutoplay = () => {
+    window.clearTimeout(resumeTimer);
+    resumeTimer = window.setTimeout(() => {
+      carousel.classList.remove('is-interacting');
+    }, 1200);
+  };
+
+  carousel.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary || event.button > 0) return;
+
+    pauseAutoplay();
+
+    // Touch keeps the browser's native scrolling and momentum. Mouse and pen
+    // use a direct 1:1 drag so movement stays locked to the pointer.
+    if (event.pointerType === 'touch') return;
+
+    activePointerId = event.pointerId;
+    startX = event.clientX;
+    startScrollLeft = carousel.scrollLeft;
+    isDragging = false;
+    carousel.setPointerCapture(event.pointerId);
+    carousel.classList.add('dragging');
   });
-  
-  carousel.addEventListener('touchend', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    
-    // Resume animation after a delay
-    setTimeout(() => {
-      if (animationPaused) {
-        carouselContent.style.animationPlayState = 'running';
-        animationPaused = false;
-      }
-    }, 2000);
-  });
-  
-  carousel.addEventListener('touchmove', (e) => {
-    if (!isDown) return;
-    
-    const x = e.touches[0].pageX - carousel.offsetLeft;
-    const y = e.touches[0].pageY;
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - startY);
-    
-    // Determine if this is a horizontal or vertical gesture
-    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
-      // This is a horizontal drag
-      isDraggingHorizontally = true;
-      
-      // Pause animation on horizontal drag
-      if (!animationPaused) {
-        carouselContent.style.animationPlayState = 'paused';
-        animationPaused = true;
-      }
+
+  carousel.addEventListener('pointermove', (event) => {
+    if (event.pointerId !== activePointerId) return;
+
+    const deltaX = event.clientX - startX;
+    if (Math.abs(deltaX) > 3) {
+      isDragging = true;
+      suppressClick = true;
     }
-    
-    // Only prevent default and handle horizontal scrolling if we're dragging horizontally
-    if (isDraggingHorizontally) {
-      e.preventDefault();
-      const walk = (x - startX) * 2; // Scroll speed multiplier
-      carousel.scrollLeft = scrollLeft - walk;
-    }
-    // If it's vertical scrolling, let the browser handle it naturally
+
+    if (!isDragging) return;
+    event.preventDefault();
+    carousel.scrollLeft = startScrollLeft - deltaX;
   });
-  
-  // Mouse events for desktop (optional - for testing)
-  carousel.addEventListener('mousedown', (e) => {
-    isDown = true;
-    carousel.style.cursor = 'grabbing';
-    startX = e.pageX - carousel.offsetLeft;
-    startY = e.pageY;
-    scrollLeft = carousel.scrollLeft;
-    isDraggingHorizontally = false;
-  });
-  
-  carousel.addEventListener('mouseleave', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    carousel.style.cursor = 'grab';
-  });
-  
-  carousel.addEventListener('mouseup', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    carousel.style.cursor = 'grab';
-    
-    setTimeout(() => {
-      if (animationPaused) {
-        carouselContent.style.animationPlayState = 'running';
-        animationPaused = false;
+
+  const finishInteraction = (event) => {
+    const completedDrag = event.pointerId === activePointerId && isDragging;
+    if (event.pointerId === activePointerId) {
+      if (carousel.hasPointerCapture(event.pointerId)) {
+        carousel.releasePointerCapture(event.pointerId);
       }
-    }, 2000);
-  });
-  
-  carousel.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    
-    const x = e.pageX - carousel.offsetLeft;
-    const y = e.pageY;
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - startY);
-    
-    // Determine if this is a horizontal drag
-    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
-      isDraggingHorizontally = true;
-      
-      if (!animationPaused) {
-        carouselContent.style.animationPlayState = 'paused';
-        animationPaused = true;
-      }
+      activePointerId = null;
+      isDragging = false;
+      carousel.classList.remove('dragging');
     }
-    
-    if (isDraggingHorizontally) {
-      e.preventDefault();
-      const walk = (x - startX) * 2;
-      carousel.scrollLeft = scrollLeft - walk;
+    if (completedDrag) {
+      window.setTimeout(() => { suppressClick = false; }, 0);
     }
-  });
+    resumeAutoplay();
+  };
+
+  carousel.addEventListener('pointerup', finishInteraction);
+  carousel.addEventListener('pointercancel', finishInteraction);
+  carousel.addEventListener('dragstart', (event) => event.preventDefault());
+  carousel.addEventListener('click', (event) => {
+    if (!suppressClick) return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressClick = false;
+  }, true);
 })();
 </script>
 
@@ -160,23 +121,27 @@
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
   }
-  
+
   #card-carousel-{{ include.id | default: 'default' }}::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
   }
   
-  /* Smooth scrolling for touch devices */
+  /* Keep direct manipulation synchronous; touch momentum remains native. */
   #card-carousel-{{ include.id | default: 'default' }} {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  #card-carousel-{{ include.id | default: 'default' }}.is-interacting .carousel-content {
+    animation-play-state: paused;
   }
   
   /* Prevent text selection during drag */
   #card-carousel-{{ include.id | default: 'default' }}.dragging {
+    cursor: grabbing !important;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
   }
 </style>
- 
