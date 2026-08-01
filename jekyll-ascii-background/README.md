@@ -35,16 +35,39 @@ That's it! The ASCII background will now appear in your Jekyll site.
 
 ## Configuration Options
 
+Defaults, named presets, palette and character registries, playground controls,
+and copied configuration are all defined in
+`_src/shared/ascii-config.js`. Add new public settings there so the renderer and
+playground stay synchronized.
+
+### Named presets
+
+Use a shared visual preset and keep mount behavior as a small page-level override:
+
+```html
+<!-- Homepage -->
+<div data-ascii-preset="homepage" data-ascii-background='{}'></div>
+
+<!-- Full-screen playground using the same visual treatment -->
+<div
+  data-ascii-preset="homepage"
+  data-ascii-background='{"showControls":true,"fullscreen":true,"opacity":1}'
+></div>
+```
+
+Available presets are `homepage`, `playground`, and `classic`. Existing pages
+with only `data-ascii-background` JSON remain supported.
+
 \`\`\`javascript
 // All available options with default values
 window.asciiConfig = {
   density: 30,            // Character density
   speed: 30,              // Animation speed
   opacity: 0.9,           // Background opacity
-  colorPalette: "stripe", // Color palette (stripe, ocean, sunset, purple, cyberpunk, custom)
+  colorPalette: "green", // green, ocean, tide, sunset, purple, cyberpunk, custom
   noiseScale: 0.015,      // Pattern detail
   noiseSpeed: 0.5,        // Flow speed
-  characterSet: "code",   // Character set (minimal, dots, blocks, code, custom)
+  characterSet: "code",   // minimal, dots, blocks, gradient, code, matrix, custom
   gradientSize: 1.5,      // Gradient size
   animationStyle: "continuous", // Animation style (continuous, wave, flow, pulse)
   transitionSmoothness: 1.2,    // Transition smoothness

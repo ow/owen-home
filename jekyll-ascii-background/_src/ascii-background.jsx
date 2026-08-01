@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { defaultSettings, renderAsciiBackground, resetAnimationState } from "./shared/ascii-core"
+import { renderAsciiBackground, resetAnimationState } from "./shared/ascii-core"
+import { resolveAsciiSettings } from "./shared/ascii-config"
 
 export function AsciiBackground(props) {
   // Merge provided props with default settings
-  const settings = { ...defaultSettings, ...props }
+  const settings = resolveAsciiSettings(props)
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [time, setTime] = useState(0)
@@ -184,7 +185,13 @@ export function AsciiBackground(props) {
       pointer.y += (target.y - pointer.y) * 0.075
       pointer.activity += (target.activity - pointer.activity) * 0.065
 
-      const speedFactor = useReducedMotion && settings.reducedMotionStyle === "slow" ? 0.2 : 1.0
+      const speedFactor = useReducedMotion
+        ? settings.reducedMotionStyle === "minimal"
+          ? 0.06
+          : settings.reducedMotionStyle === "slow"
+            ? 0.2
+            : 1
+        : 1
       setTime((prevTime) => prevTime + settings.speed * 0.0001 * speedFactor)
 
       animationRef.current = requestAnimationFrame(animate)
