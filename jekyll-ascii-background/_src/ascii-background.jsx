@@ -189,7 +189,7 @@ export function AsciiBackground(props) {
         emission: emitterColor || keepDraggedEmission ? 1 : 0,
         emissionX: emitterColor ? pointerX : currentTarget.emissionX,
         emissionY: emitterRect
-          ? Math.min(Math.max((emitterRect.top - rect.top) / Math.max(rect.height, 1) + 0.025, 0), 1)
+          ? Math.min(Math.max((emitterRect.top - rect.top) / Math.max(rect.height, 1) - 0.075, 0), 1)
           : currentTarget.emissionY,
         emissionLightness: emitterColor?.lightness ?? currentTarget.emissionLightness,
         emissionA: emitterColor?.a ?? currentTarget.emissionA,
@@ -243,7 +243,7 @@ export function AsciiBackground(props) {
           : Math.min(Math.max(((centeredEmitterRect?.left || surfaceRect.left) + (centeredEmitterRect?.width || surfaceRect.width) * 0.5 - hostRect.left) / Math.max(hostRect.width, 1), 0), 1),
         emissionY: hasPointerAnchor
           ? currentTarget.emissionY
-          : Math.min(Math.max(((centeredEmitterRect?.top || surfaceRect.top) - hostRect.top) / Math.max(hostRect.height, 1) + 0.025, 0), 1),
+          : Math.min(Math.max(((centeredEmitterRect?.top || surfaceRect.top) - hostRect.top) / Math.max(hostRect.height, 1) - 0.075, 0), 1),
         emissionLightness: centeredEmitterColor?.lightness ?? currentTarget.emissionLightness,
         emissionA: centeredEmitterColor?.a ?? currentTarget.emissionA,
         emissionB: centeredEmitterColor?.b ?? currentTarget.emissionB,
