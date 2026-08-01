@@ -1021,21 +1021,23 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
   const useMesh = structuredWave && colorField === "mesh"
   const paletteOklab = useMesh ? colors.map(hexToOklab) : null
   const mesh = useMesh ? createRibbonMesh(timeOffset, time, paletteOklab, waveSettings, reducedMotion) : null
-  const pointerEmission = useMesh && !reducedMotion && pointer?.emission > 0.001
-    ? {
-        x: pointer.emissionX,
-        y: pointer.emissionY,
-        strength: pointer.emission * (0.84 + (pointer.momentum || 0) * 0.12),
+  const pointerEmissions = useMesh && !reducedMotion
+    ? (pointer?.emissions || [])
+      .filter((emission) => emission.strength > 0.001)
+      .map((emission) => ({
+        x: emission.x,
+        y: emission.y,
+        strength: emission.strength * (0.84 + (emission.momentum || 0) * 0.12),
         radiusX: Math.max(interactiveRadius * 1.05, 0.01),
         radiusY: Math.max(interactiveRadius * 1.1, 0.01),
-        phase: pointer.emissionPhase || 0,
+        phase: emission.phase || 0,
         color: {
-          lightness: clamp(pointer.emissionLightness + 0.12, 0, 0.94),
-          a: pointer.emissionA * 1.08,
-          b: pointer.emissionB * 1.08,
+          lightness: clamp(emission.lightness + 0.12, 0, 0.94),
+          a: emission.a * 1.08,
+          b: emission.b * 1.08,
         },
-      }
-    : null
+      }))
+    : []
   if (!ctx._quantizedColorCache) ctx._quantizedColorCache = new Map()
 
   // Calculate entrance animation progress
@@ -1215,19 +1217,22 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
       // Select character based on noise
       const { clarity, complexity, normalizedX, normalizedY } = getComplexityFieldAmount(x, y, waveSettings)
-      const emissionField = pointerEmission
-        ? samplePointerEmission(normalizedX, normalizedY, pointerEmission)
+      const emissionFields = pointerEmissions.length > 0
+        ? new Array(pointerEmissions.length)
         : null
-      if (emissionField) {
+      for (let emissionIndex = 0; emissionIndex < pointerEmissions.length; emissionIndex++) {
+        const emission = pointerEmissions[emissionIndex]
+        const emissionField = samplePointerEmission(normalizedX, normalizedY, emission)
+        emissionFields[emissionIndex] = emissionField
         const inwardX = Math.min(Math.max(x - emissionField.sourceDirectionX, 0), dimensions.width - 1)
         const inwardY = Math.min(Math.max(y - emissionField.sourceDirectionY, 0), dimensions.height - 1)
         const transportedNoise = ctx.previousState[inwardY]?.[inwardX]?.noiseValue ?? currentNoiseValue
-        const transportAmount = pointerEmission.strength *
+        const transportAmount = emission.strength *
           (emissionField.crest * 0.22 + emissionField.wake * 0.045 + emissionField.contact * 0.025)
         currentNoiseValue = currentNoiseValue * (1 - transportAmount) + transportedNoise * transportAmount
         const existingWave = 0.3 + smoothstep(0.08, 0.72, currentNoiseValue) * 0.7
         currentNoiseValue = clamp(
-          currentNoiseValue + pointerEmission.strength * emissionField.displacement * existingWave * 0.16,
+          currentNoiseValue + emission.strength * emissionField.displacement * existingWave * 0.16,
         )
       }
       const baseCharacterValue = clamp(
@@ -1311,20 +1316,22 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const meshColor = sampleRibbonMesh(normalizedX, normalizedY, mesh)
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
-        if (emissionField) {
+        for (let emissionIndex = 0; emissionIndex < pointerEmissions.length; emissionIndex++) {
+          const emission = pointerEmissions[emissionIndex]
+          const emissionField = emissionFields[emissionIndex]
           const emissionPresence = emissionField.halo * 0.24 +
             emissionField.contact * 0.2 +
             emissionField.wake * 0.28 +
             emissionField.crest * 0.56
           const emissionAmount = clamp(
-            pointerEmission.strength *
+            emission.strength *
               emissionPresence *
               (0.72 + meshPresence * 0.28) *
               (0.68 + smoothstep(0.03, 0.72, currentNoiseValue) * 0.32),
             0,
             0.9,
           )
-          resolvedColor = mixOklab(resolvedColor, pointerEmission.color, emissionAmount)
+          resolvedColor = mixOklab(resolvedColor, emission.color, emissionAmount)
         }
         const quantized = quantizeOklab(resolvedColor, ctx._quantizedColorCache)
         color = quantized.color
