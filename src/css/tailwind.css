@@ -118,7 +118,7 @@
   .project-reel-track {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: min(88vw, 40rem);
+    grid-auto-columns: min(68vw, 30rem);
     gap: 0.75rem;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
@@ -145,16 +145,28 @@
     @apply relative block h-full overflow-hidden;
   }
 
+  .project-reel-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border: 1px solid rgb(125 211 252 / 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .project-reel-link:hover::after,
+  .project-reel-link:focus-visible::after {
+    opacity: 1;
+  }
+
   .project-reel-link picture {
     display: contents;
   }
 
   .project-reel-image {
-    @apply absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out;
-  }
-
-  .project-reel-link:hover .project-reel-image {
-    transform: scale(1.025);
+    @apply absolute inset-0 h-full w-full object-cover;
   }
 
   .project-reel-shade {
@@ -179,7 +191,7 @@
 
 @media (min-width: 640px) {
   .project-reel-track {
-    grid-auto-columns: min(68vw, 40rem);
+    grid-auto-columns: min(52vw, 30rem);
   }
 
   .project-reel-card {

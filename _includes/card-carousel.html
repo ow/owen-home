@@ -50,7 +50,7 @@
           class="project-reel-link group focus-ring"
           {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
           {% if card.image_name %}
-            {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 768px) 640px, 88vw" loading=card_loading fetchpriority=card_priority %}
+            {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 768px) 480px, 68vw" loading=card_loading fetchpriority=card_priority %}
           {% else %}
             <img src="{{ card.image }}" alt="{{ card.image_alt | default: card.title }}" width="720" height="440" class="project-reel-image" loading="{{ card_loading }}" decoding="async">
           {% endif %}
