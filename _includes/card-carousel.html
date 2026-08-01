@@ -1,4 +1,4 @@
-<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; cursor: grab;">
+<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" data-ascii-reactive style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; cursor: grab;">
   <div class="flex animate-scroll-left gap-4 py-2 items-stretch carousel-content">
     {% for card in include.cards %}
       {% if card.url %}
