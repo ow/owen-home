@@ -4,23 +4,41 @@ import { useState } from "react"
 import ReactDOM from "react-dom/client"
 import { AsciiBackground } from "./ascii-background"
 import { ControlPanel } from "./control-panel"
-import { defaultSettings } from "./shared/ascii-core"
+import { applyAsciiPreset, resolveAsciiSettings } from "./shared/ascii-config"
 
 function AsciiBackgroundApp({ initialConfig = {} }) {
   // If page has provided config, use it
-  const initialSettings = { ...defaultSettings, ...initialConfig }
+  const initialSettings = resolveAsciiSettings(initialConfig)
 
   const [settings, setSettings] = useState(initialSettings)
+  const [activePreset, setActivePreset] = useState(initialConfig.preset || "custom")
 
   const handleSettingsChange = (newSettings) => {
+    setActivePreset("custom")
     setSettings((prev) => ({ ...prev, ...newSettings }))
+  }
+
+  const handlePresetChange = (preset) => {
+    setActivePreset(preset)
+    setSettings((currentSettings) => applyAsciiPreset(preset, {
+      // Mount behavior belongs to the playground, not the visual preset.
+      showControls: currentSettings.showControls,
+      fullscreen: currentSettings.fullscreen,
+    }))
   }
 
   return (
     <>
       <AsciiBackground {...settings} />
       {/* Only render the control panel if showControls is true */}
-      {settings.showControls && <ControlPanel settings={settings} onSettingsChange={handleSettingsChange} />}
+      {settings.showControls && (
+        <ControlPanel
+          settings={settings}
+          activePreset={activePreset}
+          onPresetChange={handlePresetChange}
+          onSettingsChange={handleSettingsChange}
+        />
+      )}
     </>
   )
 }
@@ -54,9 +72,15 @@ function initializeAsciiBackgrounds() {
         console.error("Error parsing ASCII background config:", e)
       }
 
+      const attributePreset = element.getAttribute("data-ascii-preset")
+
       // Use global config as fallback
       if (window.asciiConfig) {
         config = { ...window.asciiConfig, ...config }
+      }
+
+      if (attributePreset) {
+        config.preset = attributePreset
       }
 
       // Make sure parent has position if not already set

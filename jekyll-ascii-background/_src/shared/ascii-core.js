@@ -3,113 +3,17 @@
  * Shared logic between Next.js and Jekyll implementations
  */
 
-// Character sets
-export const characterSets = {
-  minimal: " .".split(""),
-  dots: " .·•●".split(""),
-  blocks: " ░▒▓█".split(""),
-  // Ordered by visual weight so broad color fields read like a true ASCII gradient.
-  gradient: [" ", " ", ".", ":", ";", "+", "=", "*", "#", "%", "@"],
-  // Improved code set with more visually distinct characters and better gradation
-  code: ["(", ")", ".", ";", "+", "=", "*", "#", "@", "$", "%", "&", "<", ">", "{", "}", "/", "~"],
-  matrix: [
-    " ",
-    ".",
-    "ｦ",
-    "ｱ",
-    "ﾊ",
-    "ﾐ",
-    "ﾋ",
-    "ｰ",
-    "ｳ",
-    "ｼ",
-    "ﾅ",
-    "ﾓ",
-    "ﾆ",
-    "ｻ",
-    "ﾜ",
-    "ﾂ",
-    "ｵ",
-    "ﾘ",
-    "ｱ",
-    "ﾎ",
-    "ﾃ",
-    "ﾏ",
-    "ｹ",
-    "ﾒ",
-    "ｴ",
-    "ｶ",
-    "ｷ",
-    "ﾑ",
-    "ﾕ",
-    "ﾗ",
-    "ｾ",
-    "ﾈ",
-  ],
-  custom: [" ", ".", ":", "+", "=", "*", "#", "@", "$"], // Default custom characters
-}
+import { characterSets, colorPalettes } from "./ascii-config"
 
-// Color palettes
-export const colorPalettes = {
-  green: ["#22c55e", "#16a34a", "#059669", "#0d9488", "#0891b2", "#0e7490", "#0369a1", "#1d4ed8", "#2563eb", "#3b82f6"],
-  ocean: ["#0A2463", "#3E92CC", "#2CA6A4", "#44CF6C", "#A6EBC9"],
-  tide: ["#071A33", "#103B63", "#176783", "#1D8B83", "#35B270", "#78D795", "#C2EDC8"],
-  sunset: ["#FF0080", "#FF8C00", "#FFD700", "#FF4500", "#FF1493", "#FF00FF", "#FF6347"],
-  purple: ["#240046", "#3C096C", "#5A189A", "#7B2CBF", "#9D4EDD", "#C77DFF", "#E0AAFF"],
-  cyberpunk: ["#00FFFF", "#FF00FF", "#00FF00", "#FE53BB", "#08F7FE", "#09FBD3", "#F5D300"],
-}
-
-// Default settings
-export const defaultSettings = {
-  density: 30,
-  speed: 30,
-  opacity: 0.9,
-  colorPalette: "green",
-  customColors: ["#6366F1", "#EC4899", "#F472B6"],
-  noiseScale: 0.015,
-  noiseSpeed: 0.5,
-  characterSet: "code",
-  customCharacters: "",
-  gradientSize: 1.5,
-  animationStyle: "continuous",
-  transitionSmoothness: 1.2,
-  showControls: true,
-  showFps: false,
-  fullscreen: true,
-  // Add optical flow parameters
-  flowAwareness: 0.7,
-  flowSmoothing: 0.5,
-  // Add entrance animation parameters
-  entranceAnimation: true,
-  entranceDirection: "bottom", // "top", "bottom", "left", "right", "center"
-  entranceDuration: 1.5, // seconds
-  // Add accessibility parameters
-  respectReducedMotion: true, // Respect user's prefers-reduced-motion setting
-  reducedMotionStyle: "static", // "static", "minimal", "slow"
-  reducedMotionFadeIn: true, // Fade in the static background
-  reducedMotionFadeDuration: 1.0, // seconds
-  // Add wave-specific parameters
-  waveFlowDirection: 45, // degrees (0 = right, 90 = down, 180 = left, 270 = up)
-  waveIntensity: 1.0, // 0.1 to 2.0 - controls wave amplitude
-  waveLayers: 3, // 1 to 5 - number of wave layers
-  waveOrganicFactor: 0.1, // 0 to 0.5 - amount of organic noise
-  waveFrequency: 0.92, // broad crest count across the field
-  waveBend: 0.38, // curvature of the primary crest
-  // Complexity field settings. Disabled by default so existing uses remain unchanged.
-  complexityField: false,
-  clarityAnchorX: 0.3,
-  clarityAnchorY: 0.28,
-  clarityRadiusX: 0.42,
-  clarityRadiusY: 0.34,
-  clarityStrength: 0.88,
-  clarityQuieting: 0.18,
-  edgeTurbulence: 0.72,
-  interactiveMode: false,
-  interactiveEffect: "refraction",
-  interactiveRadius: 0.18,
-  interactiveIntensity: 0.75,
-  pointer: null,
-}
+export {
+  asciiPresets,
+  characterSets,
+  colorPalettes,
+  defaultSettings,
+  formatConfigForCopy,
+  resolveAsciiSettings,
+  settingControls,
+} from "./ascii-config"
 
 // Helper functions
 export function getCharacters(characterSet, customCharacters) {
@@ -1180,54 +1084,6 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       }
     }
   }
-}
-
-// Update the formatConfigForCopy function to include the new parameters
-export function formatConfigForCopy(settings) {
-  return `<script>
-window.asciiConfig = {
-  density: ${settings.density},
-  speed: ${settings.speed},
-  opacity: ${settings.opacity},
-  colorPalette: "${settings.colorPalette}",
-  noiseScale: ${settings.noiseScale},
-  noiseSpeed: ${settings.noiseSpeed},
-  characterSet: "${settings.characterSet}",
-  gradientSize: ${settings.gradientSize},
-  animationStyle: "${settings.animationStyle}",
-  transitionSmoothness: ${settings.transitionSmoothness || 1.2},
-  showControls: ${settings.showControls},
-  showFps: ${settings.showFps === true},
-  fullscreen: ${settings.fullscreen},
-  flowAwareness: ${settings.flowAwareness || 0.7},
-  flowSmoothing: ${settings.flowSmoothing || 0.5},
-  entranceAnimation: ${settings.entranceAnimation !== undefined ? settings.entranceAnimation : true},
-  entranceDirection: "${settings.entranceDirection || "bottom"}",
-  entranceDuration: ${settings.entranceDuration || 1.5},
-  respectReducedMotion: ${settings.respectReducedMotion !== undefined ? settings.respectReducedMotion : true},
-  reducedMotionStyle: "${settings.reducedMotionStyle || "static"}",
-  reducedMotionFadeIn: ${settings.reducedMotionFadeIn !== undefined ? settings.reducedMotionFadeIn : true},
-  reducedMotionFadeDuration: ${settings.reducedMotionFadeDuration || 1.0},
-  waveFlowDirection: ${settings.waveFlowDirection || 45},
-  waveIntensity: ${settings.waveIntensity || 1.0},
-  waveLayers: ${settings.waveLayers || 3},
-  waveOrganicFactor: ${settings.waveOrganicFactor || 0.1},
-  waveFrequency: ${settings.waveFrequency || 0.92},
-  waveBend: ${settings.waveBend || 0.38},
-  complexityField: ${settings.complexityField === true},
-  clarityAnchorX: ${settings.clarityAnchorX || 0.3},
-  clarityAnchorY: ${settings.clarityAnchorY || 0.28},
-  clarityRadiusX: ${settings.clarityRadiusX || 0.42},
-  clarityRadiusY: ${settings.clarityRadiusY || 0.34},
-  clarityStrength: ${settings.clarityStrength || 0.88},
-  clarityQuieting: ${settings.clarityQuieting || 0.18},
-  edgeTurbulence: ${settings.edgeTurbulence || 0.72},
-  interactiveMode: ${settings.interactiveMode === true},
-  interactiveEffect: "${settings.interactiveEffect || "refraction"}",
-  interactiveRadius: ${settings.interactiveRadius || 0.18},
-  interactiveIntensity: ${settings.interactiveIntensity || 0.75}
-};
-</script>`
 }
 
 // Helper function to reset animation state
