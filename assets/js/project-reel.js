@@ -7,7 +7,7 @@
     var next = reel.querySelector('[data-reel-next]');
     var counters = reel.querySelectorAll('.project-reel-count');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var speed = 10;
+    var speed = 12;
     var running = !reduceMotion.matches;
     var visible = !('IntersectionObserver' in window);
     var resumeTimer;
@@ -122,8 +122,6 @@
 
     if (previous) previous.addEventListener('click', function () { show(-1); });
     if (next) next.addEventListener('click', function () { show(1); });
-    track.addEventListener('pointerenter', pause);
-    track.addEventListener('pointerleave', resume);
     track.addEventListener('pointerdown', pause);
     track.addEventListener('pointerup', function () { pauseFor(2000); });
     track.addEventListener('pointercancel', function () { pauseFor(2000); });
