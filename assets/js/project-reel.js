@@ -122,6 +122,8 @@
 
     if (previous) previous.addEventListener('click', function () { show(-1); });
     if (next) next.addEventListener('click', function () { show(1); });
+    track.addEventListener('pointerenter', pause);
+    track.addEventListener('pointerleave', resume);
     track.addEventListener('pointerdown', pause);
     track.addEventListener('pointerup', function () { pauseFor(2000); });
     track.addEventListener('pointercancel', function () { pauseFor(2000); });
