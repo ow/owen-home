@@ -209,51 +209,134 @@ function getRibbonGeometry(normalizedX, waveTime, waveSettings) {
 }
 
 function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reducedMotion) {
-  const count = Math.round(clamp(waveSettings.meshNodeCount || 4, 3, 6))
+  const columns = Math.round(clamp(waveSettings.meshNodeCount || 4, 3, 6))
+  const rows = 4
   const meshTime = reducedMotion ? 0.42 : animationTime * (waveSettings.meshSpeed || 1)
-  const paletteStops = [0.08, 0.58, 0.96, 0.74, 0.28, 0.86]
-  const verticalOffsets = [-0.1, 0.075, -0.035, 0.12, -0.07, 0.04]
+  const paletteStops = [0.08, 0.58, 0.96, 0.74, 0.28, 0.86, 0.46, 0.68]
   const drift = waveSettings.meshDrift || 0
-  const nodes = []
+  const spread = Math.max(waveSettings.meshSpread || 0.36, 0.08)
+  const pointer = waveSettings.pointer
+  const pointerActive = !reducedMotion && pointer?.activity > 0.001
+  const vertices = []
+  const triangleIndices = []
 
-  for (let index = 0; index < count; index++) {
-    const phase = meshTime * 0.46 + index * 1.73
-    const baseX = (index + 0.45) / count
-    const x = clamp(baseX + Math.sin(phase * 0.73 + index * 0.4) * drift * 0.55, -0.08, 1.08)
-    const ribbon = getRibbonGeometry(x, waveTime, waveSettings)
-    let y = ribbon.waveCenter + verticalOffsets[index] + Math.cos(phase * 0.91 + index * 0.6) * drift * 0.45
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      const index = row * columns + column
+      const baseX = column / (columns - 1)
+      const phase = meshTime * 0.46 + column * 1.37 + row * 1.91
+      const edgeWeight = row === 0 || row === rows - 1 ? 0.18 : 1
+      const columnWeight = column === 0 || column === columns - 1 ? 0 : 1
+      let x = baseX + Math.sin(phase * 0.73 + row * 0.52) * drift * 0.5 * edgeWeight * columnWeight
+      const ribbon = getRibbonGeometry(clamp(x), waveTime, waveSettings)
+      let y
 
-    if (!reducedMotion && waveSettings.pointer?.activity > 0.001) {
-      const dx = x - waveSettings.pointer.x
-      const dy = y - waveSettings.pointer.y
-      const influence = Math.exp(-(dx * dx + dy * dy) / 0.045) * waveSettings.pointer.activity
-      y += dy * influence * 0.16
+      if (row === 0) {
+        y = -0.14 + Math.cos(phase * 0.61) * drift * 0.08
+      } else if (row === rows - 1) {
+        y = 1.14 + Math.sin(phase * 0.57) * drift * 0.08
+      } else {
+        const ribbonSide = row === 1 ? -1 : 1
+        const breathing = 1 + Math.sin(meshTime * 0.17 + column * 1.11 + row) * 0.08
+        y = ribbon.waveCenter + ribbonSide * spread * 0.58 * breathing
+        y += Math.cos(phase * 0.91 + column * 0.33) * drift * 0.42
+      }
+
+      if (pointerActive) {
+        const dx = x - pointer.x
+        const dy = y - pointer.y
+        const influence = Math.exp(-(dx * dx + dy * dy) / 0.05) * pointer.activity
+        const push = influence * (waveSettings.interactiveIntensity || 0.75) * 0.045
+        x += dx * push * columnWeight
+        y += dy * push
+      }
+
+      const paletteBase = paletteStops[(column + row * 2) % paletteStops.length]
+      const colorDrift = reducedMotion ? 0 : Math.sin(meshTime * 0.12 + index * 0.83) * 0.035
+      vertices.push({
+        x,
+        y,
+        color: samplePaletteOklab(palette, clamp(paletteBase + colorDrift)),
+      })
     }
-
-    nodes.push({ x, y, color: samplePaletteOklab(palette, paletteStops[index]) })
   }
 
-  return { nodes, spread: Math.max(waveSettings.meshSpread || 0.36, 0.08) }
+  for (let row = 0; row < rows - 1; row++) {
+    for (let column = 0; column < columns - 1; column++) {
+      const topLeft = row * columns + column
+      const topRight = topLeft + 1
+      const bottomLeft = topLeft + columns
+      const bottomRight = bottomLeft + 1
+
+      if ((row + column) % 2 === 0) {
+        triangleIndices.push([topLeft, bottomLeft, bottomRight], [topLeft, bottomRight, topRight])
+      } else {
+        triangleIndices.push([topLeft, bottomLeft, topRight], [topRight, bottomLeft, bottomRight])
+      }
+    }
+  }
+
+  const triangles = triangleIndices.map(([firstIndex, secondIndex, thirdIndex]) => {
+    const first = vertices[firstIndex]
+    const second = vertices[secondIndex]
+    const third = vertices[thirdIndex]
+    const denominator = (second.y - third.y) * (first.x - third.x) +
+      (third.x - second.x) * (first.y - third.y)
+    return {
+      first,
+      second,
+      third,
+      inverseDenominator: Math.abs(denominator) < 0.000001 ? 0 : 1 / denominator,
+      minX: Math.min(first.x, second.x, third.x),
+      maxX: Math.max(first.x, second.x, third.x),
+      minY: Math.min(first.y, second.y, third.y),
+      maxY: Math.max(first.y, second.y, third.y),
+    }
+  })
+
+  return { vertices, triangles }
 }
 
 function sampleRibbonMesh(normalizedX, normalizedY, mesh) {
-  let weightTotal = 0
-  let lightness = 0
-  let a = 0
-  let b = 0
-  const softness = mesh.spread * mesh.spread * 0.16
+  for (const triangle of mesh.triangles) {
+    if (
+      normalizedX < triangle.minX - 0.0001 || normalizedX > triangle.maxX + 0.0001 ||
+      normalizedY < triangle.minY - 0.0001 || normalizedY > triangle.maxY + 0.0001 ||
+      triangle.inverseDenominator === 0
+    ) continue
+    const { first, second, third } = triangle
 
-  for (const node of mesh.nodes) {
-    const dx = (normalizedX - node.x) * 0.72
-    const dy = normalizedY - node.y
-    const weight = 1 / (dx * dx + dy * dy + softness)
-    weightTotal += weight
-    lightness += node.color.lightness * weight
-    a += node.color.a * weight
-    b += node.color.b * weight
+    const firstWeight = (
+      (second.y - third.y) * (normalizedX - third.x) +
+      (third.x - second.x) * (normalizedY - third.y)
+    ) * triangle.inverseDenominator
+    const secondWeight = (
+      (third.y - first.y) * (normalizedX - third.x) +
+      (first.x - third.x) * (normalizedY - third.y)
+    ) * triangle.inverseDenominator
+    const thirdWeight = 1 - firstWeight - secondWeight
+
+    if (firstWeight >= -0.0001 && secondWeight >= -0.0001 && thirdWeight >= -0.0001) {
+      return {
+        lightness: first.color.lightness * firstWeight + second.color.lightness * secondWeight + third.color.lightness * thirdWeight,
+        a: first.color.a * firstWeight + second.color.a * secondWeight + third.color.a * thirdWeight,
+        b: first.color.b * firstWeight + second.color.b * secondWeight + third.color.b * thirdWeight,
+      }
+    }
   }
 
-  return { lightness: lightness / weightTotal, a: a / weightTotal, b: b / weightTotal }
+  let nearest = mesh.vertices[0]
+  let nearestDistance = Infinity
+  for (const vertex of mesh.vertices) {
+    const dx = normalizedX - vertex.x
+    const dy = normalizedY - vertex.y
+    const distance = dx * dx + dy * dy
+    if (distance < nearestDistance) {
+      nearest = vertex
+      nearestDistance = distance
+    }
+  }
+  return nearest.color
 }
 
 // Update the generateNoise function to make ripples more visible
@@ -1081,13 +1164,15 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
 
       let color
       let colorKey = null
-      if (mesh) {
+      if (mesh && char !== " ") {
         const baseColor = samplePaletteOklab(paletteOklab, colorPosition / Math.max(colorCount - 1, 1))
         const meshColor = sampleRibbonMesh(normalizedX, normalizedY, mesh)
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         const quantized = quantizeOklab(mixOklab(baseColor, meshColor, meshPresence), ctx._quantizedColorCache)
         color = quantized.color
         colorKey = quantized.colorKey
+      } else if (mesh) {
+        color = colors[0]
       } else {
         const color1 = colors[colorIndex] || colors[0]
         const color2 = colors[nextColorIndex] || colors[colors.length - 1]

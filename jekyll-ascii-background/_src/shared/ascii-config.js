@@ -88,7 +88,7 @@ export const asciiPresets = {
   },
   homepage: {
     label: "Homepage wave",
-    description: "The curved complexity-to-clarity ribbon used on the homepage.",
+    description: "The curved ASCII ribbon with a deforming, triangulated color field.",
     settings: {
       density: 30,
       speed: 60,
@@ -204,10 +204,10 @@ export const settingControls = [
   { key: "waveFrequency", tab: "animation", section: "Ribbon", label: "Crest frequency", type: "range", min: 0.35, max: 1.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "waveBend", tab: "animation", section: "Ribbon", label: "Crest bend", type: "range", min: 0, max: 0.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "edgeTurbulence", tab: "animation", section: "Ribbon", label: "Edge turbulence", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
-  { key: "meshNodeCount", tab: "animation", section: "Mesh", label: "Color nodes", type: "range", min: 3, max: 6, step: 1, integer: true, visibleWhen: meshVisible },
+  { key: "meshNodeCount", tab: "animation", section: "Mesh", label: "Mesh columns", type: "range", min: 3, max: 6, step: 1, integer: true, visibleWhen: meshVisible },
   { key: "meshIntensity", tab: "animation", section: "Mesh", label: "Mesh intensity", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: meshVisible },
-  { key: "meshSpread", tab: "animation", section: "Mesh", label: "Color spread", type: "range", min: 0.12, max: 0.7, step: 0.01, visibleWhen: meshVisible },
-  { key: "meshDrift", tab: "animation", section: "Mesh", label: "Node drift", type: "range", min: 0, max: 0.28, step: 0.01, visibleWhen: meshVisible },
+  { key: "meshSpread", tab: "animation", section: "Mesh", label: "Ribbon depth", type: "range", min: 0.12, max: 0.7, step: 0.01, visibleWhen: meshVisible },
+  { key: "meshDrift", tab: "animation", section: "Mesh", label: "Topology drift", type: "range", min: 0, max: 0.28, step: 0.01, visibleWhen: meshVisible },
   { key: "meshSpeed", tab: "animation", section: "Mesh", label: "Mesh speed", type: "range", min: 0, max: 3, step: 0.01, visibleWhen: meshVisible },
   { key: "clarityAnchorX", tab: "animation", section: "Clarity", label: "Anchor X", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
   { key: "clarityAnchorY", tab: "animation", section: "Clarity", label: "Anchor Y", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
