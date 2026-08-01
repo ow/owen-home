@@ -10,37 +10,29 @@
     <link rel="mask-icon" href="{{ "/images/favicons/safari-pinned-tab.svg" | relative_url }}" color="#5bbad5">
 
     <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
-    <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
     <link rel="manifest" href="{{ "/manifest.json" | relative_url }}">
     <meta name="theme-color" content="#0f172a">
     <meta name="google-site-verification" content="clli-zuXIqHkTVmGd6nv4NoVS8PLdrvaAtojJd-NUkc" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <title>{{ page.title }} | {{site.title}}</title>
-
     {% seo %}
     
-    <!-- ProfilePage mainEntity extension for Jekyll SEO tag -->
-    {% if page.seo.type == "ProfilePage" %}
+    {% if page.profile_page %}
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
+      "@id": "{{ page.url | absolute_url }}#profile-page",
       "mainEntity": {
         "@type": "Person",
+        "@id": "{{ site.url }}#person",
         "name": "{{ page.author.name | default: site.author.name | default: page.seo.name }}",
         {% if page.author.twitter %}
         "alternateName": "{{ page.author.twitter }}",
         {% endif %}
         "description": "{{ page.author.bio | default: site.description | strip_html | strip_newlines | truncate: 160 }}",
-        {% if page.image %}
-        "image": "{{ page.image | absolute_url }}",
-        {% elsif site.logo %}
-        "image": "{{ site.logo | absolute_url }}",
+        {% if page.author.picture or site.author.picture %}
+        "image": "{{ page.author.picture | default: site.author.picture | absolute_url }}",
         {% endif %}
         {% if page.author.job_title %}
         "jobTitle": "{{ page.author.job_title }}",
@@ -64,7 +56,7 @@
           {% endfor %}
         ],
         {% endif %}
-        "url": "{{ page.author.url | default: page.url | absolute_url }}"
+        "url": "{{ site.url }}"
       },
       "url": "{{ page.url | absolute_url }}"
     }
@@ -76,18 +68,33 @@
       document.documentElement.classList.add('dark');
     </script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49196912-1"></script>
+    {% if site.google_analytics and jekyll.environment == 'production' %}
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      window.addEventListener('load', function () {
+        var loadAnalytics = function () {
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', '{{ site.google_analytics }}');
 
-      gtag('config', 'UA-49196912-1');
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}';
+          document.head.appendChild(script);
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadAnalytics, { timeout: 3000 });
+        } else {
+          setTimeout(loadAnalytics, 1500);
+        }
+      }, { once: true });
     </script>
+    {% endif %}
 
-    <!-- ASCII Background Scripts -->
+    {% if page.ascii_controls %}
     <link rel="stylesheet" href="{{ '/assets/css/control-panel.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/ascii-background.css' | relative_url }}">
+    {% endif %}
 
 </head>

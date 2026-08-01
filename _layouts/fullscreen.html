@@ -9,7 +9,7 @@
         {{ content }}
     </div>
 
-    <script src="{{ '/assets/js/ascii-background.js' | relative_url }}"></script>	
+    <script src="{% if page.ascii_controls %}{{ '/assets/js/ascii-playground.js' | relative_url }}{% else %}{{ '/assets/js/ascii-background.js' | relative_url }}{% endif %}"></script>
   </body>
 
-</html> 
+</html>

@@ -1,0 +1,17 @@
+{% assign image_widths = include.widths | default: "320,640,1024" | split: "," %}
+{% assign fallback_width = include.fallback_width | default: "640" %}
+<picture{% if include.picture_class %} class="{{ include.picture_class }}"{% endif %}>
+  <source
+    type="image/webp"
+    srcset="{% for width in image_widths %}{{ '/images/optimized/' | append: include.name | append: '-' | append: width | append: '.webp' | relative_url }} {{ width }}w{% unless forloop.last %}, {% endunless %}{% endfor %}"
+    sizes="{{ include.sizes | default: '100vw' }}">
+  <img
+    src="{{ '/images/optimized/' | append: include.name | append: '-' | append: fallback_width | append: '.webp' | relative_url }}"
+    alt="{{ include.alt | escape }}"
+    width="{{ include.width }}"
+    height="{{ include.height }}"
+    class="{{ include.class }}"
+    loading="{{ include.loading | default: 'lazy' }}"
+    decoding="async"{% if include.fetchpriority %}
+    fetchpriority="{{ include.fetchpriority }}"{% endif %}>
+</picture>

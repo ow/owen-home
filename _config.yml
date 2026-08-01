@@ -16,15 +16,19 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen Williams is a product design manager leading a team building tools developers love at Stripe in Victoria, British Columbia. He's also a developer, writer, and maker.
+  Owen Williams is an AI and product design leader at Stripe, building teams and tools for developer experience, documentation, and deeply technical products.
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
+google_analytics: G-HZY18L3E4G
 client_availability: false
 twitter:
   username: ow
 author:
+  name: Owen Williams
+  url: https://owenwillia.ms/about/
   twitter: ow
-  picture: /images/itme.jpg
+  picture: /images/optimized/itme-192.webp
+  job_title: AI and Product Design Leader
 social:
     name: Owen Williams
     links:
@@ -40,7 +44,7 @@ instagram: https://instagram.com/findingnewo
 location: Victoria, British Columbia, Canada
 services:
   - title: Leadership
-    description: I've lead multi-disciplinary UX teams that get things done, made up of product designers, content designers, and researchers.
+    description: I've led multi-disciplinary UX teams that get things done, made up of product designers, content designers, and researchers.
     icon: far fa-rocket
     color: green
   - title: Product
@@ -65,7 +69,7 @@ career:
     dates: 2022 - Present
   - title: UX Manager
     company: Shopify
-    description: I led a large UX team working on developer tools at Shopify, from API design to the CLI, and deep in the weeds of extensibility. Mostly recently, I lead the custom storefronts group working on Hydrogen and Oxygen.
+    description: I led a large UX team working on developer tools at Shopify, from API design to the CLI, and deep in the weeds of extensibility. Most recently, I led the custom storefronts group working on Hydrogen and Oxygen.
     icon: "/images/career/shopify.png"
     color: shopify
     dates: 2019 - 2022
@@ -130,6 +134,9 @@ nav:
 collections:
   work:
     output: false
+  case_studies:
+    output: true
+    permalink: /work/:name/
   now:
     permalink: /now/:path/
     output: true

@@ -78,3 +78,7 @@ validate/log.json
 
 ### NPM ###
 package-lock.json
+
+# Keep the deterministic image build helper in source control.
+!scripts/
+!scripts/generate-responsive-images.sh

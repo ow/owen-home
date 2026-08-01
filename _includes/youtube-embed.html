@@ -1,0 +1,27 @@
+<div id="youtube-facade-{{ include.id }}" class="youtube-facade aspect-video w-full overflow-hidden rounded-xl bg-slate-950 ring-1 ring-white/10 flex items-center justify-center text-center p-6" data-youtube-id="{{ include.id }}">
+  <div>
+    <svg class="w-14 h-14 mx-auto text-sky-300" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
+      <path d="M26 20.5 45 32 26 43.5v-23Z" fill="currentColor"/>
+    </svg>
+    <button type="button" class="btn btn-primary mt-5 youtube-facade-button" aria-label="Play video: {{ include.title | escape }}">Watch the walkthrough</button>
+    <p class="text-sm text-slate-400 mt-3">Video loads only when you press play.</p>
+  </div>
+</div>
+<noscript><p><a href="https://www.youtube.com/watch?v={{ include.id }}">Watch {{ include.title }}</a></p></noscript>
+<script>
+  (function () {
+    var facade = document.getElementById('youtube-facade-{{ include.id }}');
+    var button = facade.querySelector('.youtube-facade-button');
+    button.addEventListener('click', function () {
+      var iframe = document.createElement('iframe');
+      iframe.className = 'w-full h-full';
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + facade.dataset.youtubeId + '?autoplay=1';
+      iframe.title = {{ include.title | jsonify }};
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      facade.replaceChildren(iframe);
+    }, { once: true });
+  }());
+</script>

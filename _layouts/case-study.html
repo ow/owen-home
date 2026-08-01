@@ -1,0 +1,41 @@
+---
+layout: default
+---
+{% capture ascii_settings %}
+{"density": 30, "speed": 22, "opacity": 0.65, "colorPalette": "ocean", "noiseScale": 0.02, "noiseSpeed": 0.35, "characterSet": "code", "gradientSize": 1.5, "animationStyle": "wave", "transitionSmoothness": 1.2, "showControls": false, "fullscreen": false, "entranceAnimation": false, "respectReducedMotion": true, "reducedMotionStyle": "static", "reducedMotionFadeIn": true, "reducedMotionFadeDuration": 1}
+{% endcapture %}
+{% capture hero_breadcrumbs %}
+  <a href="{{ '/work/' | relative_url }}" class="link-muted inline-flex items-center gap-2 text-sm mb-5">← Selected work</a>
+{% endcapture %}
+{% include hero.html
+    header=page.headline
+    title=page.title
+    description=page.description
+    ascii_settings=ascii_settings
+    extra=hero_breadcrumbs
+    height="min-h-[48vh]"
+%}
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 pb-20 relative z-20">
+  <div class="case-study-shell glass rounded-2xl p-6 sm:p-10 lg:p-12">
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-10 text-sm text-slate-300">
+      <span class="tag text-sky-300">{{ page.tag }}</span>
+      <span>{{ page.site }}</span>
+      <span aria-hidden="true">·</span>
+      <span>{{ page.when }}</span>
+    </div>
+
+    <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
+      <article class="post-content prose dark:prose-invert lg:col-span-7 [&>p]:mb-5">
+        {{ content }}
+      </article>
+
+      {% if page.youtube_id %}
+      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24" aria-label="Protodash demonstration">
+        {% include youtube-embed.html id=page.youtube_id title=page.youtube_title %}
+        <p class="text-sm text-slate-400 mt-3">A live walkthrough of how Protodash evolved and changed the prototyping workflow.</p>
+      </aside>
+      {% endif %}
+    </div>
+  </div>
+</main>

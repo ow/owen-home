@@ -6,6 +6,10 @@ collection: work
 when: 2022
 date: 01-03-2022
 image: /images/online-store.jpg
+image_name: online-store
+image_width: 969
+image_height: 510
+image_widths: "320,640,960"
 tag: Leadership
 ---
 My team brought an official GitHub integration to Shopify as a part of the Online Store 2.0 launch. 

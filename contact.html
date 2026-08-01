@@ -2,7 +2,7 @@
 layout: default
 title: Contact
 header: Let's chat
-description: Get in touch with Owen about a project, idea, or just to say hi.
+description: Get in touch with Owen Williams about AI and product design leadership, developer experience, or a project.
 permalink: /contact/
 image: "/images/card.png"
 color_scheme: sunset
@@ -55,14 +55,14 @@ color_scheme: sunset
                       method="POST" 
                       data-netlify="true"
                       netlify-honeypot="bot-field"
-                      data-netlify-recaptcha="true"
-                      onsubmit="return validateForm()">
+                      data-netlify-recaptcha="true">
                     
                     <div>
                         <label for="name" class="block meta">Your name</label>
                         <input type="text" id="name" name="name" required
                             class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
-                            placeholder="Jerry Seinfeld">
+                            autocomplete="name"
+                            placeholder="Your name">
                     </div>
 
                     <!-- Netlify honeypot field -->
@@ -74,18 +74,19 @@ color_scheme: sunset
                         <label for="email" class="block meta">Email address</label>
                         <input type="email" id="email" name="email" required
                             class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
-                            placeholder="jerry@email.com">
+                            autocomplete="email"
+                            placeholder="you@example.com">
                     </div>
 
                     <div>
                         <label for="message" class="block meta">How can I help?</label>
                         <textarea id="message" name="message" rows="5" required minlength="10"
                             class="mt-1 block w-full rounded-lg border-glass-border dark:border-glass-border-dark bg-white/5 px-3 py-2 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-glass-border dark:ring-glass-border-dark placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
-                            placeholder="I really need help with my fish tacos. What would you do?"></textarea>
+                            placeholder="Tell me a little about what you're working on."></textarea>
                     </div>
 
                     <!-- Netlify reCAPTCHA -->
-                     <p class="text-sm text-gray-500">Checking you're a human (sorry).</p>
+                    <p class="text-sm text-slate-400">A quick human check helps keep spam out of my inbox.</p>
                     <div data-netlify-recaptcha="true"></div>
 
                     <div>
@@ -98,46 +99,3 @@ color_scheme: sunset
         </div>
     </div>
 </div>
-
-<script>
-let formLoadTime = new Date().getTime();
-
-// Simplified form validation, uses recaptcha via netlify
-function validateForm() {
-    // Check timing (minimum 3 seconds to prevent rapid submissions)
-    const timeDiff = new Date().getTime() - formLoadTime;
-    if (timeDiff < 3000) {
-        console.log('Form submitted too quickly');
-        return false;
-    }
-    
-    // Check message length and quality
-    const message = document.getElementById('message').value.trim();
-    if (message.length < 10) {
-        alert('Please write a more detailed message (at least 10 characters).');
-        return false;
-    }
-    
-    // Check for obvious spam patterns
-    const spamPatterns = [
-        /\b(seo|backlink|rank|traffic|casino|loan|debt|credit|viagra|cialis|pharmacy)\b/i,
-        /https?:\/\/[^\s]+/g, // URLs in message
-        /\b\d{10,}\b/g, // Long numbers (phone numbers)
-        /\b(buy now|click here|limited time|act now|free money|make money fast)\b/i
-    ];
-    
-    for (let pattern of spamPatterns) {
-        if (pattern.test(message)) {
-            alert('Your message appears to contain spam content. Please revise and try again.');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-// Initialize form load time
-document.addEventListener('DOMContentLoaded', function() {
-    formLoadTime = new Date().getTime();
-});
-</script>
