@@ -10,9 +10,12 @@ export function AsciiBackground(props) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [time, setTime] = useState(0)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
   const animationRef = useRef(null)
+  const pointerRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
+  const pointerTargetRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
 
   // Performance monitoring (local development only)
   const [fps, setFps] = useState(0)
@@ -87,17 +90,75 @@ export function AsciiBackground(props) {
   useEffect(() => {
     const updateDimensions = () => {
       const charWidth = Math.max(8, settings.density / 3)
-      const width = Math.floor(window.innerWidth / charWidth)
-      const height = Math.floor(window.innerHeight / charWidth)
+      const host = containerRef.current?.parentElement
+      const hostRect = host?.getBoundingClientRect()
+      const displayWidth = settings.fullscreen ? window.innerWidth : hostRect?.width || window.innerWidth
+      const displayHeight = settings.fullscreen ? window.innerHeight : hostRect?.height || window.innerHeight
+      const width = Math.max(1, Math.floor(displayWidth / charWidth))
+      const height = Math.max(1, Math.floor(displayHeight / charWidth))
 
       setDimensions({ width, height })
     }
 
     updateDimensions()
     window.addEventListener("resize", updateDimensions)
+    const host = containerRef.current?.parentElement
+    const resizeObserver = host && typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(updateDimensions)
+      : null
+    resizeObserver?.observe(host)
 
-    return () => window.removeEventListener("resize", updateDimensions)
-  }, [settings.density])
+    return () => {
+      window.removeEventListener("resize", updateDimensions)
+      resizeObserver?.disconnect()
+    }
+  }, [settings.density, settings.fullscreen])
+
+  // Pause canvases that are outside the viewport. The page uses this component
+  // in both the hero and footer, so this prevents invisible ambient work.
+  useEffect(() => {
+    const host = containerRef.current?.parentElement
+    if (!host || typeof IntersectionObserver === "undefined") return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "120px 0px" },
+    )
+    observer.observe(host)
+
+    return () => observer.disconnect()
+  }, [])
+
+  // Refraction follows pointer movement without forcing React renders.
+  useEffect(() => {
+    if (!settings.interactiveMode || settings.interactiveEffect !== "refraction") return
+
+    const host = containerRef.current?.parentElement
+    const interactionSurface = host?.parentElement || host
+    if (!host || !interactionSurface) return
+
+    const handlePointerMove = (event) => {
+      if (event.pointerType === "touch") return
+      const rect = host.getBoundingClientRect()
+      pointerTargetRef.current = {
+        x: Math.min(Math.max((event.clientX - rect.left) / Math.max(rect.width, 1), 0), 1),
+        y: Math.min(Math.max((event.clientY - rect.top) / Math.max(rect.height, 1), 0), 1),
+        activity: 1,
+      }
+    }
+
+    const handlePointerLeave = () => {
+      pointerTargetRef.current = { ...pointerTargetRef.current, activity: 0 }
+    }
+
+    interactionSurface.addEventListener("pointermove", handlePointerMove, { passive: true })
+    interactionSurface.addEventListener("pointerleave", handlePointerLeave, { passive: true })
+
+    return () => {
+      interactionSurface.removeEventListener("pointermove", handlePointerMove)
+      interactionSurface.removeEventListener("pointerleave", handlePointerLeave)
+    }
+  }, [settings.interactiveMode, settings.interactiveEffect])
 
   // Animation using requestAnimationFrame
   useEffect(() => {
@@ -106,25 +167,25 @@ export function AsciiBackground(props) {
       animationRef.current = null
     }
 
-    if (dimensions.width === 0 || dimensions.height === 0) return
+    if (dimensions.width === 0 || dimensions.height === 0 || !isVisible) return
 
     // Determine if we should use reduced motion
     const useReducedMotion = settings.respectReducedMotion && prefersReducedMotion
 
-    // For reduced motion, we might want to slow down or stop the animation
+    if (useReducedMotion && settings.reducedMotionStyle === "static") {
+      setTime((previousTime) => previousTime === 0 ? 0.1 : previousTime)
+      return
+    }
+
     const animate = () => {
-      // If using reduced motion with static style, don't update time
-      if (useReducedMotion && settings.reducedMotionStyle === "static") {
-        // Only update time once for the initial render
-        if (time === 0) {
-          setTime(0.1) // Just enough to initialize
-        }
-      } else {
-        // For normal motion or minimal/slow reduced motion, update time
-        // Possibly at a slower rate for reduced motion
-        const speedFactor = useReducedMotion && settings.reducedMotionStyle === "slow" ? 0.2 : 1.0
-        setTime((prevTime) => prevTime + settings.speed * 0.0001 * speedFactor)
-      }
+      const pointer = pointerRef.current
+      const target = pointerTargetRef.current
+      pointer.x += (target.x - pointer.x) * 0.075
+      pointer.y += (target.y - pointer.y) * 0.075
+      pointer.activity += (target.activity - pointer.activity) * 0.065
+
+      const speedFactor = useReducedMotion && settings.reducedMotionStyle === "slow" ? 0.2 : 1.0
+      setTime((prevTime) => prevTime + settings.speed * 0.0001 * speedFactor)
 
       animationRef.current = requestAnimationFrame(animate)
     }
@@ -142,8 +203,8 @@ export function AsciiBackground(props) {
     settings.respectReducedMotion,
     settings.reducedMotionStyle,
     prefersReducedMotion,
-    time,
     settings.reducedMotionFadeIn,
+    isVisible,
   ])
 
   // Render to canvas
@@ -161,10 +222,25 @@ export function AsciiBackground(props) {
     const backgroundColor = "rgb(15, 23, 42)" // Tailwind slate-900
 
     // Pass empty array for ripples since we're removing that functionality
-    renderAsciiBackground(ctx, dimensions, time, settings, [], useReducedMotion, backgroundColor)
+    renderAsciiBackground(
+      ctx,
+      dimensions,
+      time,
+      {
+        ...settings,
+        pointer: pointerRef.current,
+        // A static reduced-motion composition should render fully on its first frame.
+        reducedMotionFadeIn: useReducedMotion && settings.reducedMotionStyle === "static"
+          ? false
+          : settings.reducedMotionFadeIn,
+      },
+      [],
+      useReducedMotion,
+      backgroundColor,
+    )
 
     // Performance monitoring (local development only)
-    if (isLocalDevelopment) {
+    if (isLocalDevelopment && settings.showFps) {
       const now = performance.now()
       fpsCounterRef.current.frameCount++
       
@@ -198,6 +274,18 @@ export function AsciiBackground(props) {
     settings.respectReducedMotion,
     settings.reducedMotionStyle,
     settings.reducedMotionFadeIn,
+    settings.complexityField,
+    settings.clarityAnchorX,
+    settings.clarityAnchorY,
+    settings.clarityRadiusX,
+    settings.clarityRadiusY,
+    settings.clarityStrength,
+    settings.clarityQuieting,
+    settings.edgeTurbulence,
+    settings.interactiveMode,
+    settings.interactiveEffect,
+    settings.interactiveRadius,
+    settings.interactiveIntensity,
     prefersReducedMotion,
     isLocalDevelopment,
   ])
@@ -225,7 +313,7 @@ export function AsciiBackground(props) {
       </div>
       
       {/* FPS Counter - Local Development Only - Rendered outside container */}
-      {isLocalDevelopment && (
+      {isLocalDevelopment && settings.showFps && (
         <div 
           className="fixed top-4 left-4 bg-red-500 text-white px-3 py-1 rounded text-sm font-mono pointer-events-none"
           style={{ 
