@@ -282,6 +282,8 @@ export function AsciiBackground(props) {
     settings.clarityStrength,
     settings.clarityQuieting,
     settings.edgeTurbulence,
+    settings.waveFrequency,
+    settings.waveBend,
     settings.interactiveMode,
     settings.interactiveEffect,
     settings.interactiveRadius,
