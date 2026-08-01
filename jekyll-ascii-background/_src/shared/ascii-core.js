@@ -53,6 +53,7 @@ export const characterSets = {
 export const colorPalettes = {
   green: ["#22c55e", "#16a34a", "#059669", "#0d9488", "#0891b2", "#0e7490", "#0369a1", "#1d4ed8", "#2563eb", "#3b82f6"],
   ocean: ["#0A2463", "#3E92CC", "#2CA6A4", "#44CF6C", "#A6EBC9"],
+  tide: ["#071A33", "#103B63", "#176783", "#1D8B83", "#35B270", "#78D795", "#C2EDC8"],
   sunset: ["#FF0080", "#FF8C00", "#FFD700", "#FF4500", "#FF1493", "#FF00FF", "#FF6347"],
   purple: ["#240046", "#3C096C", "#5A189A", "#7B2CBF", "#9D4EDD", "#C77DFF", "#E0AAFF"],
   cyberpunk: ["#00FFFF", "#FF00FF", "#00FF00", "#FE53BB", "#08F7FE", "#09FBD3", "#F5D300"],
@@ -92,6 +93,8 @@ export const defaultSettings = {
   waveIntensity: 1.0, // 0.1 to 2.0 - controls wave amplitude
   waveLayers: 3, // 1 to 5 - number of wave layers
   waveOrganicFactor: 0.1, // 0 to 0.5 - amount of organic noise
+  waveFrequency: 0.92, // broad crest count across the field
+  waveBend: 0.38, // curvature of the primary crest
   // Complexity field settings. Disabled by default so existing uses remain unchanged.
   complexityField: false,
   clarityAnchorX: 0.3,
@@ -231,6 +234,8 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       waveIntensity = 1.0,
       waveLayers = 3,
       waveOrganicFactor = 0.1,
+      waveFrequency = 0.92,
+      waveBend = 0.38,
       edgeTurbulence = 0.72,
       interactiveMode = false,
       interactiveEffect = "refraction",
@@ -247,13 +252,18 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
     const flowX = Math.cos(flowAngle)
     const flowY = Math.sin(flowAngle)
 
-    // The outer field carries more phase interference while the hero region resolves
-    // into one broad, legible gradient wave.
+    const structuredWave = waveSettings.complexityField
+    const longitudinalFlow = normalizedX * flowX + normalizedY * flowY
+    const transverseFlow = normalizedX * -flowY + normalizedY * flowX
+
+    // The outer field carries a little interference while the hero region resolves
+    // into one broad, bent crest. Normalized coordinates keep the silhouette stable
+    // across desktop and portrait canvases.
     const phaseTurbulence = waveSettings.complexityField
       ? (
-          Math.sin(scaledX * 4.8 + scaledY * 1.6 - waveTime * 0.35) * 0.58 +
-          Math.cos(scaledY * 5.2 - scaledX * 1.1 + waveTime * 0.24) * 0.42
-        ) * edgeTurbulence * complexity
+          Math.sin((normalizedX * 1.2 + normalizedY * 0.55) * Math.PI * 2 - waveTime * 0.28) * 0.62 +
+          Math.cos((normalizedY * 1.35 - normalizedX * 0.32) * Math.PI * 2 + waveTime * 0.2) * 0.38
+        ) * edgeTurbulence * complexity * 0.28
       : 0
 
     let refraction = 0
@@ -272,36 +282,66 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       refraction = crossFlow * lens * interactiveIntensity * pointer.activity * 8
     }
 
-    // Primary wave direction based on user setting.
-    const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + phaseTurbulence + refraction
-    
+    const ribbonPhase = normalizedX * Math.PI * 2 * waveFrequency - waveTime * 0.72
+    const directionalSlope = -Math.tan(flowAngle) * 0.22
+    const crestBend = structuredWave
+      ? (
+          Math.sin(ribbonPhase) * 0.72 +
+          Math.sin(ribbonPhase * 2.04 + 1.1) * 0.18 +
+          Math.sin(ribbonPhase * 0.48 - 0.7) * 0.1
+        ) * waveBend
+      : 0
+
+    // Primary wave direction based on user setting. The complexity-field variant
+    // is a curved ribbon rather than a full-frame sine wash, giving it a visible
+    // crest and a softer trailing gradient.
+    const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + refraction
+    const waveCenter = 0.42 + (normalizedX - 0.5) * directionalSlope + crestBend * 0.34 + phaseTurbulence * 0.035
+    const distanceFromCrest = normalizedY - waveCenter + refraction * 0.035
+    const crestWidth = 0.24 + Math.sin(ribbonPhase * 0.5 + 0.4) * 0.018
+    const crest = Math.exp(-Math.pow(distanceFromCrest / crestWidth, 2) * 1.42)
+    const wake = Math.exp(-Math.pow((distanceFromCrest - 0.2) / 0.38, 2) * 1.2)
+
     // Main wave with adjustable intensity
-    let waveSum = Math.sin(primaryFlow) * 0.56 * waveIntensity
+    let waveSum = structuredWave
+      ? (
+          crest * 1.25 +
+          wake * 0.28 -
+          0.72 +
+          Math.sin(ribbonPhase * 1.32 + transverseFlow * Math.PI) * 0.045 * complexity
+        ) * waveIntensity
+      : Math.sin(primaryFlow) * 0.56 * waveIntensity
     
     // Add additional wave layers if requested
-    if (waveLayers >= 2) {
+    if (!structuredWave && waveLayers >= 2) {
       // Secondary wave (perpendicular to main flow)
       const perpX = -flowY
       const perpY = flowX
-      const secondaryAmplitude = waveSettings.complexityField ? 0.07 + complexity * 0.18 : 0.25
-      const secondaryWave = Math.sin(scaledX * perpX * 1.5 + scaledY * perpY * 1.5 + waveTime * 0.8) * secondaryAmplitude * waveIntensity
+      const secondaryAmplitude = waveSettings.complexityField ? 0.035 + complexity * 0.09 : 0.25
+      const secondaryPhase = structuredWave
+        ? primaryFlow * 0.52 + transverseFlow * Math.PI * 0.7 + waveTime * 0.24 + 1.6
+        : scaledX * perpX * 1.5 + scaledY * perpY * 1.5 + waveTime * 0.8
+      const secondaryWave = Math.sin(secondaryPhase) * secondaryAmplitude * waveIntensity
       waveSum += secondaryWave
     }
     
-    if (waveLayers >= 3) {
+    if (!structuredWave && waveLayers >= 3) {
       // Tertiary wave for subtle texture
-      const tertiaryAmplitude = waveSettings.complexityField ? 0.03 + complexity * 0.12 : 0.15
-      const tertiaryWave = Math.sin(scaledX * 1.2 + scaledY * 0.8 + waveTime * 1.2) * tertiaryAmplitude * waveIntensity
+      const tertiaryAmplitude = waveSettings.complexityField ? 0.015 + complexity * 0.055 : 0.15
+      const tertiaryPhase = structuredWave
+        ? primaryFlow * 1.5 - transverseFlow * Math.PI * 0.45 + waveTime * 0.18
+        : scaledX * 1.2 + scaledY * 0.8 + waveTime * 1.2
+      const tertiaryWave = Math.sin(tertiaryPhase) * tertiaryAmplitude * waveIntensity
       waveSum += tertiaryWave
     }
     
-    if (waveLayers >= 4) {
+    if (!structuredWave && waveLayers >= 4) {
       // Quaternary wave for more complexity
       const quaternaryWave = Math.sin(scaledX * 0.7 + scaledY * 1.3 + waveTime * 0.9) * 0.1 * complexity * waveIntensity
       waveSum += quaternaryWave
     }
     
-    if (waveLayers >= 5) {
+    if (!structuredWave && waveLayers >= 5) {
       // Fifth wave for maximum detail
       const fifthWave = Math.sin(scaledX * 1.8 + scaledY * 0.4 + waveTime * 1.6) * 0.08 * complexity * waveIntensity
       waveSum += fifthWave
@@ -309,7 +349,9 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
     
     // Add organic noise based on user setting
     const organicAmount = waveSettings.complexityField ? 0.18 + complexity * 0.82 : 1
-    const organicNoise = Math.sin(scaledX * 2.3 + waveTime * 0.6) * Math.cos(scaledY * 1.8 + waveTime * 0.9) * waveOrganicFactor * organicAmount * waveIntensity
+    const organicX = structuredWave ? normalizedX * Math.PI * 3.2 : scaledX * 2.3
+    const organicY = structuredWave ? normalizedY * Math.PI * 2.7 : scaledY * 1.8
+    const organicNoise = Math.sin(organicX + waveTime * 0.6) * Math.cos(organicY + waveTime * 0.9) * waveOrganicFactor * organicAmount * waveIntensity
     
     baseNoise = waveSum + organicNoise
   } else if (animationStyle === "flow") {
@@ -415,22 +457,44 @@ export function interpolateColors(color1, color2, t) {
   }
 
   try {
-    // Parse colors
-    const r1 = Number.parseInt(color1.slice(1, 3), 16)
-    const g1 = Number.parseInt(color1.slice(3, 5), 16)
-    const b1 = Number.parseInt(color1.slice(5, 7), 16)
+    const toLinear = (channel) => {
+      const value = channel / 255
+      return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4)
+    }
+    const toSrgb = (channel) => {
+      const value = channel <= 0.0031308
+        ? channel * 12.92
+        : 1.055 * Math.pow(channel, 1 / 2.4) - 0.055
+      return Math.round(clamp(value) * 255)
+    }
+    const toOklab = (color) => {
+      const red = toLinear(Number.parseInt(color.slice(1, 3), 16))
+      const green = toLinear(Number.parseInt(color.slice(3, 5), 16))
+      const blue = toLinear(Number.parseInt(color.slice(5, 7), 16))
+      const l = Math.cbrt(0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue)
+      const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue)
+      const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue)
 
-    const r2 = Number.parseInt(color2.slice(1, 3), 16)
-    const g2 = Number.parseInt(color2.slice(3, 5), 16)
-    const b2 = Number.parseInt(color2.slice(5, 7), 16)
-
-    // Interpolate
-    const r = Math.round(r1 + (r2 - r1) * t)
-    const g = Math.round(g1 + (g2 - g1) * t)
-    const b = Math.round(b1 + (b2 - b1) * t)
+      return {
+        lightness: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+        a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+        b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+      }
+    }
+    const first = toOklab(color1)
+    const second = toOklab(color2)
+    const lightness = first.lightness + (second.lightness - first.lightness) * t
+    const a = first.a + (second.a - first.a) * t
+    const b = first.b + (second.b - first.b) * t
+    const l = Math.pow(lightness + 0.3963377774 * a + 0.2158037573 * b, 3)
+    const m = Math.pow(lightness - 0.1055613458 * a - 0.0638541728 * b, 3)
+    const s = Math.pow(lightness - 0.0894841775 * a - 1.291485548 * b, 3)
+    const r = toSrgb(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s)
+    const g = toSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s)
+    const blue = toSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)
 
     // Convert back to hex
-    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${blue.toString(16).padStart(2, "0")}`
   } catch (e) {
     // If anything goes wrong, return a safe default color
     return "#6366F1"
@@ -553,6 +617,8 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     waveIntensity = 1.0,
     waveLayers = 3,
     waveOrganicFactor = 0.1,
+    waveFrequency = 0.92,
+    waveBend = 0.38,
     complexityField = false,
     clarityAnchorX = 0.3,
     clarityAnchorY = 0.28,
@@ -576,6 +642,8 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     waveIntensity,
     waveLayers,
     waveOrganicFactor,
+    waveFrequency,
+    waveBend,
     complexityField,
     clarityAnchorX,
     clarityAnchorY,
@@ -977,7 +1045,10 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       const char = characters[charIndex] || "#"
 
       // Select color based on noise
-      let colorPosition = clamp(currentNoiseValue) * (colorCount - 1)
+      const gradientValue = animationStyle === "wave" && complexityField
+        ? smoothstep(0.04, 0.96, currentNoiseValue)
+        : clamp(currentNoiseValue)
+      let colorPosition = gradientValue * (colorCount - 1)
 
       // Apply color boost if any
       if (colorBoost > 0) {
@@ -1014,12 +1085,13 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       newStates[y][x] = newState
 
       // Check if this cell has changed and mark as dirty if so
-      if (ctx._forceFullRedraw || ctx._isPrePopulated || hasCellChanged(newState, prevState, 0.1, isEarlyFrame)) {
+      const changeThreshold = complexityField ? 0.035 : 0.1
+      if (ctx._forceFullRedraw || ctx._isPrePopulated || hasCellChanged(newState, prevState, changeThreshold, isEarlyFrame)) {
         ctx._dirtyTracker.markDirty(x, y)
       }
       
       // Debug: Log if we have cells that should be visible but aren't being marked dirty
-      if (newState.isVisible && !ctx._forceFullRedraw && !ctx._isPrePopulated && !hasCellChanged(newState, prevState, 0.1, isEarlyFrame)) {
+      if (newState.isVisible && !ctx._forceFullRedraw && !ctx._isPrePopulated && !hasCellChanged(newState, prevState, changeThreshold, isEarlyFrame)) {
         // This cell is visible but not marked dirty - potential issue
         // Debug logging removed for production
       }
@@ -1140,6 +1212,8 @@ window.asciiConfig = {
   waveIntensity: ${settings.waveIntensity || 1.0},
   waveLayers: ${settings.waveLayers || 3},
   waveOrganicFactor: ${settings.waveOrganicFactor || 0.1},
+  waveFrequency: ${settings.waveFrequency || 0.92},
+  waveBend: ${settings.waveBend || 0.38},
   complexityField: ${settings.complexityField === true},
   clarityAnchorX: ${settings.clarityAnchorX || 0.3},
   clarityAnchorY: ${settings.clarityAnchorY || 0.28},
