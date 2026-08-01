@@ -47,53 +47,7 @@ author:
     </div>
   </section>
 
-  <section class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-20" aria-labelledby="selected-work">
-    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-      <div class="max-w-2xl">
-        <p class="tag text-sky-300 mb-3">Selected work</p>
-        <h2 id="selected-work" class="heading-section text-white">Making complex systems easier to build and use</h2>
-      </div>
-      <a href="/work/" class="link">See all work →</a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <a href="/work/protodash/" class="group glass rounded-2xl overflow-hidden md:col-span-2 focus-ring">
-        {% include responsive-image.html name="stripe" widths="320,640" fallback_width="640" width="724" height="362" alt="Stripe product interface representing the Protodash AI prototyping system" class="w-full aspect-[2/1] object-cover" sizes="(min-width: 768px) 66vw, 100vw" %}
-        <div class="p-6 sm:p-8">
-          <p class="tag text-sky-300 mb-3">AI leadership · Stripe</p>
-          <h3 class="heading-subsection text-white group-hover:text-sky-300 transition-colors">Protodash: scaling AI prototyping across a design organization</h3>
-          <p class="text-slate-300 mt-3 max-w-2xl">An internal system that gives designers and product managers a faster path from an idea to a realistic, shareable product experience.</p>
-        </div>
-      </a>
-
-      <a href="/work/#stripe-workbench" class="group glass rounded-2xl overflow-hidden focus-ring">
-        {% include responsive-image.html name="workbench2" widths="320,640" fallback_width="640" width="1200" height="750" alt="Stripe Workbench developer tooling interface" class="w-full aspect-[8/5] object-cover" sizes="(min-width: 768px) 33vw, 100vw" %}
-        <div class="p-6">
-          <p class="tag text-sky-300 mb-3">Developer experience</p>
-          <h3 class="heading-subsection text-white group-hover:text-sky-300 transition-colors">Stripe Workbench</h3>
-          <p class="text-slate-300 mt-3">A new way for developers to debug, monitor, and build integrations.</p>
-        </div>
-      </a>
-
-      <a href="/work/#shopify-hydrogen" class="group glass rounded-2xl overflow-hidden focus-ring md:col-span-1">
-        {% include responsive-image.html name="hydrogen" widths="320,640" fallback_width="640" width="1200" height="675" alt="Shopify Hydrogen developer tools" class="w-full aspect-video object-cover" sizes="(min-width: 768px) 33vw, 100vw" %}
-        <div class="p-6">
-          <p class="tag text-sky-300 mb-3">Team building · Shopify</p>
-          <h3 class="heading-subsection text-white group-hover:text-sky-300 transition-colors">Hydrogen and Oxygen</h3>
-          <p class="text-slate-300 mt-3">Building a UX team for Shopify's next generation of headless commerce tools.</p>
-        </div>
-      </a>
-
-      <div class="glass rounded-2xl p-7 sm:p-9 md:col-span-2 flex flex-col justify-between">
-        <div>
-          <p class="tag text-sky-300 mb-3">How I work</p>
-          <h3 class="heading-subsection text-white">Demos, not memos</h3>
-          <p class="text-slate-300 mt-3 max-w-2xl">I use my engineering background to turn strategy into working systems, shorten the distance between ideas and evidence, and help teams spend more time on judgment and craft.</p>
-        </div>
-        <a href="/ai-design-leadership/" class="link mt-6">Read my AI design leadership principles →</a>
-      </div>
-    </div>
-  </section>
+  {% include card-carousel.html cards=site.data.work_cards id="selected-work" %}
 
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" aria-labelledby="strengths">
     <div class="max-w-3xl mb-10">

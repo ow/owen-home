@@ -1,22 +1,82 @@
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div
-    class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-5 work-card-scroller"
-    aria-label="Selected projects">
-    {% for card in include.cards %}
-      <a
-        href="{{ card.url }}"
-        class="group glass rounded-2xl overflow-hidden w-[82vw] sm:w-[360px] shrink-0 snap-start focus-ring"
-        {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
-        {% if card.image_name %}
-          {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="w-full h-44 object-cover" sizes="360px" %}
-        {% else %}
-          <img src="{{ card.image }}" alt="{{ card.image_alt | default: card.title }}" width="720" height="440" class="w-full h-44 object-cover" loading="lazy" decoding="async">
+{% assign carousel_id = include.id | default: 'selected-work' %}
+<section
+  class="project-reel relative z-10 -mt-10 md:-mt-20 pb-20"
+  aria-labelledby="{{ carousel_id }}-heading"
+  data-project-reel>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-6 mb-6">
+      <div class="max-w-2xl">
+        <p class="tag text-sky-300 mb-3">Selected work</p>
+        <h2 id="{{ carousel_id }}-heading" class="heading-section text-white">A reel of complex products made clearer</h2>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-3" aria-label="Project reel controls">
+        <span class="project-reel-count meta tabular-nums text-slate-400" aria-hidden="true">01 / {{ include.cards.size | prepend: '0' | slice: -2, 2 }}</span>
+        <button
+          type="button"
+          class="project-reel-control focus-ring"
+          data-reel-previous
+          aria-label="Show previous project"
+          aria-controls="{{ carousel_id }}-track">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m12.5 4.5-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button
+          type="button"
+          class="project-reel-control focus-ring"
+          data-reel-next
+          aria-label="Show next project"
+          aria-controls="{{ carousel_id }}-track">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m7.5 4.5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="{{ carousel_id }}-track"
+      class="project-reel-track"
+      tabindex="0"
+      aria-label="Selected projects. Scroll horizontally to explore.">
+      {% for card in include.cards %}
+        {% assign card_loading = 'lazy' %}
+        {% assign card_priority = nil %}
+        {% if forloop.first %}
+          {% assign card_loading = 'eager' %}
+          {% assign card_priority = 'high' %}
         {% endif %}
-        <div class="p-6">
-          <h3 class="heading-widget text-white group-hover:text-sky-300 transition-colors">{{ card.title }}</h3>
-          <p class="text-slate-300 mt-2">{{ card.description }}</p>
-        </div>
-      </a>
-    {% endfor %}
+        <article class="project-reel-card" data-reel-card>
+          <a
+            href="{{ card.url }}"
+            class="project-reel-link group focus-ring"
+            {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
+            {% if card.image_name %}
+              {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 768px) 736px, 86vw" loading=card_loading fetchpriority=card_priority %}
+            {% else %}
+              <img src="{{ card.image }}" alt="{{ card.image_alt | default: card.title }}" width="720" height="440" class="project-reel-image" loading="{{ card_loading }}" decoding="async">
+            {% endif %}
+            <span class="project-reel-shade" aria-hidden="true"></span>
+            <span class="project-reel-copy">
+              <span class="flex items-center gap-3 mb-3">
+                <span class="tag text-sky-300">{{ card.label | default: 'Selected project' }}</span>
+                <span class="h-px w-8 bg-sky-300/50" aria-hidden="true"></span>
+                <span class="meta text-slate-300 tabular-nums">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              </span>
+              <span class="block text-2xl sm:text-3xl font-bold leading-tight text-white group-hover:text-sky-200 transition-colors">{{ card.title }}</span>
+              <span class="block text-sm sm:text-base text-slate-200 mt-2 max-w-xl">{{ card.description }}</span>
+            </span>
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="flex items-center justify-between mt-5 sm:hidden">
+      <span class="project-reel-count meta tabular-nums text-slate-400" aria-hidden="true">01 / {{ include.cards.size | prepend: '0' | slice: -2, 2 }}</span>
+      <p class="meta text-slate-400">Swipe to explore</p>
+    </div>
+
+    <div class="mt-7 flex justify-end">
+      <a href="/work/" class="link">See the full archive →</a>
+    </div>
   </div>
-</div>
+</section>
+
+<script src="{{ '/assets/js/project-reel.js' | relative_url }}" defer></script>

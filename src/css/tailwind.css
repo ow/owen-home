@@ -114,6 +114,79 @@
   .post-content hr {
     @apply border-white/10 my-8;
   }
+
+  .project-reel-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86vw, 46rem);
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+    padding: 0.25rem 0 0.75rem;
+  }
+
+  .project-reel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-reel-card {
+    aspect-ratio: 4 / 5;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(15 23 42);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    contain: layout paint;
+  }
+
+  .project-reel-link {
+    @apply relative block h-full overflow-hidden rounded-2xl;
+  }
+
+  .project-reel-link picture {
+    display: contents;
+  }
+
+  .project-reel-image {
+    @apply absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out;
+  }
+
+  .project-reel-link:hover .project-reel-image {
+    transform: scale(1.025);
+  }
+
+  .project-reel-shade {
+    @apply absolute inset-0;
+    background:
+      linear-gradient(180deg, rgb(2 6 23 / 0.04) 20%, rgb(2 6 23 / 0.2) 48%, rgb(2 6 23 / 0.95) 100%),
+      linear-gradient(90deg, rgb(2 6 23 / 0.18), transparent 65%);
+  }
+
+  .project-reel-copy {
+    @apply absolute inset-x-0 bottom-0 block p-6 sm:p-8;
+  }
+
+  .project-reel-control {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-slate-200 transition-colors hover:border-sky-300/60 hover:text-sky-200 disabled:cursor-default disabled:opacity-30;
+  }
+
+  .project-reel-control svg {
+    @apply h-5 w-5;
+  }
+}
+
+@media (min-width: 640px) {
+  .project-reel-track {
+    grid-auto-columns: min(72vw, 46rem);
+  }
+
+  .project-reel-card {
+    aspect-ratio: 16 / 9;
+  }
 }
 
 @layer utilities {

@@ -9,11 +9,11 @@ standalone: true
 when: 2026
 date: 2026-05-01
 last_modified_at: 2026-07-31
-image: /images/stripe.png
-image_name: stripe
-image_width: 724
-image_height: 362
-image_widths: "320,640"
+image: /images/protodash.jpg
+image_name: protodash
+image_width: 1280
+image_height: 720
+image_widths: "320,640,1024"
 youtube_id: hQFEAZK__q0
 youtube_title: "The internal AI tool that's transforming how Stripe designs products"
 tag: AI Leadership
@@ -39,5 +39,7 @@ Because the prototypes run in code, teams can explore realistic data, empty stat
 ## Moving the culture toward demos, not memos
 
 Protodash became a practical way to move our culture toward “demos, not memos.” More importantly, it showed what becomes possible when design leaders can build precise, opinionated tools for their teams: you don't have to wait for an off-the-shelf product or a fully staffed internal-tools team to change how the work gets done.
+
+That experience sharpened three principles I now bring to AI work: start with a real point of friction rather than a mandate to use the technology; connect AI to the actual systems and standards that define quality; and use the time it saves to increase exploration and critique, not lower the craft bar. AI can maintain momentum, but taste, accountability, and deciding which problem matters still belong to people.
 
 I joined Claire Vo on [*How I AI*](https://www.lennysnewsletter.com/p/this-week-on-how-i-ai-the-internal) to walk through how Protodash evolved, build a prototype live, and talk about what changes when a company can make tools that fit the way its teams actually work.

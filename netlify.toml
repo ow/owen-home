@@ -6,6 +6,12 @@
   NODE_VERSION = "20"
   RUBY_VERSION = "3.2.2"
 
+[[redirects]]
+  from = "/ai-design-leadership/"
+  to = "/work/protodash/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/assets/*"
   [headers.values]

@@ -27,7 +27,7 @@ render_widths "images/shopify-app-store.jpg" "shopify-app-store" 320 640 1024
 render_widths "images/ikea-place.jpg" "ikea-place" 320 640 1024
 render_widths "images/stripe-dev.png" "stripe-dev" 320 640 1024
 render_widths "images/mountains.jpg" "mountains" 320 640 1024
-render_widths "images/stripe.png" "stripe" 320 640
+render_widths "images/protodash.jpg" "protodash" 320 640 1024
 render_widths "images/argo.png" "argo" 320 640 1024
 
 echo "Responsive images written to $output_dir"
