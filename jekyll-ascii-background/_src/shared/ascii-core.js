@@ -80,6 +80,81 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t)
 }
 
+const oklabCache = new Map()
+
+function toLinear(channel) {
+  const value = channel / 255
+  return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4)
+}
+
+function toSrgb(channel) {
+  const value = channel <= 0.0031308
+    ? channel * 12.92
+    : 1.055 * Math.pow(Math.max(channel, 0), 1 / 2.4) - 0.055
+  return Math.round(clamp(value) * 255)
+}
+
+function hexToOklab(color) {
+  const safeColor = typeof color === "string" && /^#[0-9a-f]{6}$/i.test(color)
+    ? color.toLowerCase()
+    : "#6366f1"
+  if (oklabCache.has(safeColor)) return oklabCache.get(safeColor)
+
+  const red = toLinear(Number.parseInt(safeColor.slice(1, 3), 16))
+  const green = toLinear(Number.parseInt(safeColor.slice(3, 5), 16))
+  const blue = toLinear(Number.parseInt(safeColor.slice(5, 7), 16))
+  const l = Math.cbrt(0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue)
+  const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue)
+  const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue)
+  const result = {
+    lightness: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  }
+  oklabCache.set(safeColor, result)
+  return result
+}
+
+function mixOklab(first, second, amount) {
+  const t = clamp(amount)
+  return {
+    lightness: first.lightness + (second.lightness - first.lightness) * t,
+    a: first.a + (second.a - first.a) * t,
+    b: first.b + (second.b - first.b) * t,
+  }
+}
+
+function samplePaletteOklab(palette, position) {
+  const scaled = clamp(position) * Math.max(palette.length - 1, 0)
+  const index = Math.floor(scaled)
+  return mixOklab(palette[index], palette[Math.min(index + 1, palette.length - 1)], scaled - index)
+}
+
+function oklabToHex(color) {
+  const l = Math.pow(color.lightness + 0.3963377774 * color.a + 0.2158037573 * color.b, 3)
+  const m = Math.pow(color.lightness - 0.1055613458 * color.a - 0.0638541728 * color.b, 3)
+  const s = Math.pow(color.lightness - 0.0894841775 * color.a - 1.291485548 * color.b, 3)
+  const red = toSrgb(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s)
+  const green = toSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s)
+  const blue = toSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)
+  return `#${red.toString(16).padStart(2, "0")}${green.toString(16).padStart(2, "0")}${blue.toString(16).padStart(2, "0")}`
+}
+
+function quantizeOklab(color, cache) {
+  const lightness = Math.round(clamp(color.lightness) * 47)
+  const a = Math.round(clamp((color.a + 0.4) / 0.8) * 31)
+  const b = Math.round(clamp((color.b + 0.4) / 0.8) * 31)
+  const key = (lightness << 10) | (a << 5) | b
+  if (!cache.has(key)) {
+    cache.set(key, oklabToHex({
+      lightness: lightness / 47,
+      a: (a / 31) * 0.8 - 0.4,
+      b: (b / 31) * 0.8 - 0.4,
+    }))
+  }
+  return { color: cache.get(key), colorKey: key }
+}
+
 const bayer4x4 = [
   [0, 8, 2, 10],
   [12, 4, 14, 6],
@@ -115,6 +190,70 @@ function getComplexityFieldAmount(x, y, waveSettings) {
     normalizedX,
     normalizedY,
   }
+}
+
+function getRibbonGeometry(normalizedX, waveTime, waveSettings) {
+  const flowAngle = ((waveSettings.waveFlowDirection || 45) * Math.PI) / 180
+  const ribbonPhase = normalizedX * Math.PI * 2 * (waveSettings.waveFrequency || 0.92) - waveTime * 0.72
+  const directionalSlope = -Math.tan(flowAngle) * 0.22
+  const crestBend = (
+    Math.sin(ribbonPhase) * 0.72 +
+    Math.sin(ribbonPhase * 2.04 + 1.1) * 0.18 +
+    Math.sin(ribbonPhase * 0.48 - 0.7) * 0.1
+  ) * (waveSettings.waveBend || 0)
+
+  return {
+    ribbonPhase,
+    waveCenter: 0.42 + (normalizedX - 0.5) * directionalSlope + crestBend * 0.34,
+  }
+}
+
+function createRibbonMesh(waveTime, animationTime, palette, waveSettings, reducedMotion) {
+  const count = Math.round(clamp(waveSettings.meshNodeCount || 4, 3, 6))
+  const meshTime = reducedMotion ? 0.42 : animationTime * (waveSettings.meshSpeed || 1)
+  const paletteStops = [0.08, 0.58, 0.96, 0.74, 0.28, 0.86]
+  const verticalOffsets = [-0.1, 0.075, -0.035, 0.12, -0.07, 0.04]
+  const drift = waveSettings.meshDrift || 0
+  const nodes = []
+
+  for (let index = 0; index < count; index++) {
+    const phase = meshTime * 0.46 + index * 1.73
+    const baseX = (index + 0.45) / count
+    const x = clamp(baseX + Math.sin(phase * 0.73 + index * 0.4) * drift * 0.55, -0.08, 1.08)
+    const ribbon = getRibbonGeometry(x, waveTime, waveSettings)
+    let y = ribbon.waveCenter + verticalOffsets[index] + Math.cos(phase * 0.91 + index * 0.6) * drift * 0.45
+
+    if (!reducedMotion && waveSettings.pointer?.activity > 0.001) {
+      const dx = x - waveSettings.pointer.x
+      const dy = y - waveSettings.pointer.y
+      const influence = Math.exp(-(dx * dx + dy * dy) / 0.045) * waveSettings.pointer.activity
+      y += dy * influence * 0.16
+    }
+
+    nodes.push({ x, y, color: samplePaletteOklab(palette, paletteStops[index]) })
+  }
+
+  return { nodes, spread: Math.max(waveSettings.meshSpread || 0.36, 0.08) }
+}
+
+function sampleRibbonMesh(normalizedX, normalizedY, mesh) {
+  let weightTotal = 0
+  let lightness = 0
+  let a = 0
+  let b = 0
+  const softness = mesh.spread * mesh.spread * 0.16
+
+  for (const node of mesh.nodes) {
+    const dx = (normalizedX - node.x) * 0.72
+    const dy = normalizedY - node.y
+    const weight = 1 / (dx * dx + dy * dy + softness)
+    weightTotal += weight
+    lightness += node.color.lightness * weight
+    a += node.color.a * weight
+    b += node.color.b * weight
+  }
+
+  return { lightness: lightness / weightTotal, a: a / weightTotal, b: b / weightTotal }
 }
 
 // Update the generateNoise function to make ripples more visible
@@ -186,21 +325,14 @@ export function generateNoise(x, y, z, noiseScale, gradientSize, animationStyle,
       refraction = crossFlow * lens * interactiveIntensity * pointer.activity * 8
     }
 
-    const ribbonPhase = normalizedX * Math.PI * 2 * waveFrequency - waveTime * 0.72
-    const directionalSlope = -Math.tan(flowAngle) * 0.22
-    const crestBend = structuredWave
-      ? (
-          Math.sin(ribbonPhase) * 0.72 +
-          Math.sin(ribbonPhase * 2.04 + 1.1) * 0.18 +
-          Math.sin(ribbonPhase * 0.48 - 0.7) * 0.1
-        ) * waveBend
-      : 0
+    const ribbon = getRibbonGeometry(normalizedX, waveTime, waveSettings)
+    const ribbonPhase = ribbon.ribbonPhase
 
     // Primary wave direction based on user setting. The complexity-field variant
     // is a curved ribbon rather than a full-frame sine wash, giving it a visible
     // crest and a softer trailing gradient.
     const primaryFlow = scaledX * flowX + scaledY * flowY + waveTime * 1.5 + refraction
-    const waveCenter = 0.42 + (normalizedX - 0.5) * directionalSlope + crestBend * 0.34 + phaseTurbulence * 0.035
+    const waveCenter = ribbon.waveCenter + phaseTurbulence * 0.035
     const distanceFromCrest = normalizedY - waveCenter + refraction * 0.035
     const crestWidth = 0.24 + Math.sin(ribbonPhase * 0.5 + 0.4) * 0.018
     const crest = Math.exp(-Math.pow(distanceFromCrest / crestWidth, 2) * 1.42)
@@ -351,54 +483,8 @@ function calculateGradient(x, y, z, noiseScale, gradientSize, animationStyle, ri
 
 // Color interpolation
 export function interpolateColors(color1, color2, t) {
-  // Validate inputs - use fallback colors if any are invalid
-  if (!color1 || typeof color1 !== "string" || !color1.startsWith("#") || color1.length < 7) {
-    color1 = "#6366F1" // Default fallback color
-  }
-
-  if (!color2 || typeof color2 !== "string" || !color2.startsWith("#") || color2.length < 7) {
-    color2 = "#EC4899" // Default fallback color
-  }
-
   try {
-    const toLinear = (channel) => {
-      const value = channel / 255
-      return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4)
-    }
-    const toSrgb = (channel) => {
-      const value = channel <= 0.0031308
-        ? channel * 12.92
-        : 1.055 * Math.pow(channel, 1 / 2.4) - 0.055
-      return Math.round(clamp(value) * 255)
-    }
-    const toOklab = (color) => {
-      const red = toLinear(Number.parseInt(color.slice(1, 3), 16))
-      const green = toLinear(Number.parseInt(color.slice(3, 5), 16))
-      const blue = toLinear(Number.parseInt(color.slice(5, 7), 16))
-      const l = Math.cbrt(0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue)
-      const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue)
-      const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue)
-
-      return {
-        lightness: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-        a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-        b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-      }
-    }
-    const first = toOklab(color1)
-    const second = toOklab(color2)
-    const lightness = first.lightness + (second.lightness - first.lightness) * t
-    const a = first.a + (second.a - first.a) * t
-    const b = first.b + (second.b - first.b) * t
-    const l = Math.pow(lightness + 0.3963377774 * a + 0.2158037573 * b, 3)
-    const m = Math.pow(lightness - 0.1055613458 * a - 0.0638541728 * b, 3)
-    const s = Math.pow(lightness - 0.0894841775 * a - 1.291485548 * b, 3)
-    const r = toSrgb(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s)
-    const g = toSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s)
-    const blue = toSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)
-
-    // Convert back to hex
-    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${blue.toString(16).padStart(2, "0")}`
+    return oklabToHex(mixOklab(hexToOklab(color1), hexToOklab(color2), t))
   } catch (e) {
     // If anything goes wrong, return a safe default color
     return "#6366F1"
@@ -409,17 +495,22 @@ export function interpolateColors(color1, color2, t) {
 function createDirtyRegionTracker(width, height) {
   return {
     regions: [],
+    dirtyCount: 0,
     cellChanges: Array(height).fill().map(() => Array(width).fill(false)),
     
     markDirty(x, y) {
       if (x >= 0 && x < width && y >= 0 && y < height) {
-        this.cellChanges[y][x] = true
+        if (!this.cellChanges[y][x]) {
+          this.cellChanges[y][x] = true
+          this.dirtyCount++
+        }
       }
     },
     
     // Batch nearby dirty cells into rectangular regions for efficient clearing
     calculateDirtyRegions(charWidth) {
       this.regions = []
+      this.dirtyCount = 0
       const visited = Array(height).fill().map(() => Array(width).fill(false))
       
       for (let y = 0; y < height; y++) {
@@ -489,6 +580,9 @@ function hasCellChanged(newState, oldState, threshold = 0.1, isEarlyFrame = fals
   if (newState.charIndex !== oldState.charIndex) return true
   
   // Check if color changed significantly
+  if (newState.colorKey !== oldState.colorKey) return true
+
+  // Check if legacy gradient position changed significantly
   if (Math.abs(newState.colorIndex - oldState.colorIndex) > effectiveThreshold) return true
   
   // Check if noise value changed significantly
@@ -503,6 +597,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     characterSet,
     customCharacters,
     colorPalette,
+    colorField = "gradient",
     customColors,
     noiseScale,
     noiseSpeed,
@@ -531,6 +626,11 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     clarityStrength = 0.88,
     clarityQuieting = 0.18,
     edgeTurbulence = 0.72,
+    meshNodeCount = 4,
+    meshIntensity = 0.78,
+    meshSpread = 0.36,
+    meshDrift = 0.1,
+    meshSpeed = 1,
     interactiveMode = false,
     interactiveEffect = "refraction",
     interactiveRadius = 0.18,
@@ -556,6 +656,11 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     clarityStrength,
     clarityQuieting,
     edgeTurbulence,
+    meshNodeCount,
+    meshIntensity,
+    meshSpread,
+    meshDrift,
+    meshSpeed,
     interactiveMode,
     interactiveEffect,
     interactiveRadius,
@@ -632,6 +737,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           .map(() => ({
             charIndex: 0,
             colorIndex: 0,
+            colorKey: null,
             noiseValue: 0,
             flowX: 0,
             flowY: 0,
@@ -654,6 +760,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           ctx.previousState[y][x] = {
             charIndex: Math.min(charIndex, characters.length - 1),
             colorIndex: Math.min(colorIndex, colors.length - 1),
+            colorKey: null,
             noiseValue: enhancedValue,
             flowX: 0,
             flowY: 0,
@@ -700,6 +807,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           .map(() => ({
             charIndex: 0,
             colorIndex: 0,
+            colorKey: null,
             noiseValue: 0,
             flowX: 0,
             flowY: 0,
@@ -724,6 +832,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
           ctx.previousState[y][x] = {
             charIndex: Math.min(charIndex, characters.length - 1),
             colorIndex: Math.min(colorIndex, colors.length - 1),
+            colorKey: null,
             noiseValue: enhancedValue,
             flowX: 0,
             flowY: 0,
@@ -757,6 +866,11 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
   // Pre-calculate some values for optimization
   const timeOffset = time * noiseSpeed
   const colorCount = colors.length
+  const structuredWave = animationStyle === "wave" && complexityField
+  const useMesh = structuredWave && colorField === "mesh"
+  const paletteOklab = useMesh ? colors.map(hexToOklab) : null
+  const mesh = useMesh ? createRibbonMesh(timeOffset, time, paletteOklab, waveSettings, reducedMotion) : null
+  if (!ctx._quantizedColorCache) ctx._quantizedColorCache = new Map()
 
   // Calculate entrance animation progress
   let entranceProgress = 1.0 // Default to fully visible
@@ -782,29 +896,26 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     }
   }
 
-  // First pass: calculate flow vectors for each position
-  const flowVectors = Array(dimensions.height)
-    .fill()
-    .map(() =>
-      Array(dimensions.width)
-        .fill()
-        .map(() => ({ dx: 0, dy: 0, magnitude: 0 })),
-    )
+  // The structured ribbon has a known direction, so numerical optical-flow
+  // sampling only repeats the same expensive noise function three extra times.
+  // Legacy modes keep their original gradient pass.
+  const flowVectors = structuredWave ? null : Array(dimensions.height).fill().map(() => Array(dimensions.width))
 
-  for (let y = 0; y < dimensions.height; y++) {
-    for (let x = 0; x < dimensions.width; x++) {
-      // Calculate the gradient (direction of change) at this position
-      flowVectors[y][x] = calculateGradient(
-        x,
-        y,
-        timeOffset,
-        noiseScale,
-        gradientSize,
-        animationStyle,
-        ripples,
-        reducedMotion,
-        waveSettings
-      )
+  if (flowVectors) {
+    for (let y = 0; y < dimensions.height; y++) {
+      for (let x = 0; x < dimensions.width; x++) {
+        flowVectors[y][x] = calculateGradient(
+          x,
+          y,
+          timeOffset,
+          noiseScale,
+          gradientSize,
+          animationStyle,
+          ripples,
+          reducedMotion,
+          waveSettings,
+        )
+      }
     }
   }
 
@@ -883,12 +994,14 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       const prevState = ctx.previousState[y][x]
 
       // Get the flow vector for this position
-      const flow = flowVectors[y][x]
+      const flow = flowVectors ? flowVectors[y][x] : { dx: 0, dy: 0, magnitude: 0 }
 
       // Apply optical flow awareness
       let currentNoiseValue = enhancedValue
 
-      if (!reducedMotion && flowAwareness > 0 && prevState) {
+      if (!reducedMotion && structuredWave && prevState) {
+        currentNoiseValue = prevState.noiseValue * flowSmoothing + enhancedValue * (1 - flowSmoothing)
+      } else if (!reducedMotion && flowAwareness > 0 && prevState) {
         // Calculate flow-aware value based on previous state and current flow
         const flowFactor = Math.min(flow.magnitude * flowAwareness, 1)
 
@@ -935,7 +1048,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       }
 
       // Select character based on noise
-      const { clarity, complexity } = getComplexityFieldAmount(x, y, waveSettings)
+      const { clarity, complexity, normalizedX, normalizedY } = getComplexityFieldAmount(x, y, waveSettings)
       const orderedDither = bayer4x4[y % 4][x % 4] / 15 - 0.5
       const characterValue = clamp(
         currentNoiseValue -
@@ -966,17 +1079,26 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
       // Calculate interpolation factor between the two colors
       const colorMix = colorPosition - colorIndex
 
-      // Get the two colors to interpolate between
-      const color1 = colors[colorIndex] || colors[0]
-      const color2 = colors[nextColorIndex] || colors[colors.length - 1]
-
-      // Interpolate between colors for smoother transitions
-      const color = interpolateColors(color1, color2, colorMix)
+      let color
+      let colorKey = null
+      if (mesh) {
+        const baseColor = samplePaletteOklab(paletteOklab, colorPosition / Math.max(colorCount - 1, 1))
+        const meshColor = sampleRibbonMesh(normalizedX, normalizedY, mesh)
+        const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
+        const quantized = quantizeOklab(mixOklab(baseColor, meshColor, meshPresence), ctx._quantizedColorCache)
+        color = quantized.color
+        colorKey = quantized.colorKey
+      } else {
+        const color1 = colors[colorIndex] || colors[0]
+        const color2 = colors[nextColorIndex] || colors[colors.length - 1]
+        color = interpolateColors(color1, color2, colorMix)
+      }
 
       // Create new state
       const newState = {
         charIndex,
         colorIndex,
+        colorKey,
         noiseValue: currentNoiseValue,
         flowX: flow.dx,
         flowY: flow.dy,
@@ -1000,6 +1122,12 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         // Debug logging removed for production
       }
     }
+  }
+
+  // Clearing many tiny rectangles costs more than one coherent repaint once
+  // the drifting mesh changes a large share of the grid.
+  if (ctx._dirtyTracker.dirtyCount > dimensions.width * dimensions.height * 0.38) {
+    ctx._forceFullRedraw = true
   }
 
   // Calculate dirty regions for efficient rendering
@@ -1077,6 +1205,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         ctx.previousState[y][x] = {
           charIndex: newStates[y][x].charIndex,
           colorIndex: newStates[y][x].colorIndex,
+          colorKey: newStates[y][x].colorKey,
           noiseValue: newStates[y][x].noiseValue,
           flowX: newStates[y][x].flowX,
           flowY: newStates[y][x].flowY,
@@ -1109,4 +1238,5 @@ export function resetAnimationState(ctx) {
   ctx._cachedWidth = null
   ctx._cachedHeight = null
   ctx._cachedCharWidth = null
+  ctx._quantizedColorCache = null
 }

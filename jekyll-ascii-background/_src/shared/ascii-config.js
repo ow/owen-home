@@ -33,6 +33,7 @@ export const defaultSettings = {
   speed: 30,
   opacity: 0.9,
   colorPalette: "green",
+  colorField: "gradient",
   customColors: ["#6366F1", "#EC4899", "#F472B6"],
   noiseScale: 0.015,
   noiseSpeed: 0.5,
@@ -67,6 +68,11 @@ export const defaultSettings = {
   clarityStrength: 0.88,
   clarityQuieting: 0.18,
   edgeTurbulence: 0.72,
+  meshNodeCount: 4,
+  meshIntensity: 0.78,
+  meshSpread: 0.36,
+  meshDrift: 0.1,
+  meshSpeed: 1,
   interactiveMode: false,
   interactiveEffect: "refraction",
   interactiveRadius: 0.18,
@@ -88,6 +94,7 @@ export const asciiPresets = {
       speed: 60,
       opacity: 0.7,
       colorPalette: "tide",
+      colorField: "mesh",
       noiseScale: 0.02,
       noiseSpeed: 0.22,
       characterSet: "gradient",
@@ -113,6 +120,11 @@ export const asciiPresets = {
       clarityStrength: 0.9,
       clarityQuieting: 0.2,
       edgeTurbulence: 0.48,
+      meshNodeCount: 5,
+      meshIntensity: 0.82,
+      meshSpread: 0.38,
+      meshDrift: 0.11,
+      meshSpeed: 1.08,
       entranceAnimation: false,
       interactiveMode: true,
       interactiveEffect: "refraction",
@@ -158,9 +170,13 @@ export const asciiPresets = {
 const waveVisible = [{ key: "animationStyle", equals: "wave" }]
 const complexityVisible = [...waveVisible, { key: "complexityField", equals: true }]
 const interactionVisible = [...complexityVisible, { key: "interactiveMode", equals: true }]
+const meshVisible = [...complexityVisible, { key: "colorField", equals: "mesh" }]
 
 export const settingControls = [
   { key: "colorPalette", tab: "appearance", label: "Color palette", type: "select", optionsFrom: "colorPalettes" },
+  { key: "colorField", tab: "appearance", label: "Color field", type: "select", options: [
+    { value: "gradient", label: "Gradient ramp" }, { value: "mesh", label: "Ribbon mesh" },
+  ], visibleWhen: complexityVisible },
   { key: "customColors", tab: "appearance", label: "Custom colors", type: "colorList", visibleWhen: [{ key: "colorPalette", equals: "custom" }] },
   { key: "characterSet", tab: "appearance", label: "Character set", type: "select", optionsFrom: "characterSets" },
   { key: "customCharacters", tab: "appearance", label: "Custom characters", type: "text", visibleWhen: [{ key: "characterSet", equals: "custom" }] },
@@ -188,6 +204,11 @@ export const settingControls = [
   { key: "waveFrequency", tab: "animation", section: "Ribbon", label: "Crest frequency", type: "range", min: 0.35, max: 1.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "waveBend", tab: "animation", section: "Ribbon", label: "Crest bend", type: "range", min: 0, max: 0.8, step: 0.01, visibleWhen: complexityVisible },
   { key: "edgeTurbulence", tab: "animation", section: "Ribbon", label: "Edge turbulence", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
+  { key: "meshNodeCount", tab: "animation", section: "Mesh", label: "Color nodes", type: "range", min: 3, max: 6, step: 1, integer: true, visibleWhen: meshVisible },
+  { key: "meshIntensity", tab: "animation", section: "Mesh", label: "Mesh intensity", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: meshVisible },
+  { key: "meshSpread", tab: "animation", section: "Mesh", label: "Color spread", type: "range", min: 0.12, max: 0.7, step: 0.01, visibleWhen: meshVisible },
+  { key: "meshDrift", tab: "animation", section: "Mesh", label: "Node drift", type: "range", min: 0, max: 0.28, step: 0.01, visibleWhen: meshVisible },
+  { key: "meshSpeed", tab: "animation", section: "Mesh", label: "Mesh speed", type: "range", min: 0, max: 3, step: 0.01, visibleWhen: meshVisible },
   { key: "clarityAnchorX", tab: "animation", section: "Clarity", label: "Anchor X", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
   { key: "clarityAnchorY", tab: "animation", section: "Clarity", label: "Anchor Y", type: "range", min: 0, max: 1, step: 0.01, visibleWhen: complexityVisible },
   { key: "clarityRadiusX", tab: "animation", section: "Clarity", label: "Radius X", type: "range", min: 0.1, max: 1, step: 0.01, visibleWhen: complexityVisible },
@@ -213,6 +234,7 @@ export const settingControls = [
   ] },
   { key: "reducedMotionFadeIn", tab: "accessibility", label: "Fade in static background", type: "boolean" },
   { key: "reducedMotionFadeDuration", tab: "accessibility", label: "Fade duration", suffix: "s", type: "range", min: 0.5, max: 3, step: 0.1, visibleWhen: [{ key: "reducedMotionFadeIn", equals: true }] },
+  { key: "showFps", tab: "accessibility", section: "Diagnostics", label: "Show local FPS", type: "boolean" },
 ]
 
 export function resolveAsciiSettings(config = {}) {

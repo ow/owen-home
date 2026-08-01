@@ -7,14 +7,18 @@ import { resolveAsciiSettings } from "./shared/ascii-config"
 export function AsciiBackground(props) {
   // Merge provided props with default settings
   const settings = resolveAsciiSettings(props)
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
+  const settingsSignature = JSON.stringify({ ...settings, pointer: null })
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-  const [time, setTime] = useState(0)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
   const animationRef = useRef(null)
+  const renderFrameRef = useRef(null)
+  const timeRef = useRef(0)
   const pointerRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
   const pointerTargetRef = useRef({ x: 0.72, y: 0.34, activity: 0 })
 
@@ -46,8 +50,8 @@ export function AsciiBackground(props) {
           // Reset the animation state
           resetAnimationState(ctx)
           
-          // Reset time to trigger a fresh start
-          setTime(0)
+          timeRef.current = 0
+          renderFrameRef.current?.(performance.now(), false)
         }
       }
     }
@@ -161,7 +165,8 @@ export function AsciiBackground(props) {
     }
   }, [settings.interactiveMode, settings.interactiveEffect])
 
-  // Animation using requestAnimationFrame
+  // Draw directly inside requestAnimationFrame. React only hears about the
+  // once-per-second FPS label, keeping its reconciliation work off the hot path.
   useEffect(() => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
@@ -170,15 +175,16 @@ export function AsciiBackground(props) {
 
     if (dimensions.width === 0 || dimensions.height === 0 || !isVisible) return
 
-    // Determine if we should use reduced motion
     const useReducedMotion = settings.respectReducedMotion && prefersReducedMotion
+    const staticComposition = useReducedMotion && settings.reducedMotionStyle === "static"
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext("2d")
+    if (!ctx) return
+    const backgroundColor = "rgb(15, 23, 42)"
+    let lastTimestamp = performance.now()
 
-    if (useReducedMotion && settings.reducedMotionStyle === "static") {
-      setTime((previousTime) => previousTime === 0 ? 0.1 : previousTime)
-      return
-    }
-
-    const animate = () => {
+    const drawFrame = (timestamp, scheduleNext = true) => {
+      const currentSettings = settingsRef.current
       const pointer = pointerRef.current
       const target = pointerTargetRef.current
       pointer.x += (target.x - pointer.x) * 0.075
@@ -186,117 +192,58 @@ export function AsciiBackground(props) {
       pointer.activity += (target.activity - pointer.activity) * 0.065
 
       const speedFactor = useReducedMotion
-        ? settings.reducedMotionStyle === "minimal"
+        ? currentSettings.reducedMotionStyle === "minimal"
           ? 0.06
-          : settings.reducedMotionStyle === "slow"
+          : currentSettings.reducedMotionStyle === "slow"
             ? 0.2
             : 1
         : 1
-      setTime((prevTime) => prevTime + settings.speed * 0.0001 * speedFactor)
+      const frameScale = Math.min(Math.max((timestamp - lastTimestamp) / (1000 / 60), 0), 2)
+      lastTimestamp = timestamp
+      if (!staticComposition) {
+        timeRef.current += currentSettings.speed * 0.0001 * speedFactor * frameScale
+      }
 
-      animationRef.current = requestAnimationFrame(animate)
+      renderAsciiBackground(
+        ctx,
+        dimensions,
+        staticComposition ? 0.42 : timeRef.current,
+        {
+          ...currentSettings,
+          pointer,
+          reducedMotionFadeIn: staticComposition ? false : currentSettings.reducedMotionFadeIn,
+        },
+        [],
+        useReducedMotion,
+        backgroundColor,
+      )
+
+      if (isLocalDevelopment && currentSettings.showFps && !staticComposition) {
+        fpsCounterRef.current.frameCount++
+        if (timestamp - fpsCounterRef.current.lastTime >= 1000) {
+          setFps(Math.round(fpsCounterRef.current.frameCount * 1000 / (timestamp - fpsCounterRef.current.lastTime)))
+          fpsCounterRef.current.frameCount = 0
+          fpsCounterRef.current.lastTime = timestamp
+        }
+      }
+
+      if (!staticComposition && scheduleNext) animationRef.current = requestAnimationFrame(drawFrame)
     }
 
-    animationRef.current = requestAnimationFrame(animate)
+    renderFrameRef.current = drawFrame
+    drawFrame(lastTimestamp)
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
+      renderFrameRef.current = null
+      if (animationRef.current) cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
     }
   }, [
-    dimensions,
-    settings.speed,
-    settings.respectReducedMotion,
-    settings.reducedMotionStyle,
+    dimensions.width,
+    dimensions.height,
+    settingsSignature,
     prefersReducedMotion,
-    settings.reducedMotionFadeIn,
     isVisible,
-  ])
-
-  // Render to canvas
-  useEffect(() => {
-    if (!canvasRef.current || dimensions.width === 0 || dimensions.height === 0) return
-
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    // Determine if we should use reduced motion
-    const useReducedMotion = settings.respectReducedMotion && prefersReducedMotion
-
-    // Use slate-900 background color to match the page background
-    const backgroundColor = "rgb(15, 23, 42)" // Tailwind slate-900
-
-    // Pass empty array for ripples since we're removing that functionality
-    renderAsciiBackground(
-      ctx,
-      dimensions,
-      time,
-      {
-        ...settings,
-        pointer: pointerRef.current,
-        // A static reduced-motion composition should render fully on its first frame.
-        reducedMotionFadeIn: useReducedMotion && settings.reducedMotionStyle === "static"
-          ? false
-          : settings.reducedMotionFadeIn,
-      },
-      [],
-      useReducedMotion,
-      backgroundColor,
-    )
-
-    // Performance monitoring (local development only)
-    if (isLocalDevelopment && settings.showFps) {
-      const now = performance.now()
-      fpsCounterRef.current.frameCount++
-      
-      if (now - fpsCounterRef.current.lastTime >= 1000) {
-        const calculatedFps = fpsCounterRef.current.frameCount
-        setFps(calculatedFps)
-        fpsCounterRef.current.frameCount = 0
-        fpsCounterRef.current.lastTime = now
-      }
-    }
-  }, [
-    dimensions,
-    time,
-    settings.density,
-    settings.speed,
-    settings.opacity,
-    settings.colorPalette,
-    settings.customColors,
-    settings.noiseScale,
-    settings.noiseSpeed,
-    settings.characterSet,
-    settings.customCharacters,
-    settings.gradientSize,
-    settings.animationStyle,
-    settings.transitionSmoothness,
-    settings.flowAwareness,
-    settings.flowSmoothing,
-    settings.entranceAnimation,
-    settings.entranceDirection,
-    settings.entranceDuration,
-    settings.respectReducedMotion,
-    settings.reducedMotionStyle,
-    settings.reducedMotionFadeIn,
-    settings.complexityField,
-    settings.clarityAnchorX,
-    settings.clarityAnchorY,
-    settings.clarityRadiusX,
-    settings.clarityRadiusY,
-    settings.clarityStrength,
-    settings.clarityQuieting,
-    settings.edgeTurbulence,
-    settings.waveFrequency,
-    settings.waveBend,
-    settings.interactiveMode,
-    settings.interactiveEffect,
-    settings.interactiveRadius,
-    settings.interactiveIntensity,
-    prefersReducedMotion,
-    isLocalDevelopment,
   ])
 
   return (
