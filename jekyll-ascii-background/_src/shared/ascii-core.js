@@ -85,15 +85,27 @@ function samplePointerEmission(normalizedX, normalizedY, emission) {
   const sourceY = (normalizedY - emission.y) / emission.radiusY
   const distance = Math.sqrt(sourceX * sourceX + sourceY * sourceY)
   const progress = emission.phase / (Math.PI * 2)
-  const waveRadius = progress * 1.65
-  const waveWidth = 0.075 + waveRadius * 0.035
-  const waveDistance = (distance - waveRadius) / waveWidth
-  const upwardGate = smoothstep(-0.06, 0.045, emission.y - normalizedY)
-  const distanceFade = Math.exp(-distance * 0.52)
-  const ripple = Math.exp(-waveDistance * waveDistance * 1.35) * upwardGate * distanceFade
-  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 1.8)
+  const waveRadius = 0.045 + progress * 0.72
+  const waveWidth = 0.095 + waveRadius * 0.035
+  const crestDistance = (distance - waveRadius) / waveWidth
+  const trailingRadius = waveRadius - waveWidth * 1.7
+  const troughDistance = (distance - trailingRadius) / (waveWidth * 1.2)
+  const upwardGate = 0.16 + smoothstep(-0.045, 0.055, emission.y - normalizedY) * 0.84
+  const localFade = Math.exp(-distance * distance * 0.72)
+  const crest = Math.exp(-crestDistance * crestDistance * 1.35) * upwardGate * localFade
+  const trough = trailingRadius > 0
+    ? Math.exp(-troughDistance * troughDistance * 1.2) * upwardGate * localFade
+    : 0
+  const displacement = crest - trough * 0.42
+  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 2.4)
 
-  return { halo, ripple }
+  return {
+    crest,
+    displacement,
+    halo,
+    sourceDirectionX: Math.sign(sourceX),
+    sourceDirectionY: Math.sign(sourceY),
+  }
 }
 
 const oklabCache = new Map()
@@ -1006,9 +1018,9 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
     ? {
         x: pointer.emissionX,
         y: pointer.emissionY,
-        strength: pointer.emission * (0.92 + (pointer.momentum || 0) * 0.16),
-        radiusX: Math.max(interactiveRadius * 1.55, 0.01),
-        radiusY: Math.max(interactiveRadius * 1.8, 0.01),
+        strength: pointer.emission * (0.84 + (pointer.momentum || 0) * 0.12),
+        radiusX: Math.max(interactiveRadius * 1.05, 0.01),
+        radiusY: Math.max(interactiveRadius * 1.1, 0.01),
         phase: pointer.emissionPhase || 0,
         color: {
           lightness: clamp(pointer.emissionLightness + 0.12, 0, 0.94),
@@ -1200,8 +1212,15 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         ? samplePointerEmission(normalizedX, normalizedY, pointerEmission)
         : null
       if (emissionField) {
-        const emittedDensity = pointerEmission.strength * emissionField.ripple
-        currentNoiseValue = Math.max(currentNoiseValue, 0.14 + emittedDensity * 0.62)
+        const inwardX = Math.min(Math.max(x - emissionField.sourceDirectionX, 0), dimensions.width - 1)
+        const inwardY = Math.min(Math.max(y - emissionField.sourceDirectionY, 0), dimensions.height - 1)
+        const transportedNoise = ctx.previousState[inwardY]?.[inwardX]?.noiseValue ?? currentNoiseValue
+        const transportAmount = pointerEmission.strength * emissionField.crest * 0.24
+        currentNoiseValue = currentNoiseValue * (1 - transportAmount) + transportedNoise * transportAmount
+        const existingWave = 0.3 + smoothstep(0.08, 0.72, currentNoiseValue) * 0.7
+        currentNoiseValue = clamp(
+          currentNoiseValue + pointerEmission.strength * emissionField.displacement * existingWave * 0.16,
+        )
       }
       const baseCharacterValue = clamp(
         currentNoiseValue - clarity * waveSettings.clarityQuieting,
@@ -1285,7 +1304,7 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
         if (emissionField) {
-          const emissionPresence = emissionField.halo * 0.3 + emissionField.ripple * 0.86
+          const emissionPresence = emissionField.halo * 0.22 + emissionField.crest * 0.78
           const emissionAmount = clamp(
             pointerEmission.strength *
               emissionPresence *

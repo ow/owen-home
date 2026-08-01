@@ -338,7 +338,7 @@ export function AsciiBackground(props) {
       lastTimestamp = timestamp
       if (!useReducedMotion && pointer.emission > 0.001) {
         pointer.emissionPhase = (
-          pointer.emissionPhase + frameScale * (0.05 + pointer.momentum * 0.018)
+          pointer.emissionPhase + frameScale * (0.026 + pointer.momentum * 0.012)
         ) % (Math.PI * 2)
       }
       if (!staticComposition) {
