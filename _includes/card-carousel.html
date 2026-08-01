@@ -56,6 +56,11 @@
     }, 1200);
   };
 
+  carousel.addEventListener('pointerenter', pauseAutoplay);
+  carousel.addEventListener('pointerleave', () => {
+    if (activePointerId === null) resumeAutoplay();
+  });
+
   carousel.addEventListener('pointerdown', (event) => {
     if (!event.isPrimary || event.button > 0) return;
 
@@ -74,6 +79,7 @@
   });
 
   carousel.addEventListener('pointermove', (event) => {
+    pauseAutoplay();
     if (event.pointerId !== activePointerId) return;
 
     const deltaX = event.clientX - startX;

@@ -85,24 +85,31 @@ function samplePointerEmission(normalizedX, normalizedY, emission) {
   const sourceY = (normalizedY - emission.y) / emission.radiusY
   const distance = Math.sqrt(sourceX * sourceX + sourceY * sourceY)
   const progress = emission.phase / (Math.PI * 2)
-  const waveRadius = 0.045 + progress * 0.72
-  const waveWidth = 0.095 + waveRadius * 0.035
+  const waveRadius = 0.025 + progress * 0.72
+  const waveWidth = 0.105 + waveRadius * 0.035
   const crestDistance = (distance - waveRadius) / waveWidth
   const trailingRadius = waveRadius - waveWidth * 1.7
   const troughDistance = (distance - trailingRadius) / (waveWidth * 1.2)
-  const upwardGate = 0.16 + smoothstep(-0.045, 0.055, emission.y - normalizedY) * 0.84
+  const upwardGate = 0.08 + smoothstep(-0.025, 0.04, emission.y - normalizedY) * 0.92
   const localFade = Math.exp(-distance * distance * 0.72)
   const crest = Math.exp(-crestDistance * crestDistance * 1.35) * upwardGate * localFade
+  const wake = (1 - smoothstep(waveRadius - waveWidth, waveRadius + waveWidth, distance)) *
+    upwardGate *
+    localFade
+  const edgeRise = Math.max(emission.y - normalizedY, 0) / (emission.radiusY * 0.18)
+  const contact = Math.exp(-(sourceX * sourceX * 3.8 + edgeRise * edgeRise * 1.5)) * upwardGate
   const trough = trailingRadius > 0
     ? Math.exp(-troughDistance * troughDistance * 1.2) * upwardGate * localFade
     : 0
-  const displacement = crest - trough * 0.42
-  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 2.4)
+  const displacement = crest * 0.72 + wake * 0.1 - trough * 0.22
+  const halo = Math.exp(-(sourceX * sourceX + sourceY * sourceY) * 3.2)
 
   return {
     crest,
+    contact,
     displacement,
     halo,
+    wake,
     sourceDirectionX: Math.sign(sourceX),
     sourceDirectionY: Math.sign(sourceY),
   }
@@ -1215,7 +1222,8 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const inwardX = Math.min(Math.max(x - emissionField.sourceDirectionX, 0), dimensions.width - 1)
         const inwardY = Math.min(Math.max(y - emissionField.sourceDirectionY, 0), dimensions.height - 1)
         const transportedNoise = ctx.previousState[inwardY]?.[inwardX]?.noiseValue ?? currentNoiseValue
-        const transportAmount = pointerEmission.strength * emissionField.crest * 0.24
+        const transportAmount = pointerEmission.strength *
+          (emissionField.crest * 0.22 + emissionField.wake * 0.045 + emissionField.contact * 0.025)
         currentNoiseValue = currentNoiseValue * (1 - transportAmount) + transportedNoise * transportAmount
         const existingWave = 0.3 + smoothstep(0.08, 0.72, currentNoiseValue) * 0.7
         currentNoiseValue = clamp(
@@ -1304,7 +1312,10 @@ export function renderAsciiBackground(ctx, dimensions, time, settings, ripples =
         const meshPresence = meshIntensity * (0.5 + smoothstep(0.08, 0.84, currentNoiseValue) * 0.5) * (1 - clarity * 0.18)
         let resolvedColor = mixOklab(baseColor, meshColor, meshPresence)
         if (emissionField) {
-          const emissionPresence = emissionField.halo * 0.22 + emissionField.crest * 0.78
+          const emissionPresence = emissionField.halo * 0.24 +
+            emissionField.contact * 0.2 +
+            emissionField.wake * 0.28 +
+            emissionField.crest * 0.56
           const emissionAmount = clamp(
             pointerEmission.strength *
               emissionPresence *
