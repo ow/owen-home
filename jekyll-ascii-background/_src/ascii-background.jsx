@@ -28,6 +28,7 @@ export function AsciiBackground(props) {
     engagement: 0,
     momentum: 0,
     emission: 0,
+    emissionPhase: 0,
     emissionX: 0.72,
     emissionY: 0.46,
     emissionLightness: defaultEmissionColor.lightness,
@@ -319,6 +320,11 @@ export function AsciiBackground(props) {
         : 1
       const frameScale = Math.min(Math.max((timestamp - lastTimestamp) / (1000 / 60), 0), 2)
       lastTimestamp = timestamp
+      if (!useReducedMotion && pointer.emission > 0.001) {
+        pointer.emissionPhase = (
+          pointer.emissionPhase + frameScale * (0.028 + pointer.momentum * 0.014)
+        ) % (Math.PI * 2)
+      }
       if (!staticComposition) {
         timeRef.current += currentSettings.speed * 0.0001 * speedFactor * frameScale
       }
