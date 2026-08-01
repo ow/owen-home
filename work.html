@@ -53,7 +53,7 @@ seo:
     <div class="space-y-16 relative z-20">
         {% for item in items reversed %}
         <div class="glass rounded-2xl p-8" id="{{ item.slug }}">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 {% if item.youtube_id %}items-start{% else %}items-center{% endif %}">
                 <div>
                     <div class="mb-6">
                         {% if item.tag %}
@@ -71,9 +71,21 @@ seo:
                     </a>
                     {% endif %}
                 </div>
-                <div class="mt-8 lg:mt-0">
-                    <div class="aspect-[1.8] w-full overflow-hidden rounded-xl">
+                <div class="mt-8 lg:mt-0 {% if item.youtube_id %}lg:sticky lg:top-24{% endif %}">
+                    <div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-950">
+                        {% if item.youtube_id %}
+                        <iframe
+                            class="w-full h-full"
+                            src="https://www.youtube-nocookie.com/embed/{{ item.youtube_id }}"
+                            title="{{ item.youtube_title | default: item.headline | escape }}"
+                            loading="lazy"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                        {% else %}
                         <img class="w-full h-full object-cover" src="{{ item.image }}" alt="{{ item.headline }}" loading="lazy">
+                        {% endif %}
                     </div>
                 </div>
             </div>
