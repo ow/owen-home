@@ -69,8 +69,8 @@ author:
 </div>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
-    <h2 class="heading-section text-white">Selected work</h2>
+    <h2 id="about-selected-work" class="heading-section text-white">Selected work</h2>
     <p class="text-slate-200 mt-2">Projects from across my career as a design leader, developer, and builder.</p>
 </div>
 
-{% include card-carousel.html cards=site.data.work_cards %}
+{% include card-carousel.html cards=site.data.work_cards id="about-selected-work-reel" labelledby="about-selected-work" hide_heading=true %}
