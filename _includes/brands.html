@@ -1,17 +1,29 @@
-<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="companies-heading">
-  <div class="max-w-2xl mb-8">
+<section class="brand-reel py-16 overflow-hidden" aria-labelledby="companies-heading">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10">
     <h2 id="companies-heading" class="heading-section text-white">Companies I've worked with</h2>
-    <p class="text-slate-300 mt-3">From developer infrastructure and commerce to consumer products and media.</p>
+    <p class="text-slate-300 mt-3">I've worked with some of the largest, most innovative companies in tech—and beyond.</p>
   </div>
-  {% assign company_logos = "Stripe|stripe-blurple.png,Shopify|shopify.png,Spotify|spotify.svg,Intercom|intercom.svg,Google|google.svg,DigitalOcean|digitalocean.svg,IKEA|ikea.png,Figma|figma.svg,Clearbit|clearbit.svg,MessageBird|messagebird.svg" | split: "," %}
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-    {% for company in company_logos %}
-      {% assign company_parts = company | split: "|" %}
-      {% assign company_logo_path = "/images/logo/" | append: company_parts[1] %}
-      {% if company_parts[0] == "Shopify" %}{% assign company_logo_path = "/images/career/shopify.png" %}{% endif %}
-      <div class="glass rounded-lg px-5 py-4 h-16 flex items-center justify-center">
-        <img src="{{ company_logo_path }}" alt="{{ company_parts[0] }} logo" width="112" height="28" class="max-w-28 max-h-7 w-auto h-auto object-contain opacity-80" loading="lazy" decoding="async">
-      </div>
-    {% endfor %}
+
+  {% assign company_logos = "Stripe|/images/logo/stripe-blurple.png,Shopify|/images/career/shopify.png,Intercom|/images/logo/intercom.svg,Google|/images/logo/google.svg,DigitalOcean|/images/logo/digitalocean.svg,IKEA|/images/logo/ikea.png,Clubhouse|/images/logo/clubhouse.png,HubSpot|/images/logo/hubspot.svg,Notion|/images/logo/notion.png,Greylock|/images/logo/greylock.png,MessageBird|/images/logo/messagebird.svg,Figma|/images/logo/figma.svg,Clearbit|/images/logo/clearbit.svg,Spotify|/images/logo/spotify.svg,Framer|/images/logo/framer.png,Ghost|/images/logo/ghost.svg,Vice|/images/logo/vice.svg,Google Cloud|/images/logo/gcloud.png" | split: "," %}
+
+  <div class="brand-reel-viewport">
+    <div class="brand-reel-track">
+      {% for reel_pass in (1..2) %}
+        <div class="brand-reel-set" {% if reel_pass == 1 %}role="list" aria-label="Companies Owen Williams has worked with"{% else %}aria-hidden="true"{% endif %}>
+          {% for company in company_logos %}
+            {% assign company_parts = company | split: "|" %}
+            <div class="brand-reel-item glass" {% if reel_pass == 1 %}role="listitem"{% endif %}>
+              <img
+                src="{{ company_parts[1] }}"
+                alt="{% if reel_pass == 1 %}{{ company_parts[0] }} logo{% endif %}"
+                width="112"
+                height="28"
+                loading="lazy"
+                decoding="async">
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
   </div>
 </section>
