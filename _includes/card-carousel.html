@@ -54,10 +54,8 @@
             {% endif %}
             <span class="project-reel-shade" aria-hidden="true"></span>
             <span class="project-reel-copy">
-              <span class="flex items-center gap-2 mb-0">
+              <span class="block mb-0">
                 <span class="tag text-sky-300">{{ card.label | default: 'Selected project' }}</span>
-                <span class="h-px w-6 bg-sky-300/50" aria-hidden="true"></span>
-                <span class="meta text-slate-300 tabular-nums">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
               </span>
               <span class="block text-xl sm:text-2xl font-bold leading-tight text-white group-hover:text-sky-200 group-focus-visible:text-sky-200 transition-colors">{{ card.title }}</span>
               <span class="project-reel-description text-xs sm:text-sm text-slate-200 mt-1.5">{{ card.description }}</span>
