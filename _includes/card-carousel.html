@@ -59,6 +59,9 @@
               </span>
               <span class="block text-xl sm:text-2xl font-bold leading-tight text-white group-hover:text-sky-200 group-focus-visible:text-sky-200 transition-colors">{{ card.title }}</span>
               <span class="project-reel-description text-xs sm:text-sm text-slate-200 mt-1.5">{{ card.description }}</span>
+              {% if card.cta %}
+                <span class="inline-block mt-2 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 group-hover:text-sky-200 group-focus-visible:text-sky-200 group-hover:decoration-sky-200 group-focus-visible:decoration-sky-200 transition-colors">{{ card.cta }}</span>
+              {% endif %}
             </span>
           </a>
         </article>

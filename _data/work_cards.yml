@@ -7,6 +7,7 @@
   image_height: 720
   image_alt: "Owen Williams presenting Protodash and the demos-not-memos approach"
   description: "Scaling realistic AI prototyping across a design organization"
+  cta: "Read more"
   url: "/work/protodash/"
 - title: "Stripe Workbench"
   label: "Developer tools · Stripe"
