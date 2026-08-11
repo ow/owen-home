@@ -95,7 +95,7 @@
   }
 
   /* Font hierarchy utility classes */
-  .heading-hero { @apply text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.02]; }
+  .heading-hero { @apply text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05]; }
   .heading-section { @apply text-3xl sm:text-4xl font-bold leading-tight; }
   .heading-subsection { @apply text-xl font-semibold; }
   .heading-widget { @apply text-lg font-semibold; }
