@@ -22,6 +22,8 @@ seo:
 ---
 AI leadership isn't just telling a team to start using AI. The interesting work is creating the conditions for people to use it confidently, at the quality bar your company expects, in ways that actually change how they work.
 
+Protodash grew out of a broader interest in [using AI to shorten the distance between an idea and something you can experience](/2025/05/23/co-designing-with-ai/).
+
 ## Why generic AI prototypes missed the quality bar
 
 I started building Protodash after seeing designers experiment with off-the-shelf AI prototyping tools in reviews. They were fast, but the results often landed in an uncanny valley: the wrong fonts, strange navigation, and what we started calling “blurple slop.” Stripe already had a high-quality, predictable design system, so it felt obvious that AI should be able to build with those real components instead of imagining its own version of our product.

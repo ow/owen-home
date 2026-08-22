@@ -62,6 +62,29 @@
     }
     </script>
     {% endif %}
+
+    {% if page.web_application %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "{{ page.title }}",
+      "description": "{{ page.description }}",
+      "url": "{{ page.url | absolute_url }}",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and HTML5 Canvas",
+      "author": {
+        "@id": "{{ site.url }}#person"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    {% endif %}
     
     <script>
       // Force dark mode by default; did this to potentially support light mode in the future

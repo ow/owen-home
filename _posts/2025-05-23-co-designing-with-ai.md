@@ -34,4 +34,6 @@ I won't brag that I have the most creative or innovative portfolio ever, but for
 
 It also helped cement my belief that AI prototyping of ideas is going to unlock a new wave of creativity in the tech industry, especially in my role. We just need to completely reset how we think about the design process, and move towards _showing_ rather than telling through the use of prototypes.
 
-If you're interested in playing with the ASCII art gradient tool that powers the site, head to [the gradient playground.](/gradient) 
+Since writing this, I've taken the same experimental approach into my work with product teams. I built [Protodash](/work/protodash/), an AI prototyping system that helps designers and product managers turn ideas into realistic, shareable product experiences.
+
+If you're interested in playing with the ASCII art gradient tool that powers the site, head to [the gradient playground.](/gradient)

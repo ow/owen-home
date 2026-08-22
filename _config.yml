@@ -63,7 +63,7 @@ services:
 career:
   - title: Product Design Manager
     company: Stripe
-    description: I lead product design for Stripe's developer experience, docs, and AI. We push the boundaries of developer tools to help our users focus more on growing their business, rather than building. 
+    description: I lead product design for Stripe's developer experience, docs, and <a href="/work/protodash/" class="link">AI</a>. We push the boundaries of developer tools to help our users focus more on growing their business, rather than building.
     icon: "/images/career/stripe.jpg"
     color: stripe
     dates: 2022 - Present
