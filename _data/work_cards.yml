@@ -40,7 +40,7 @@
   image_width: 1200
   image_height: 750
   image_alt: "Shopify Online Store GitHub integration"
-  description: "Supercharging theme development with continuous deployment"
+  description: "Supercharging theme development with better tools"
   url: "/work/#shopify-github"
 - title: "Spotify Encore"
   label: "Design systems · Spotify"
@@ -73,5 +73,5 @@
   image_width: 1200
   image_height: 750
   image_alt: "IKEA Place conversational design"
-  description: "Designing the chat experience and personality for IKEA Place"
+  description: "Designing personality for IKEA's first chat app"
   url: "/work/#ikea-conversational-design"
