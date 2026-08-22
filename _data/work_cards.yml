@@ -7,8 +7,7 @@
   image_width: 1280
   image_height: 720
   image_alt: "Owen Williams presenting Protodash and the demos-not-memos approach"
-  description: "Scaling realistic AI prototyping across a design organization"
-  cta: "Read more"
+  description: "Scaling AI prototyping across a design organization"
   url: "/work/protodash/"
 - title: "Stripe Workbench"
   label: "Developer tools · Stripe"
@@ -19,7 +18,7 @@
   image_width: 1200
   image_height: 750
   image_alt: "Stripe Workbench developer tooling interface"
-  description: "A new way for developers to debug, monitor, and build integrations"
+  description: "Next-gen tools for developers building Stripe integrations"
   url: "/work/#stripe-workbench"
 - title: "Shopify Hydrogen"
   label: "Zero to One · Shopify"
@@ -52,7 +51,7 @@
   image_width: 1000
   image_height: 551
   image_alt: "Spotify Encore design system"
-  description: "A design system that works across hundreds of device types"
+  description: "A design system that works across 100s of device types"
   url: "/work/#spotify-encore"
 - title: "Shopify Extensibility"
   label: "Platform design · Shopify"
