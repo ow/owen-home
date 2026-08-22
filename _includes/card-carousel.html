@@ -1,182 +1,74 @@
-<div class="w-screen relative left-1/2 right-1/2 -translate-x-1/2 mt-6 overflow-hidden relative z-20 card-carousel-container" id="card-carousel-{{ include.id | default: 'default' }}" style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; cursor: grab;">
-  <div class="flex animate-scroll-left gap-4 py-2 items-stretch carousel-content">
-    {% for card in include.cards %}
-      {% if card.url %}
-        <a href="{{ card.url }}" class="group" {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
-      {% endif %}
-      <div class="glass rounded-2xl overflow-hidden w-[300px] h-full flex flex-col border border-slate-700/30 md:hover:border-sky-400/50 transform transition-all duration-300 md:hover:scale-[1.03]">
-        <img src="{{ card.image }}" alt="{{ card.title }}" class="w-full h-40 object-cover rounded-t-2xl">
-        <div class="p-6 flex flex-col flex-1">
-          <h3 class="heading-widget text-white mb-2">{{ card.title }}</h3>
-          <p class="text-slate-200 text-md">{{ card.description }}</p>
-        </div>
+{% assign carousel_id = include.id | default: 'selected-work' %}
+{% assign carousel_heading_id = carousel_id | append: '-heading' %}
+{% if include.labelledby %}
+  {% assign carousel_heading_id = include.labelledby %}
+{% endif %}
+{% assign reel_position_classes = 'mt-0' %}
+{% if include.overlap %}
+  {% assign reel_position_classes = '-mt-10 md:-mt-20' %}
+{% endif %}
+<section
+  class="project-reel relative z-10 {{ reel_position_classes }} pb-20"
+  aria-labelledby="{{ carousel_heading_id }}"
+  data-project-reel>
+  {% unless include.hide_heading %}
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-6">
+      <div class="max-w-2xl">
+        <h2 id="{{ carousel_heading_id }}" class="heading-section">
+          <a href="{{ '/work/' | relative_url }}" class="project-reel-heading-link text-white visited:text-white transition-colors hover:text-sky-200 focus-visible:text-sky-200 focus-ring">
+            Selected work
+          </a>
+        </h2>
       </div>
-      {% if card.url %}</a>{% endif %}
-    {% endfor %}
-    <!-- Duplicate for seamless loop -->
-    {% for card in include.cards %}
-      {% if card.url %}
-        <a href="{{ card.url }}" class="group" {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
-      {% endif %}
-      <div class="glass rounded-2xl overflow-hidden w-[300px] h-full flex flex-col border border-slate-700/30 md:hover:border-sky-400/50 transform transition-all duration-300 md:hover:scale-[1.03]">
-        <img src="{{ card.image }}" alt="{{ card.title }}" class="w-full h-40 object-cover rounded-t-2xl">
-        <div class="p-6 flex flex-col flex-1">
-          <h3 class="heading-widget text-white mb-2">{{ card.title }}</h3>
-          <p class="text-slate-200 text-md">{{ card.description }}</p>
-        </div>
-      </div>
-      {% if card.url %}</a>{% endif %}
+    </div>
+  </div>
+  {% endunless %}
+
+  <div
+    id="{{ carousel_id }}-track"
+    class="project-reel-track"
+    tabindex="0"
+    aria-label="Selected projects. Scroll horizontally to explore.">
+    {% for reel_pass in (1..2) %}
+      {% for card in include.cards %}
+        {% assign card_loading = 'lazy' %}
+        {% assign card_priority = nil %}
+        {% if reel_pass == 1 and forloop.first %}
+          {% assign card_loading = 'eager' %}
+          {% assign card_priority = 'high' %}
+        {% endif %}
+        <article
+          class="project-reel-card"
+          data-reel-card
+          {% if reel_pass == 2 %}data-reel-clone aria-hidden="true"{% endif %}>
+          <a
+            href="{{ card.url }}"
+            class="project-reel-link group focus-ring"
+            {% if reel_pass == 2 %}tabindex="-1"{% endif %}
+            {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
+            {% if card.image_name %}
+              {% include responsive-image.html name=card.image_name widths=card.image_widths fallback_width=card.fallback_width width=card.image_width height=card.image_height alt=card.image_alt class="project-reel-image" sizes="(min-width: 640px) 420px, 82vw" loading=card_loading fetchpriority=card_priority %}
+            {% else %}
+              <img src="{{ card.image }}" alt="{{ card.image_alt | default: card.title }}" width="720" height="440" class="project-reel-image" loading="{{ card_loading }}" decoding="async">
+            {% endif %}
+            <span class="project-reel-shade" aria-hidden="true"></span>
+            <span class="project-reel-copy">
+              <span class="block mb-0">
+                <span class="tag text-sky-300">{{ card.label | default: 'Selected project' }}</span>
+              </span>
+              <span class="block text-xl sm:text-2xl font-bold leading-tight text-white group-hover:text-sky-200 group-focus-visible:text-sky-200 transition-colors">{{ card.title }}</span>
+              <span class="project-reel-description text-xs sm:text-sm text-slate-200 mt-1.5">{{ card.description }}</span>
+              {% if card.cta %}
+                <span class="inline-block mt-2 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 group-hover:text-sky-200 group-focus-visible:text-sky-200 group-hover:decoration-sky-200 group-focus-visible:decoration-sky-200 transition-colors">{{ card.cta }}</span>
+              {% endif %}
+            </span>
+          </a>
+        </article>
+      {% endfor %}
     {% endfor %}
   </div>
-</div>
 
-<script>
-(function() {
-  const carouselId = 'card-carousel-{{ include.id | default: "default" }}';
-  const carousel = document.getElementById(carouselId);
-  const carouselContent = carousel.querySelector('.carousel-content');
-  
-  let isDown = false;
-  let startX;
-  let startY;
-  let scrollLeft;
-  let animationPaused = false;
-  let isDraggingHorizontally = false;
-  
-  // Hide scrollbar with inline styles
-  carousel.style.scrollbarWidth = 'none';
-  carousel.style.msOverflowStyle = 'none';
-  
-  // Touch events for mobile
-  carousel.addEventListener('touchstart', (e) => {
-    isDown = true;
-    startX = e.touches[0].pageX - carousel.offsetLeft;
-    startY = e.touches[0].pageY;
-    scrollLeft = carousel.scrollLeft;
-    isDraggingHorizontally = false;
-  });
-  
-  carousel.addEventListener('touchend', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    
-    // Resume animation after a delay
-    setTimeout(() => {
-      if (animationPaused) {
-        carouselContent.style.animationPlayState = 'running';
-        animationPaused = false;
-      }
-    }, 2000);
-  });
-  
-  carousel.addEventListener('touchmove', (e) => {
-    if (!isDown) return;
-    
-    const x = e.touches[0].pageX - carousel.offsetLeft;
-    const y = e.touches[0].pageY;
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - startY);
-    
-    // Determine if this is a horizontal or vertical gesture
-    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
-      // This is a horizontal drag
-      isDraggingHorizontally = true;
-      
-      // Pause animation on horizontal drag
-      if (!animationPaused) {
-        carouselContent.style.animationPlayState = 'paused';
-        animationPaused = true;
-      }
-    }
-    
-    // Only prevent default and handle horizontal scrolling if we're dragging horizontally
-    if (isDraggingHorizontally) {
-      e.preventDefault();
-      const walk = (x - startX) * 2; // Scroll speed multiplier
-      carousel.scrollLeft = scrollLeft - walk;
-    }
-    // If it's vertical scrolling, let the browser handle it naturally
-  });
-  
-  // Mouse events for desktop (optional - for testing)
-  carousel.addEventListener('mousedown', (e) => {
-    isDown = true;
-    carousel.style.cursor = 'grabbing';
-    startX = e.pageX - carousel.offsetLeft;
-    startY = e.pageY;
-    scrollLeft = carousel.scrollLeft;
-    isDraggingHorizontally = false;
-  });
-  
-  carousel.addEventListener('mouseleave', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    carousel.style.cursor = 'grab';
-  });
-  
-  carousel.addEventListener('mouseup', () => {
-    isDown = false;
-    isDraggingHorizontally = false;
-    carousel.style.cursor = 'grab';
-    
-    setTimeout(() => {
-      if (animationPaused) {
-        carouselContent.style.animationPlayState = 'running';
-        animationPaused = false;
-      }
-    }, 2000);
-  });
-  
-  carousel.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    
-    const x = e.pageX - carousel.offsetLeft;
-    const y = e.pageY;
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - startY);
-    
-    // Determine if this is a horizontal drag
-    if (!isDraggingHorizontally && deltaX > 10 && deltaX > deltaY) {
-      isDraggingHorizontally = true;
-      
-      if (!animationPaused) {
-        carouselContent.style.animationPlayState = 'paused';
-        animationPaused = true;
-      }
-    }
-    
-    if (isDraggingHorizontally) {
-      e.preventDefault();
-      const walk = (x - startX) * 2;
-      carousel.scrollLeft = scrollLeft - walk;
-    }
-  });
-})();
-</script>
+</section>
 
-<style>
-  #card-carousel-{{ include.id | default: 'default' }} {
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-  
-  #card-carousel-{{ include.id | default: 'default' }}::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  
-  /* Smooth scrolling for touch devices */
-  #card-carousel-{{ include.id | default: 'default' }} {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* Prevent text selection during drag */
-  #card-carousel-{{ include.id | default: 'default' }}.dragging {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-</style>
- 
+<script src="{{ '/assets/js/project-reel.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

@@ -1,0 +1,11 @@
+<div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-950 ring-1 ring-white/10">
+  <iframe
+    class="h-full w-full border-0"
+    src="https://www.youtube-nocookie.com/embed/{{ include.id }}?rel=0"
+    title="{{ include.title | escape }}"
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
+</div>
+<noscript><p><a href="https://www.youtube.com/watch?v={{ include.id }}">Watch {{ include.title }}</a></p></noscript>

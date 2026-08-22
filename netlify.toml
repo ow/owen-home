@@ -4,4 +4,20 @@
  
 [build.environment]
   NODE_VERSION = "20"
-  RUBY_VERSION = "3.2.2" 
+  RUBY_VERSION = "3.2.2"
+
+[[redirects]]
+  from = "/ai-design-leadership/"
+  to = "/work/protodash/"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/images/optimized/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"

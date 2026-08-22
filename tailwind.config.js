@@ -5,8 +5,10 @@ module.exports = {
     './_includes/**/*.{html,js}',
     './_layouts/**/*.{html,js}',
     './*.{html,js}',
-    './pages/**/*.{html,js,md}',
-    './posts/**/*.{html,js,md}'
+    './_posts/**/*.{html,js,md}',
+    './_work/**/*.{html,js,md}',
+    './_case_studies/**/*.{html,js,md}',
+    './pages/**/*.{html,js,md}'
   ],
   safelist: [
     'image-caption'
@@ -55,4 +57,4 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms')
   ],
-} 
+}

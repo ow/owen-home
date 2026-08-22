@@ -1,13 +1,23 @@
 ---
 layout: default
-title: About 
-header: Career
-description: Owen Williams is a design manager, developer and maker based in Victoria, British Columbia, Canada. He's currently working at Stripe, leading developer experience design.
+title: About Owen Williams — AI and Product Design Leader
+header: About Owen Williams
+description: Owen Williams is an AI and product design leader, developer, and maker based in Victoria, British Columbia. He leads design for developer experience, documentation, and AI at Stripe.
 permalink: /about/
 image: "/images/card.png"
 color_scheme: purple
+profile_page: true
 seo:
-  type: Person
+  links:
+    - https://twitter.com/ow
+    - https://github.com/ow
+    - https://www.linkedin.com/in/owenpwilliams/
+author:
+  name: Owen Williams
+  picture: /images/optimized/itme-192.webp
+  job_title: AI and Product Design Leader
+  company: Stripe
+  location: Victoria, British Columbia, Canada
 ---
 {% capture ascii_settings %}
 {
@@ -59,8 +69,8 @@ seo:
 </div>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
-    <h2 class="heading-section text-white">My Work</h2>
-    <p class="text-slate-200 mt-2">Here's a selection of projects from across my career as design manager, developer, and beyond.</p>
+    <h2 id="about-selected-work" class="heading-section text-white">Selected work</h2>
+    <p class="text-slate-200 mt-2">Projects from across my career as a design leader, developer, and builder.</p>
 </div>
 
-{% include card-carousel.html cards=site.data.work_cards %}
+{% include card-carousel.html cards=site.data.work_cards id="about-selected-work-reel" labelledby="about-selected-work" hide_heading=true %}
