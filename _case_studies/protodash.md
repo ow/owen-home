@@ -8,7 +8,7 @@ slug: stripe-protodash
 standalone: true
 when: 2026
 date: 2026-05-01
-last_modified_at: 2026-07-31
+last_modified_at: 2026-08-22
 image: /images/protodash.jpg
 image_name: protodash
 image_width: 1280
@@ -41,6 +41,15 @@ Because the prototypes run in code, teams can explore realistic data, empty stat
 ## Moving the culture toward demos, not memos
 
 Protodash became a practical way to move our culture toward “demos, not memos.” More importantly, it showed what becomes possible when design leaders can build precise, opinionated tools for their teams: you don't have to wait for an off-the-shelf product or a fully staffed internal-tools team to change how the work gets done.
+
+The organizational impact was later highlighted in Designer Fund and Foundation Capital's [*AI in Design Report 2026*](https://stateofaidesign.com/chapters/tools), which featured Protodash as an example of enterprise design teams building shared AI infrastructure:
+
+<figure class="not-prose my-8 rounded-xl border border-sky-400/20 bg-sky-400/5 p-5 sm:p-6">
+  <blockquote class="text-lg leading-relaxed text-slate-100">
+    “Our team built ProtoDash, an AI-powered product playground with Stripe’s design system baked in. Now anyone can build a realistic prototype in minutes.”
+  </blockquote>
+  <figcaption class="mt-4 text-sm text-slate-300">— Katie Dill, Head of Design at Stripe</figcaption>
+</figure>
 
 That experience sharpened three principles I now bring to AI work: start with a real point of friction rather than a mandate to use the technology; connect AI to the actual systems and standards that define quality; and use the time it saves to increase exploration and critique, not lower the craft bar. AI can maintain momentum, but taste, accountability, and deciding which problem matters still belong to people.
 
