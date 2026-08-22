@@ -28,6 +28,7 @@
   <div
     id="{{ carousel_id }}-track"
     class="project-reel-track"
+    data-ascii-reactive
     tabindex="0"
     aria-label="Selected projects. Scroll horizontally to explore.">
     {% for reel_pass in (1..2) %}
@@ -45,6 +46,7 @@
           <a
             href="{{ card.url }}"
             class="project-reel-link group focus-ring"
+            data-ascii-emission="{{ card.ascii_color }}"
             {% if reel_pass == 2 %}tabindex="-1"{% endif %}
             {% if card.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>
             {% if card.image_name %}

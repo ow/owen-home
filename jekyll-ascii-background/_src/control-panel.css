@@ -98,6 +98,25 @@
   background-color: #2a2a2a;
 }
 
+.ascii-control-section-title {
+  margin: 20px 0 12px;
+  padding-top: 14px;
+  border-top: 1px solid #333;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ascii-control-group small {
+  display: block;
+  margin-top: 6px;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 /* Styles for the copy button section */
 .copy-section {
   border-top: 1px solid #333;
