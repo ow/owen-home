@@ -3,11 +3,11 @@
     {% capture footer_ascii_settings %}
     {
         "density": 30,
-        "speed": 30,
-        "opacity": 0.7,
+        "speed": 50,
+        "opacity": 0.9,
         "colorPalette": "{{ include.color_scheme | default: 'sunset' }}",
-        "noiseScale": 0.015,
-        "noiseSpeed": 0.5,
+        "noiseScale": 0.01,
+        "noiseSpeed": 1,
         "characterSet": "code",
         "gradientSize": 1.5,
         "animationStyle": "wave",
@@ -23,10 +23,10 @@
         "reducedMotionStyle": "static",
         "reducedMotionFadeIn": true,
         "reducedMotionFadeDuration": 1,
-        "waveFlowDirection": 45,
+        "waveFlowDirection": 270,
         "waveIntensity": 1,
         "waveLayers": 3,
-        "waveOrganicFactor": 0.1
+        "waveOrganicFactor": 0.2
     }
     {% endcapture %}
     <!-- ASCII Background -->
