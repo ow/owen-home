@@ -16,7 +16,7 @@
 title: Owen Williams
 email: owen@char.gd
 description: > # this means to ignore newlines until "baseurl:"
-  Owen Williams is an AI and product design leader at Stripe, building teams and tools for developer experience, documentation, and deeply technical products.
+  Owen Williams is a Product Design Manager at Stripe, leading teams across developer experience, documentation, AI, and deeply technical products.
 url: "https://owenwillia.ms"
 baseurl: "/" # the subpath of your site, e.g. /blog
 google_analytics: G-HZY18L3E4G
@@ -28,7 +28,7 @@ author:
   url: https://owenwillia.ms/about/
   twitter: ow
   picture: /images/optimized/itme-192.webp
-  job_title: AI and Product Design Leader
+  job_title: Product Design Manager
 social:
     name: Owen Williams
     links:
