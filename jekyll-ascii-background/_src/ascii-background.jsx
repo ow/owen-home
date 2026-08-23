@@ -156,7 +156,7 @@ export function AsciiBackground(props) {
     if (!settings.interactiveMode || settings.interactiveEffect !== "refraction") return
 
     const host = containerRef.current?.parentElement
-    const interactionSurface = host?.parentElement || host
+    const interactionSurface = host?.closest("[data-ascii-interaction-root]") || host?.parentElement || host
     if (!host || !interactionSurface) return
     const reactiveSurfaces = interactionSurface.querySelectorAll("[data-ascii-reactive]")
     const scrollPositions = new WeakMap()
