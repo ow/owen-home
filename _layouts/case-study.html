@@ -17,7 +17,11 @@ layout: default
 %}
 
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 pb-20 relative z-20">
-  <div class="case-study-shell glass rounded-2xl p-6 sm:p-10 lg:p-12">
+  {%- comment -%}
+    Padding matches the container gutters and the negative margins cancel it,
+    so the body text lines up with the hero title above.
+  {%- endcomment -%}
+  <div class="case-study-shell glass rounded-none sm:rounded-2xl p-4 sm:p-6 lg:p-8 -mx-4 sm:-mx-6 lg:-mx-8">
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-10 text-sm text-slate-300">
       <span class="tag text-sky-300">{{ page.tag }}</span>
       <span>{{ page.site }}</span>
@@ -30,10 +34,18 @@ layout: default
         {{ content }}
       </article>
 
-      {% if page.youtube_id %}
-      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24" aria-label="Protodash demonstration">
-        {% include youtube-embed.html id=page.youtube_id title=page.youtube_title %}
-        <p class="text-sm text-slate-400 mt-3">A live walkthrough of how Protodash evolved and changed the prototyping workflow.</p>
+      {% if page.videos or page.youtube_id %}
+      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24 space-y-8" aria-label="{{ page.videos_label | default: 'Video walkthroughs' }}">
+        {% if page.videos %}
+          {% for video in page.videos %}
+          <div>
+            {% include youtube-embed.html id=video.id title=video.title %}
+            {% if video.caption %}<p class="text-sm text-slate-400 mt-3 text-pretty">{{ video.caption }}</p>{% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+          {% include youtube-embed.html id=page.youtube_id title=page.youtube_title %}
+        {% endif %}
       </aside>
       {% endif %}
     </div>

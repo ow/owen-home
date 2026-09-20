@@ -31,5 +31,8 @@ render_widths "images/home.jpg" "home" 320 640 1024
 render_widths "images/career/charged.jpg" "charged" 320 640
 render_widths "images/protodash.jpg" "protodash" 320 640 1024
 render_widths "images/argo.png" "argo" 320 640 1024
+render_widths "images/protodash-studio.png" "protodash-studio" 640 1024 1440
+render_widths "images/protodash-radar.png" "protodash-radar" 640 1024 1440
+render_widths "images/protodash-editor.png" "protodash-editor" 640 1024 1440
 
 echo "Responsive images written to $output_dir"
