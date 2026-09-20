@@ -40,7 +40,7 @@ layout: default
           {% for video in page.videos %}
           <div>
             {% include youtube-embed.html id=video.id title=video.title %}
-            {% if video.caption %}<p class="text-sm text-slate-400 mt-3">{{ video.caption }}</p>{% endif %}
+            {% if video.caption %}<p class="text-sm text-slate-400 mt-3 text-pretty">{{ video.caption }}</p>{% endif %}
           </div>
           {% endfor %}
         {% else %}

@@ -91,7 +91,7 @@
 
   /* Image caption styling for blog posts */
   .image-caption {
-    @apply block text-center text-sm text-slate-500 dark:text-slate-400 mt-2 mb-4 italic;
+    @apply block text-center text-sm text-slate-500 dark:text-slate-400 mt-2 mb-4 italic text-pretty;
   }
 
   /* Font hierarchy utility classes */

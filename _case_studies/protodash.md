@@ -65,7 +65,7 @@ Reviews happen inside the clickable prototype. Anyone can select an element, dra
   <video class="w-full rounded-xl ring-1 ring-white/10" autoplay muted loop playsinline preload="metadata" poster="{{ '/images/optimized/protodash-editor-1024.webp' | relative_url }}" aria-label="Screen recording of the Protodash visual editor: dragging a card to a new position, adjusting a container's layout properties, then sending the edit to the AI">
     <source src="{{ '/assets/video/protodash-editor.mp4' | relative_url }}" type="video/mp4">
   </video>
-  <figcaption class="image-caption">The visual editor: move a card, tweak a container's layout, then hand the edit to the AI to make it real.</figcaption>
+  <figcaption class="image-caption">The visual editor: move a card, tweak its layout, then hand the edit to the AI.</figcaption>
 </figure>
 
 ## What it looks like in practice
@@ -76,7 +76,7 @@ The first response is a working dashboard: fraud rate, blocked payments, protect
 
 <figure class="not-prose my-8">
   {% include responsive-image.html name="protodash-radar" alt="A Radar fraud prototype in Protodash Studio with risk charts, alongside the AI panel listing the steps it took: reading Sail docs, editing a file, taking browser screenshots" width="3224" height="2098" widths="640,1024,1440" fallback_width="1024" sizes="(min-width: 1024px) 640px, 100vw" class="w-full rounded-xl ring-1 ring-white/10" %}
-  <figcaption class="image-caption">A Radar prototype mid-iteration. The AI reads the Sail docs, edits the code, and checks its own work in the browser before reporting back.</figcaption>
+  <figcaption class="image-caption">A Radar prototype mid-iteration: the AI reads the Sail docs, edits the code, and checks its own work in the browser.</figcaption>
 </figure>
 
 As Ryan puts it, putting that in front of a user “is a much more rich experience because they can actually feel the different components of it, versus a static screen.” They use it to share concepts with each other and to test with real users before anything is built.
