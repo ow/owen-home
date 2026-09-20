@@ -47,7 +47,7 @@ My goal was to lower the barrier until a designer only needed to know how to run
 Eventually, I built Protodash Studio: a browser-based layer where anyone can create, remix, review, and iterate on a prototype without opening a code editor at all.
 
 <figure class="not-prose my-8">
-  {% include responsive-image.html name="protodash-studio" alt="Protodash Studio workspace showing a grid of prototype cards and the Protodash AI chat panel" width="3224" height="2098" widths="640,1024,1440" fallback_width="1024" sizes="(min-width: 1024px) 640px, 100vw" class="w-full rounded-xl ring-1 ring-white/10" %}
+  {% include responsive-image.html name="protodash-studio" alt="Protodash Studio workspace showing a grid of prototype cards and the Protodash AI chat panel" width="3224" height="2098" widths="640,1024,1440" fallback_width="1024" sizes="(min-width: 1024px) 640px, 100vw" class="w-full" %}
   <figcaption class="image-caption">Protodash Studio: every prototype in the workspace, with the AI panel open and ready for a prompt or a Figma link.</figcaption>
 </figure>
 
@@ -62,7 +62,7 @@ Because the prototypes run in code, teams can explore realistic data, empty stat
 Reviews happen inside the clickable prototype. Anyone can select an element, drag it somewhere else, or adjust its layout directly, and those edits are summarized and sent back to the AI as the next round of work.
 
 <figure class="not-prose my-8">
-  <video class="w-full rounded-xl ring-1 ring-white/10" autoplay muted loop playsinline preload="metadata" poster="{{ '/images/optimized/protodash-editor-1024.webp' | relative_url }}" aria-label="Screen recording of the Protodash visual editor: dragging a card to a new position, adjusting a container's layout properties, then sending the edit to the AI">
+  <video class="w-full" autoplay muted loop playsinline preload="metadata" poster="{{ '/images/optimized/protodash-editor-1024.webp' | relative_url }}" aria-label="Screen recording of the Protodash visual editor: dragging a card to a new position, adjusting a container's layout properties, then sending the edit to the AI">
     <source src="{{ '/assets/video/protodash-editor.mp4' | relative_url }}" type="video/mp4">
   </video>
   <figcaption class="image-caption">The visual editor: move a card, tweak its layout, then hand the edit to the AI.</figcaption>
@@ -75,7 +75,7 @@ The fraud and risk teams have leaned on Protodash more than most. In the Designe
 The first response is a working dashboard: fraud rate, blocked payments, protected revenue, trends over time and by category, flagged transactions with risk levels, all built from Sail components and fully interactive.
 
 <figure class="not-prose my-8">
-  {% include responsive-image.html name="protodash-radar" alt="A Radar fraud prototype in Protodash Studio with risk charts, alongside the AI panel listing the steps it took: reading Sail docs, editing a file, taking browser screenshots" width="3224" height="2098" widths="640,1024,1440" fallback_width="1024" sizes="(min-width: 1024px) 640px, 100vw" class="w-full rounded-xl ring-1 ring-white/10" %}
+  {% include responsive-image.html name="protodash-radar" alt="A Radar fraud prototype in Protodash Studio with risk charts, alongside the AI panel listing the steps it took: reading Sail docs, editing a file, taking browser screenshots" width="3224" height="2098" widths="640,1024,1440" fallback_width="1024" sizes="(min-width: 1024px) 640px, 100vw" class="w-full" %}
   <figcaption class="image-caption">A Radar prototype mid-iteration: the AI reads the Sail docs, edits the code, and checks its own work in the browser.</figcaption>
 </figure>
 
