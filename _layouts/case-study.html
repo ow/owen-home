@@ -29,13 +29,13 @@ layout: default
       <span>{{ page.when }}</span>
     </div>
 
+    {%- comment -%}
+      The videos come first in source so they sit above the article on
+      mobile; explicit column placement keeps them on the right at lg.
+    {%- endcomment -%}
     <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
-      <article class="post-content prose dark:prose-invert lg:col-span-7 [&>p]:mb-5">
-        {{ content }}
-      </article>
-
       {% if page.videos or page.youtube_id %}
-      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24 space-y-8" aria-label="{{ page.videos_label | default: 'Video walkthroughs' }}">
+      <aside class="mb-10 lg:mb-0 lg:col-start-8 lg:col-span-5 lg:row-start-1 lg:sticky lg:top-24 space-y-8" aria-label="{{ page.videos_label | default: 'Video walkthroughs' }}">
         {% if page.videos %}
           {% for video in page.videos %}
           <div>
@@ -48,6 +48,10 @@ layout: default
         {% endif %}
       </aside>
       {% endif %}
+
+      <article class="post-content prose dark:prose-invert lg:col-start-1 lg:col-span-7 lg:row-start-1 [&>p]:mb-5">
+        {{ content }}
+      </article>
     </div>
   </div>
 </main>
