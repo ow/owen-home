@@ -30,10 +30,18 @@ layout: default
         {{ content }}
       </article>
 
-      {% if page.youtube_id %}
-      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24" aria-label="Protodash demonstration">
-        {% include youtube-embed.html id=page.youtube_id title=page.youtube_title %}
-        <p class="text-sm text-slate-400 mt-3">A live walkthrough of how Protodash evolved and changed the prototyping workflow.</p>
+      {% if page.videos or page.youtube_id %}
+      <aside class="lg:col-span-5 mt-10 lg:mt-0 lg:sticky lg:top-24 space-y-8" aria-label="{{ page.videos_label | default: 'Video walkthroughs' }}">
+        {% if page.videos %}
+          {% for video in page.videos %}
+          <div>
+            {% include youtube-embed.html id=video.id title=video.title %}
+            {% if video.caption %}<p class="text-sm text-slate-400 mt-3">{{ video.caption }}</p>{% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+          {% include youtube-embed.html id=page.youtube_id title=page.youtube_title %}
+        {% endif %}
       </aside>
       {% endif %}
     </div>
