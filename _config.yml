@@ -105,12 +105,6 @@ projects:
     action: Read now
     emoji: ⚡
     url: https://char.gd/
-  - title: Write Together
-    description: Learn to write through the power of habit-building. It's a social platform that encourages writing anything.
-    color: call-me-maybe
-    action: Try it now
-    emoji: 📝
-    url: https://writetogether.space
   - title: Podcast
     description: A tech podcast with a difference. Three hosts, casual conversations about the state of the industry.
     color: podcast
