@@ -234,6 +234,38 @@
     -webkit-line-clamp: 2;
   }
 
+  /* DeliveryKit’s original three plane assets, not generated illustrations. */
+  .deliverykit-sky {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 65% 8%, #6084b3 0, #3c638e 38%, #233e60 75%, #172b46 100%);
+  }
+  .deliverykit-plane {
+    position: absolute;
+    height: auto;
+    max-width: none;
+    transform: rotate(-18deg);
+    filter: drop-shadow(0 7px 8px #13294333);
+  }
+  .deliverykit-plane--1 { width: 32%; left: 38%; top: 4%; }
+  .deliverykit-plane--2 { width: 25%; left: 2%; top: 20%; }
+  .deliverykit-plane--3 { width: 23%; left: 74%; top: 20%; }
+  .deliverykit-plane--4 { width: 17%; left: 21%; top: -3%; opacity: .65; }
+  .deliverykit-plane--5 { width: 16%; left: 69%; top: -5%; opacity: .8; }
+  .deliverykit-plane--6 { width: 18%; left: 28%; top: 43%; opacity: .7; }
+  .deliverykit-plane--7 { width: 14%; left: 89%; top: -8%; opacity: .55; }
+  .project-reel-card--deliverykit .project-reel-shade {
+    background: linear-gradient(180deg, transparent 25%, #0d1c3610 38%, #0b142bd9 78%, #090f20fa);
+  }
+  .project-reel-card--deliverykit .tag {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+    color: #c0d7ff;
+    font-size: 12px;
+  }
+
   .brand-reel-viewport {
     @apply w-full overflow-hidden;
   }
